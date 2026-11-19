@@ -36,6 +36,9 @@
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
+  <!-- Supabase JS v2 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
     body {
       background-color: #FAFAFA;
@@ -99,6 +102,28 @@
   </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-zinc-900 selection:text-white">
+
+  <!-- ===================================================================== -->
+  <!-- SUPABASE CONFIG NOTICE BANNER (DISMISSIBLE IN LOCAL FALLBACK MODE)    -->
+  <!-- ===================================================================== -->
+  <div id="supabase-setup-banner" class="hidden bg-amber-50 border-b border-amber-200 text-amber-950 px-4 py-2.5 text-xs">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-amber-500 shrink-0"></span>
+        <span>
+          <strong>Mode Lokal (Belum Terhubung Supabase)</strong> — isi <code class="font-mono bg-amber-100/80 px-1 py-0.5 rounded">SUPABASE_URL</code> &amp; <code class="font-mono bg-amber-100/80 px-1 py-0.5 rounded">SUPABASE_ANON_KEY</code> di file <code class="font-mono bg-amber-100/80 px-1 py-0.5 rounded">index.html</code> agar data sinkron antar perangkat.
+        </span>
+      </div>
+      <button
+        type="button"
+        onclick="dismissSetupBanner()"
+        class="p-1 rounded hover:bg-amber-200/60 text-amber-800 shrink-0 cursor-pointer"
+        aria-label="Tutup pemberitahuan"
+      >
+        <i data-lucide="x" class="w-3.5 h-3.5"></i>
+      </button>
+    </div>
+  </div>
 
   <!-- ===================================================================== -->
   <!-- STICKY GLASSMORPHIC HEADER / NAVBAR                                   -->
@@ -179,6 +204,11 @@
             <span class="text-zinc-500">Penjual Mahasiswa ITB:</span>
             <span id="metric-itb" class="font-mono font-semibold text-zinc-950">0</span>
           </div>
+
+          <div id="sync-status-pill" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-50 border border-zinc-200 text-xs">
+            <span id="sync-status-dot" class="w-2 h-2 rounded-full bg-zinc-400"></span>
+            <span id="sync-status-text" class="font-mono font-medium text-zinc-600">Menghubungkan...</span>
+          </div>
         </div>
       </div>
     </div>
@@ -253,18 +283,29 @@
       <div class="w-12 h-12 rounded-full bg-zinc-100 border border-zinc-200 flex items-center justify-center text-zinc-500 mb-3">
         <i data-lucide="package-search" class="w-6 h-6"></i>
       </div>
-      <h3 class="text-base font-semibold text-zinc-950">Barang tidak ditemukan</h3>
-      <p class="text-sm text-zinc-500 mt-1 max-w-md">
+      <h3 id="empty-state-title" class="text-base font-semibold text-zinc-950">Barang tidak ditemukan</h3>
+      <p id="empty-state-desc" class="text-sm text-zinc-500 mt-1 max-w-md">
         Coba ubah kata kunci pencarian, pilih kategori lain, atau tampilkan barang yang sudah tersalurkan.
       </p>
-      <button
-        type="button"
-        onclick="resetFilters()"
-        class="mt-4 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium bg-zinc-950 text-white hover:bg-zinc-800 transition-colors"
-      >
-        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
-        <span>Reset Filter Katalog</span>
-      </button>
+      <div class="mt-4 flex flex-wrap items-center justify-center gap-2.5">
+        <button
+          type="button"
+          onclick="resetFilters()"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium bg-zinc-950 text-white hover:bg-zinc-800 transition-colors cursor-pointer"
+        >
+          <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+          <span>Reset Filter Katalog</span>
+        </button>
+        <button
+          id="empty-seed-btn"
+          type="button"
+          onclick="handleSeedDemoClick('empty')"
+          class="hidden inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 text-zinc-800 transition-colors cursor-pointer"
+        >
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-emerald-600"></i>
+          <span id="empty-seed-label">Isi / Reset 8 Data Demo</span>
+        </button>
+      </div>
     </div>
 
   </main>
@@ -285,11 +326,11 @@
         <button
           id="reset-demo-btn"
           type="button"
-          onclick="handleResetDemoClick()"
+          onclick="handleSeedDemoClick('footer')"
           class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 text-zinc-700 font-medium transition-colors cursor-pointer"
         >
           <i data-lucide="refresh-cw" class="w-3 h-3"></i>
-          <span id="reset-demo-label">Reset Data Demo</span>
+          <span id="reset-demo-label">Isi / Reset 8 Data Demo</span>
         </button>
       </div>
     </div>
@@ -568,11 +609,12 @@
             Batal
           </button>
           <button
+            id="upload-submit-btn"
             type="submit"
-            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-medium bg-zinc-950 text-white hover:bg-zinc-800 transition-colors shadow-sm cursor-pointer"
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-medium bg-zinc-950 text-white hover:bg-zinc-800 disabled:opacity-60 disabled:cursor-not-allowed transition-colors shadow-sm cursor-pointer"
           >
             <i data-lucide="check" class="w-4 h-4"></i>
-            <span>Tayangkan Barang</span>
+            <span id="upload-submit-label">Tayangkan Barang</span>
           </button>
         </div>
       </form>
@@ -588,6 +630,24 @@
   <!-- APPLICATION LOGIC                                                     -->
   <!-- ===================================================================== -->
   <script>
+    // -----------------------------------------------------------------------
+    // 0. KONFIGURASI SUPABASE (ISI URL & ANON KEY PROYEK SUPABASE KAMU)
+    // -----------------------------------------------------------------------
+    const SUPABASE_URL = 'https://rogpfzhhkdmugcwmhqbb.supabase.co/rest/v1/';
+    const SUPABASE_ANON_KEY = 'sb_publishable_1I5L7Y9rWl_MntxPEwRupA_Ev3LX7Ff';
+
+    const IS_SUPABASE_CONFIGURED =
+      typeof SUPABASE_URL === 'string' &&
+      SUPABASE_URL.startsWith('https://') &&
+      typeof SUPABASE_ANON_KEY === 'string' &&
+      SUPABASE_ANON_KEY.trim() !== '' &&
+      SUPABASE_ANON_KEY !== 'ISI_DENGAN_ANON_PUBLIC_KEY_SUPABASE_KAMU';
+
+    const supabaseClient =
+      IS_SUPABASE_CONFIGURED && window.supabase
+        ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+        : null;
+
     // -----------------------------------------------------------------------
     // 1. STUDIO-CRAFTED EMBEDDED SVG ARTWORKS (100% RELIABLE OFFLINE/ONLINE)
     // -----------------------------------------------------------------------
@@ -839,6 +899,9 @@
     // 3. STATE MANAGEMENT
     // -----------------------------------------------------------------------
     let items = [];
+    let isLoadingItems = true;
+    let isRealtimeConnected = false;
+    let realtimeChannel = null;
     let activeCategory = 'Semua';
     let activeStatusFilter = 'active'; // 'active' | 'all'
     let searchQuery = '';
@@ -846,6 +909,7 @@
     let isBookingFormOpen = false;
     let uploadCondition = 4;
     let uploadPhotoDataUrl = '';
+    let uploadCompressedBlob = null;
     let resetConfirmPending = false;
     let resetConfirmTimer = null;
 
@@ -860,9 +924,80 @@
     };
 
     // -----------------------------------------------------------------------
-    // 4. STORAGE & HELPERS
+    // 4. DATABASE MAPPERS, SUPABASE SYNC & LOCALSTORAGE FALLBACK
     // -----------------------------------------------------------------------
-    function loadItems() {
+    function mapDbRowToItem(row) {
+      return {
+        id: String(row.id),
+        title: row.title || '',
+        description: row.description || '',
+        category: row.category || 'Elektronik',
+        condition: Number(row.condition) || 4,
+        price: Number(row.price) || 0,
+        isFree: Boolean(row.is_free) || Number(row.price) === 0,
+        location: row.location || '',
+        sellerName: row.seller_name || '',
+        sellerEmail: row.seller_email || '',
+        sellerWa: row.seller_wa || '',
+        pin: String(row.pin || '1234'),
+        status: row.status || 'Tersedia',
+        buyerName: row.buyer_name || '',
+        buyerWa: row.buyer_wa || '',
+        imageUrl: row.image_url || ARTWORKS.monitor,
+        createdAt: row.created_at ? new Date(row.created_at).getTime() : Date.now()
+      };
+    }
+
+    function mapItemToDbInsert(item) {
+      return {
+        title: item.title,
+        description: item.description,
+        category: item.category,
+        condition: Number(item.condition) || 4,
+        price: item.isFree ? 0 : Number(item.price) || 0,
+        is_free: Boolean(item.isFree) || Number(item.price) === 0,
+        location: item.location,
+        seller_name: item.sellerName,
+        seller_email: item.sellerEmail,
+        seller_wa: item.sellerWa,
+        pin: String(item.pin),
+        status: item.status || 'Tersedia',
+        buyer_name: item.buyerName || '',
+        buyer_wa: item.buyerWa || '',
+        image_url: item.imageUrl
+      };
+    }
+
+    function updateSyncStatusBadge(mode, detailText = '') {
+      const pill = document.getElementById('sync-status-pill');
+      const dot = document.getElementById('sync-status-dot');
+      const text = document.getElementById('sync-status-text');
+      if (!pill || !dot || !text) return;
+
+      if (mode === 'supabase') {
+        pill.className = 'inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-50/80 border border-emerald-200 text-xs';
+        dot.className = 'w-2 h-2 rounded-full bg-emerald-500 animate-pulse';
+        text.className = 'font-mono font-semibold text-emerald-800';
+        text.textContent = detailText || 'Live Sync: Supabase';
+      } else if (mode === 'error') {
+        pill.className = 'inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-red-50 border border-red-200 text-xs';
+        dot.className = 'w-2 h-2 rounded-full bg-red-500';
+        text.className = 'font-mono font-medium text-red-700';
+        text.textContent = detailText || 'Koneksi Supabase Terputus';
+      } else {
+        pill.className = 'inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-50/70 border border-amber-200/80 text-xs';
+        dot.className = 'w-2 h-2 rounded-full bg-amber-500';
+        text.className = 'font-mono font-medium text-amber-800';
+        text.textContent = detailText || 'Mode Lokal (Browser)';
+      }
+    }
+
+    function dismissSetupBanner() {
+      const banner = document.getElementById('supabase-setup-banner');
+      if (banner) banner.classList.add('hidden');
+    }
+
+    function loadItemsFromLocal() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) {
@@ -876,14 +1011,117 @@
         console.warn('Gagal membaca localStorage, menggunakan data demo:', e);
       }
       items = JSON.parse(JSON.stringify(INITIAL_DEMO_ITEMS));
-      saveItems();
+      saveItemsToLocal();
     }
 
-    function saveItems() {
+    function saveItemsToLocal() {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
       } catch (e) {
         console.warn('Gagal menyimpan ke localStorage:', e);
+      }
+    }
+
+    async function fetchItemsFromSupabase(silent = false) {
+      if (!supabaseClient) return;
+      if (!silent) {
+        isLoadingItems = true;
+        renderCatalog();
+      }
+      try {
+        const { data, error } = await supabaseClient
+          .from('items')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        items = Array.isArray(data) ? data.map(mapDbRowToItem) : [];
+        isLoadingItems = false;
+        updateSyncStatusBadge('supabase', 'Live Sync: Supabase');
+        refreshAll();
+
+        // Sync open detail modal if open
+        if (selectedItemId) {
+          const updatedSelected = items.find(i => i.id === selectedItemId);
+          if (updatedSelected) {
+            renderDetailModalContent(updatedSelected);
+            lucide.createIcons();
+          } else {
+            closeDetailModal();
+          }
+        }
+      } catch (err) {
+        console.error('Supabase fetch error:', err);
+        isLoadingItems = false;
+        updateSyncStatusBadge('error', 'Error Tabel Supabase');
+        showToast('Gagal memuat data dari Supabase. Pastikan tabel "items" & policy publik sudah dibuat.', 'error');
+        refreshAll();
+      }
+    }
+
+    function setupSupabaseRealtime() {
+      if (!supabaseClient) return;
+      if (realtimeChannel) {
+        supabaseClient.removeChannel(realtimeChannel);
+      }
+
+      realtimeChannel = supabaseClient
+        .channel('public:items-sync')
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: 'items' },
+          (payload) => {
+            if (payload.eventType === 'INSERT' && payload.new) {
+              const incoming = mapDbRowToItem(payload.new);
+              const exists = items.some(i => i.id === incoming.id);
+              if (!exists) {
+                items.unshift(incoming);
+              }
+            } else if (payload.eventType === 'UPDATE' && payload.new) {
+              const updated = mapDbRowToItem(payload.new);
+              const idx = items.findIndex(i => i.id === updated.id);
+              if (idx !== -1) {
+                items[idx] = updated;
+              } else {
+                items.unshift(updated);
+              }
+              if (selectedItemId === updated.id) {
+                isBookingFormOpen = false;
+                renderDetailModalContent(updated);
+                lucide.createIcons();
+              }
+            } else if (payload.eventType === 'DELETE' && payload.old) {
+              const deletedId = String(payload.old.id);
+              items = items.filter(i => i.id !== deletedId);
+              if (selectedItemId === deletedId) {
+                closeDetailModal();
+              }
+            }
+            refreshAll();
+          }
+        )
+        .subscribe((status) => {
+          isRealtimeConnected = status === 'SUBSCRIBED';
+          if (isRealtimeConnected) {
+            updateSyncStatusBadge('supabase', 'Live Sync: Supabase');
+          }
+        });
+    }
+
+    async function initAppData() {
+      if (supabaseClient) {
+        dismissSetupBanner();
+        updateSyncStatusBadge('supabase', 'Menghubungkan Supabase...');
+        await fetchItemsFromSupabase(false);
+        setupSupabaseRealtime();
+      } else {
+        const banner = document.getElementById('supabase-setup-banner');
+        if (banner) banner.classList.remove('hidden');
+        updateSyncStatusBadge('local', 'Mode Lokal (Browser)');
+        loadItemsFromLocal();
+        isLoadingItems = false;
+        refreshAll();
       }
     }
 
@@ -1048,6 +1286,25 @@
       const emptyState = document.getElementById('empty-state');
       const visibleCountEl = document.getElementById('visible-count');
 
+      if (isLoadingItems) {
+        visibleCountEl.textContent = '...';
+        emptyState.classList.add('hidden');
+        emptyState.classList.remove('flex');
+        grid.classList.remove('hidden');
+        grid.innerHTML = Array.from({ length: 4 }).map(() => `
+          <div class="bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-vercel animate-pulse">
+            <div class="aspect-[4/3] w-full bg-zinc-100"></div>
+            <div class="p-4 space-y-3">
+              <div class="h-3 bg-zinc-100 rounded w-1/3"></div>
+              <div class="h-4 bg-zinc-200 rounded w-3/4"></div>
+              <div class="h-5 bg-zinc-100 rounded w-1/2"></div>
+              <div class="pt-3 border-t border-zinc-100 h-6 bg-zinc-50 rounded"></div>
+            </div>
+          </div>
+        `).join('');
+        return;
+      }
+
       const filtered = items.filter(item => {
         // Status filter
         if (activeStatusFilter === 'active' && item.status === 'Sudah Tersalurkan') {
@@ -1078,6 +1335,21 @@
         grid.classList.add('hidden');
         emptyState.classList.remove('hidden');
         emptyState.classList.add('flex');
+
+        const emptyTitle = document.getElementById('empty-state-title');
+        const emptyDesc = document.getElementById('empty-state-desc');
+        const emptySeedBtn = document.getElementById('empty-seed-btn');
+
+        if (items.length === 0) {
+          emptyTitle.textContent = 'Katalog masih kosong';
+          emptyDesc.textContent = 'Belum ada barang di database. Kamu bisa langsung upload barang baru atau isi 8 data demo ITB.';
+          emptySeedBtn.classList.remove('hidden');
+        } else {
+          emptyTitle.textContent = 'Barang tidak ditemukan';
+          emptyDesc.textContent = 'Coba ubah kata kunci pencarian, pilih kategori lain, atau tampilkan barang yang sudah tersalurkan.';
+          emptySeedBtn.classList.add('hidden');
+        }
+
         lucide.createIcons();
         return;
       }
@@ -1346,11 +1618,12 @@
               <div id="booking-error-msg" class="hidden text-xs text-red-600 font-medium"></div>
               <div class="flex items-center justify-end gap-2 pt-1">
                 <button
+                  id="booking-submit-btn"
                   type="submit"
-                  class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs sm:text-sm font-medium bg-zinc-950 text-white hover:bg-zinc-800 transition-colors cursor-pointer"
+                  class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs sm:text-sm font-medium bg-zinc-950 text-white hover:bg-zinc-800 disabled:opacity-60 transition-colors cursor-pointer"
                 >
                   <i data-lucide="lock" class="w-3.5 h-3.5"></i>
-                  <span>Konfirmasi Booking</span>
+                  <span id="booking-submit-label">Konfirmasi Booking</span>
                 </button>
               </div>
             </form>
@@ -1528,7 +1801,7 @@
       }
     }
 
-    function handleBookingSubmit(event) {
+    async function handleBookingSubmit(event) {
       event.preventDefault();
       const item = items.find(i => i.id === selectedItemId);
       if (!item || item.status !== 'Tersedia') return;
@@ -1537,6 +1810,8 @@
       const buyerWaRaw = document.getElementById('booking-buyer-wa').value.trim();
       const buyerWa = normalizeWhatsApp(buyerWaRaw);
       const errEl = document.getElementById('booking-error-msg');
+      const submitBtn = document.getElementById('booking-submit-btn');
+      const submitLabel = document.getElementById('booking-submit-label');
 
       if (!buyerName || buyerWa.length < 9) {
         errEl.textContent = 'Masukkan nama pembeli dan nomor WhatsApp yang valid (minimal 9 digit).';
@@ -1544,11 +1819,56 @@
         return;
       }
 
+      if (supabaseClient) {
+        if (submitBtn) submitBtn.disabled = true;
+        if (submitLabel) submitLabel.textContent = 'Mengunci Barang...';
+        try {
+          const { data, error } = await supabaseClient
+            .from('items')
+            .update({
+              status: 'Dalam Proses',
+              buyer_name: buyerName,
+              buyer_wa: buyerWa
+            })
+            .eq('id', item.id)
+            .eq('status', 'Tersedia')
+            .select();
+
+          if (error) throw error;
+
+          if (!data || data.length === 0) {
+            await fetchItemsFromSupabase(true);
+            showToast('Maaf, barang ini baru saja dibooking mahasiswa lain!', 'error');
+            return;
+          }
+
+          const updated = mapDbRowToItem(data[0]);
+          const idx = items.findIndex(i => i.id === updated.id);
+          if (idx !== -1) items[idx] = updated;
+
+          refreshAll();
+          isBookingFormOpen = false;
+          renderDetailModalContent(updated);
+          lucide.createIcons();
+          showToast(`Berhasil dibooking! Status "${updated.title}" kini Dalam Proses.`);
+        } catch (err) {
+          console.error('Supabase booking error:', err);
+          if (errEl) {
+            errEl.textContent = 'Gagal memproses booking ke Supabase. Coba lagi.';
+            errEl.classList.remove('hidden');
+          }
+          if (submitBtn) submitBtn.disabled = false;
+          if (submitLabel) submitLabel.textContent = 'Konfirmasi Booking';
+        }
+        return;
+      }
+
+      // Local fallback mode
       item.status = 'Dalam Proses';
       item.buyerName = buyerName;
       item.buyerWa = buyerWa;
 
-      saveItems();
+      saveItemsToLocal();
       refreshAll();
       isBookingFormOpen = false;
       renderDetailModalContent(item);
@@ -1585,28 +1905,86 @@
       return true;
     }
 
-    function handleMarkSold() {
+    async function handleMarkSold() {
       const item = items.find(i => i.id === selectedItemId);
       if (!item) return;
       if (!validateSellerPin(item)) return;
 
+      if (supabaseClient) {
+        try {
+          const { data, error } = await supabaseClient
+            .from('items')
+            .update({ status: 'Sudah Tersalurkan' })
+            .eq('id', item.id)
+            .eq('pin', String(item.pin))
+            .select();
+
+          if (error) throw error;
+
+          if (data && data.length > 0) {
+            const updated = mapDbRowToItem(data[0]);
+            const idx = items.findIndex(i => i.id === updated.id);
+            if (idx !== -1) items[idx] = updated;
+            refreshAll();
+            renderDetailModalContent(updated);
+            lucide.createIcons();
+            showToast(`"${updated.title}" ditandai Sudah Tersalurkan.`);
+          }
+        } catch (err) {
+          console.error('Supabase mark sold error:', err);
+          showToast('Gagal memperbarui status barang di Supabase.', 'error');
+        }
+        return;
+      }
+
       item.status = 'Sudah Tersalurkan';
-      saveItems();
+      saveItemsToLocal();
       refreshAll();
       renderDetailModalContent(item);
       lucide.createIcons();
       showToast(`"${item.title}" ditandai Sudah Tersalurkan.`);
     }
 
-    function handleCancelBooking() {
+    async function handleCancelBooking() {
       const item = items.find(i => i.id === selectedItemId);
       if (!item) return;
       if (!validateSellerPin(item)) return;
 
+      if (supabaseClient) {
+        try {
+          const { data, error } = await supabaseClient
+            .from('items')
+            .update({
+              status: 'Tersedia',
+              buyer_name: '',
+              buyer_wa: ''
+            })
+            .eq('id', item.id)
+            .eq('pin', String(item.pin))
+            .select();
+
+          if (error) throw error;
+
+          if (data && data.length > 0) {
+            const updated = mapDbRowToItem(data[0]);
+            const idx = items.findIndex(i => i.id === updated.id);
+            if (idx !== -1) items[idx] = updated;
+            refreshAll();
+            renderDetailModalContent(updated);
+            lucide.createIcons();
+            showToast(`Booking dibatalkan. "${updated.title}" kembali Tersedia.`);
+          }
+        } catch (err) {
+          console.error('Supabase cancel booking error:', err);
+          showToast('Gagal membatalkan booking di Supabase.', 'error');
+        }
+        return;
+      }
+
       item.status = 'Tersedia';
       item.buyerName = '';
       item.buyerWa = '';
-      saveItems();
+      saveItemsToLocal();
       refreshAll();
       renderDetailModalContent(item);
       lucide.createIcons();
@@ -1621,6 +1999,13 @@
       document.getElementById('upload-error-box').classList.add('hidden');
       uploadCondition = 4;
       uploadPhotoDataUrl = '';
+      uploadCompressedBlob = null;
+
+      // Reset submit button state
+      const submitBtn = document.getElementById('upload-submit-btn');
+      const submitLabel = document.getElementById('upload-submit-label');
+      if (submitBtn) submitBtn.disabled = false;
+      if (submitLabel) submitLabel.textContent = 'Tayangkan Barang';
 
       // Reset photo preview
       const preview = document.getElementById('upload-photo-preview');
@@ -1706,20 +2091,65 @@
       lucide.createIcons();
     }
 
-    function handlePhotoFileChange(event) {
+    function compressImageFile(file, maxWidth = 800, quality = 0.75) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = new Image();
+          img.onload = function() {
+            let width = img.width;
+            let height = img.height;
+            if (width > maxWidth) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+
+            const dataUrl = canvas.toDataURL('image/jpeg', quality);
+            canvas.toBlob(
+              (blob) => {
+                resolve({ dataUrl, blob });
+              },
+              'image/jpeg',
+              quality
+            );
+          };
+          img.onerror = reject;
+          img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function handlePhotoFileChange(event) {
       const file = event.target.files && event.target.files[0];
       if (!file) return;
 
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        uploadPhotoDataUrl = e.target.result;
+      try {
+        const { dataUrl, blob } = await compressImageFile(file, 800, 0.75);
+        uploadPhotoDataUrl = dataUrl;
+        uploadCompressedBlob = blob;
         showUploadPhotoPreview(uploadPhotoDataUrl);
-      };
-      reader.readAsDataURL(file);
+      } catch (err) {
+        console.warn('Kompresi foto gagal, memakai pembacaan langsung:', err);
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          uploadPhotoDataUrl = e.target.result;
+          uploadCompressedBlob = file;
+          showUploadPhotoPreview(uploadPhotoDataUrl);
+        };
+        reader.readAsDataURL(file);
+      }
     }
 
     function selectPresetPhoto(key) {
       uploadPhotoDataUrl = PRESET_UPLOAD_ARTWORKS[key] || ARTWORKS.monitor;
+      uploadCompressedBlob = null;
       showUploadPhotoPreview(uploadPhotoDataUrl);
     }
 
@@ -1731,7 +2161,7 @@
       placeholder.classList.add('hidden');
     }
 
-    function handleUploadSubmit(event) {
+    async function handleUploadSubmit(event) {
       event.preventDefault();
       const errorBox = document.getElementById('upload-error-box');
       errorBox.classList.add('hidden');
@@ -1771,6 +2201,11 @@
         return;
       }
 
+      const submitBtn = document.getElementById('upload-submit-btn');
+      const submitLabel = document.getElementById('upload-submit-label');
+      if (submitBtn) submitBtn.disabled = true;
+      if (submitLabel) submitLabel.textContent = 'Mengunggah...';
+
       // Fallback artwork matching category if user didn't upload a file
       let finalImage = uploadPhotoDataUrl;
       if (!finalImage) {
@@ -1779,7 +2214,33 @@
         else finalImage = ARTWORKS.monitor;
       }
 
-      const newItem = {
+      // If Supabase is connected and user selected a photo file, upload to bucket 'item-photos'
+      if (supabaseClient && uploadCompressedBlob) {
+        try {
+          const fileName = `item-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.jpg`;
+          const { data: uploadData, error: uploadError } = await supabaseClient.storage
+            .from('item-photos')
+            .upload(fileName, uploadCompressedBlob, {
+              contentType: 'image/jpeg',
+              upsert: false
+            });
+
+          if (!uploadError && uploadData) {
+            const { data: publicUrlData } = supabaseClient.storage
+              .from('item-photos')
+              .getPublicUrl(uploadData.path);
+            if (publicUrlData && publicUrlData.publicUrl) {
+              finalImage = publicUrlData.publicUrl;
+            }
+          } else {
+            console.warn('Bucket item-photos belum tersedia/gagal upload, fallback ke foto terkompresi:', uploadError);
+          }
+        } catch (storageErr) {
+          console.warn('Storage upload fallback ke Data URL terkompresi:', storageErr);
+        }
+      }
+
+      const newItemDraft = {
         id: 'gt-' + Date.now(),
         title,
         description,
@@ -1799,48 +2260,109 @@
         createdAt: Date.now()
       };
 
-      items.unshift(newItem);
-      saveItems();
+      if (supabaseClient) {
+        try {
+          const { data, error } = await supabaseClient
+            .from('items')
+            .insert([mapItemToDbInsert(newItemDraft)])
+            .select();
 
-      // Switch to Semua category if current category hides the newly added item
+          if (error) throw error;
+
+          const insertedItem = data && data.length > 0 ? mapDbRowToItem(data[0]) : newItemDraft;
+          if (!items.some(i => i.id === insertedItem.id)) {
+            items.unshift(insertedItem);
+          }
+
+          if (activeCategory !== 'Semua') {
+            if (activeCategory === 'Gratis' && !insertedItem.isFree) activeCategory = 'Semua';
+            else if (activeCategory !== 'Gratis' && activeCategory !== insertedItem.category) activeCategory = 'Semua';
+          }
+
+          refreshAll();
+          closeUploadModal();
+          showToast(`"${insertedItem.title}" berhasil ditayangkan ke cloud!`);
+        } catch (err) {
+          console.error('Supabase insert error:', err);
+          errorBox.textContent = 'Gagal menyimpan barang ke Supabase: ' + (err.message || 'Periksa izin tabel items.');
+          errorBox.classList.remove('hidden');
+          if (submitBtn) submitBtn.disabled = false;
+          if (submitLabel) submitLabel.textContent = 'Tayangkan Barang';
+        }
+        return;
+      }
+
+      // Local fallback mode
+      items.unshift(newItemDraft);
+      saveItemsToLocal();
+
       if (activeCategory !== 'Semua') {
-        if (activeCategory === 'Gratis' && !newItem.isFree) activeCategory = 'Semua';
-        else if (activeCategory !== 'Gratis' && activeCategory !== newItem.category) activeCategory = 'Semua';
+        if (activeCategory === 'Gratis' && !newItemDraft.isFree) activeCategory = 'Semua';
+        else if (activeCategory !== 'Gratis' && activeCategory !== newItemDraft.category) activeCategory = 'Semua';
       }
 
       refreshAll();
       closeUploadModal();
-      showToast(`"${newItem.title}" berhasil ditayangkan ke katalog!`);
+      showToast(`"${newItemDraft.title}" berhasil ditayangkan ke katalog!`);
     }
 
     // -----------------------------------------------------------------------
-    // 9. RESET DEMO DATA (2-STEP INLINE CONFIRMATION - NO BROWSER CONFIRM())
+    // 9. SEED / RESET 8 DEMO ITEMS (2-STEP INLINE CONFIRMATION)
     // -----------------------------------------------------------------------
-    function handleResetDemoClick() {
-      const labelEl = document.getElementById('reset-demo-label');
-      const btnEl = document.getElementById('reset-demo-btn');
+    async function handleSeedDemoClick(source = 'footer') {
+      const labelEl = document.getElementById(source === 'empty' ? 'empty-seed-label' : 'reset-demo-label');
+      const btnEl = document.getElementById(source === 'empty' ? 'empty-seed-btn' : 'reset-demo-btn');
 
       if (!resetConfirmPending) {
         resetConfirmPending = true;
-        labelEl.textContent = 'Klik lagi untuk konfirmasi';
-        btnEl.classList.add('border-red-300', 'bg-red-50', 'text-red-700');
+        if (labelEl) labelEl.textContent = 'Klik lagi untuk konfirmasi';
+        if (btnEl) btnEl.classList.add('border-red-300', 'bg-red-50', 'text-red-700');
 
         clearTimeout(resetConfirmTimer);
         resetConfirmTimer = setTimeout(() => {
           resetConfirmPending = false;
-          labelEl.textContent = 'Reset Data Demo';
-          btnEl.classList.remove('border-red-300', 'bg-red-50', 'text-red-700');
+          if (labelEl) labelEl.textContent = 'Isi / Reset 8 Data Demo';
+          if (btnEl) btnEl.classList.remove('border-red-300', 'bg-red-50', 'text-red-700');
         }, 3500);
         return;
       }
 
       clearTimeout(resetConfirmTimer);
       resetConfirmPending = false;
-      labelEl.textContent = 'Reset Data Demo';
-      btnEl.classList.remove('border-red-300', 'bg-red-50', 'text-red-700');
+      if (labelEl) labelEl.textContent = 'Memproses...';
+      if (btnEl) btnEl.classList.remove('border-red-300', 'bg-red-50', 'text-red-700');
 
+      if (supabaseClient) {
+        try {
+          // Clear existing rows if delete policy allows, then insert fresh 8 demo items
+          await supabaseClient
+            .from('items')
+            .delete()
+            .neq('id', '00000000-0000-0000-0000-000000000000');
+
+          const demoRows = INITIAL_DEMO_ITEMS.map(mapItemToDbInsert);
+          const { error: insertError } = await supabaseClient
+            .from('items')
+            .insert(demoRows);
+
+          if (insertError) throw insertError;
+
+          await fetchItemsFromSupabase(true);
+          resetFilters();
+          showToast('8 data demo ITB berhasil diisi ke database Supabase!');
+        } catch (err) {
+          console.error('Supabase seed demo error:', err);
+          showToast('Gagal mengisi data demo ke Supabase. Cek policy tabel items.', 'error');
+        } finally {
+          if (labelEl) labelEl.textContent = 'Isi / Reset 8 Data Demo';
+        }
+        return;
+      }
+
+      // Local fallback mode
+      if (labelEl) labelEl.textContent = 'Isi / Reset 8 Data Demo';
       items = JSON.parse(JSON.stringify(INITIAL_DEMO_ITEMS));
-      saveItems();
+      saveItemsToLocal();
       resetFilters();
       showToast('Data demo GanesaThrift berhasil dikembalikan ke kondisi awal.');
     }
@@ -1870,8 +2392,7 @@
     // 11. INITIALIZE APP
     // -----------------------------------------------------------------------
     window.addEventListener('DOMContentLoaded', () => {
-      loadItems();
-      refreshAll();
+      initAppData();
     });
   </script>
 </body>
