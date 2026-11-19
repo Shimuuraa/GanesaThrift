@@ -1,0 +1,1878 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GanesaThrift — Pasar Barang Bekas & Hibah Mahasiswa ITB</title>
+  
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            canvas: '#FAFAFA',
+          },
+          boxShadow: {
+            'vercel': '0 1px 2px 0 rgba(0, 0, 0, 0.04)',
+            'vercel-hover': '0 8px 24px -4px rgba(0, 0, 0, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04)',
+            'modal': '0 24px 48px -12px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.06)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      background-color: #FAFAFA;
+      color: #09090B;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Vercel-style subtle dot matrix background for hero */
+    .hero-dot-pattern {
+      background-image: radial-gradient(#D4D4D8 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+
+    .hero-radial-mask {
+      mask-image: radial-gradient(ellipse 85% 75% at 50% 35%, #000 55%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse 85% 75% at 50% 35%, #000 55%, transparent 100%);
+    }
+
+    /* Glassmorphic sticky header */
+    .glass-header {
+      background: rgba(250, 250, 250, 0.82);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    /* Smooth modal animation */
+    @keyframes modalScaleIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.985);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .animate-modal-in {
+      animation: modalScaleIn 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes shakeError {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-5px); }
+      40%, 80% { transform: translateX(5px); }
+    }
+
+    .animate-shake {
+      animation: shakeError 0.32s ease-in-out;
+    }
+
+    /* Hide scrollbar for horizontal pill bar on mobile */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-zinc-900 selection:text-white">
+
+  <!-- ===================================================================== -->
+  <!-- STICKY GLASSMORPHIC HEADER / NAVBAR                                   -->
+  <!-- ===================================================================== -->
+  <header class="sticky top-0 z-40 w-full glass-header border-b border-zinc-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
+      <!-- Left: Minimalist Geometric Ganesha/Triangle Emblem + Wordmark -->
+      <button type="button" onclick="resetFilters()" class="flex items-center gap-2.5 text-left group focus:outline-none">
+        <div class="w-8 h-8 rounded-lg bg-zinc-950 text-white flex items-center justify-center shadow-sm group-hover:bg-zinc-800 transition-colors">
+          <!-- Minimalist Geometric Triangle / Arch Emblem -->
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 3L21 19H3L12 3Z" fill="currentColor" />
+            <path d="M12 9.5L16 16.5H8L12 9.5Z" fill="#09090B" />
+          </svg>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-lg tracking-tight text-zinc-950">GanesaThrift</span>
+          <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-mono font-medium bg-zinc-100 text-zinc-600 border border-zinc-200">
+            ITB Campus Marketplace
+          </span>
+        </div>
+      </button>
+
+      <!-- Right: Primary CTA Button -->
+      <div class="flex items-center gap-2.5">
+        <button
+          type="button"
+          onclick="openUploadModal()"
+          class="inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2 rounded-lg text-sm font-medium bg-zinc-950 text-white hover:bg-zinc-800 active:scale-[0.99] transition-all shadow-sm cursor-pointer"
+        >
+          <i data-lucide="plus" class="w-4 h-4 stroke-[2.25]"></i>
+          <span>Jual / Hibahkan Barang</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================================================================== -->
+  <!-- COMPACT VERCEL-STYLE HERO BANNER                                      -->
+  <!-- ===================================================================== -->
+  <section class="relative overflow-hidden border-b border-zinc-200 bg-white">
+    <div class="absolute inset-0 hero-dot-pattern hero-radial-mask opacity-75 pointer-events-none"></div>
+    
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-9 sm:py-12">
+      <div class="max-w-3xl">
+        <!-- Top Subtle Badge -->
+        <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-medium bg-zinc-100/90 text-zinc-700 border border-zinc-200 mb-4">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          <span>Ganesha &bull; Jatinangor &bull; Cisitu &bull; Dago</span>
+        </div>
+
+        <!-- Hero Headline -->
+        <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-zinc-950 leading-[1.15]">
+          Pasar Barang Bekas &amp; Hibah Mahasiswa ITB
+        </h1>
+
+        <!-- Hero Subtitle -->
+        <p class="mt-3 text-sm sm:text-base text-zinc-600 leading-relaxed max-w-2xl">
+          Platform titip jual dan hibah cepat antar mahasiswa sekitar Kampus Ganesha, Jatinangor, Dago, &amp; Cisitu. Tanpa login—langsung upload, booking, atau chat WhatsApp.
+        </p>
+
+        <!-- Live Compact Metrics Pills -->
+        <div class="mt-6 flex flex-wrap items-center gap-2.5 sm:gap-3">
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-50 border border-zinc-200 text-xs">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span class="text-zinc-500">Barang Aktif:</span>
+            <span id="metric-active" class="font-mono font-semibold text-zinc-950">0</span>
+          </div>
+
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-50/70 border border-emerald-200/80 text-xs">
+            <i data-lucide="gift" class="w-3.5 h-3.5 text-emerald-600"></i>
+            <span class="text-emerald-800">Barang Gratis (Hibah):</span>
+            <span id="metric-free" class="font-mono font-semibold text-emerald-700">0</span>
+          </div>
+
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-50 border border-zinc-200 text-xs">
+            <i data-lucide="badge-check" class="w-3.5 h-3.5 text-emerald-600"></i>
+            <span class="text-zinc-500">Penjual Mahasiswa ITB:</span>
+            <span id="metric-itb" class="font-mono font-semibold text-zinc-950">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- MAIN CONTENT: SEARCH, QUICK FILTERS & CATALOG GRID                    -->
+  <!-- ===================================================================== -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+    
+    <!-- Search & Quick Filter Bar -->
+    <div class="flex flex-col gap-4 mb-6">
+      <!-- Top Row: Search Input + Status Filter -->
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <!-- Search Input -->
+        <div class="relative flex-1 max-w-xl">
+          <i data-lucide="search" class="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+          <input
+            id="search-input"
+            type="text"
+            placeholder="Cari kalkulus, monitor, meja kos, Cisitu, Jatinangor..."
+            oninput="handleSearchInput(this.value)"
+            class="w-full pl-10 pr-9 py-2.5 text-sm bg-white border border-zinc-200 rounded-lg text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-zinc-950 focus:ring-1 focus:ring-zinc-950 transition-all shadow-vercel"
+          />
+          <button
+            id="clear-search-btn"
+            type="button"
+            onclick="clearSearch()"
+            class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-zinc-400 hover:text-zinc-700 rounded"
+            title="Hapus pencarian"
+          >
+            <i data-lucide="x" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+
+        <!-- Status Filter Tabs / Dropdown -->
+        <div class="flex items-center gap-2 self-start sm:self-auto">
+          <label for="status-filter" class="text-xs font-medium text-zinc-500 hidden md:inline">Status:</label>
+          <div class="relative">
+            <select
+              id="status-filter"
+              onchange="handleStatusFilter(this.value)"
+              class="appearance-none bg-white border border-zinc-200 rounded-lg pl-3 pr-8 py-2 text-xs sm:text-sm font-medium text-zinc-800 hover:border-zinc-300 focus:outline-none focus:border-zinc-950 transition-colors shadow-vercel cursor-pointer"
+            >
+              <option value="active">Aktif (Tersedia &amp; Dalam Proses)</option>
+              <option value="all">Semua Termasuk Tersalurkan</option>
+            </select>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-zinc-500 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Row: Quick Category Pills -->
+      <div class="flex items-center justify-between gap-4 border-b border-zinc-200 pb-3">
+        <div id="category-pills" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+          <!-- Rendered dynamically by JS -->
+        </div>
+
+        <div class="hidden sm:block text-xs font-mono text-zinc-500 shrink-0">
+          Menampilkan <span id="visible-count" class="font-semibold text-zinc-900">0</span> barang
+        </div>
+      </div>
+    </div>
+
+    <!-- Responsive Product Grid -->
+    <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+      <!-- Cards rendered dynamically by JS -->
+    </div>
+
+    <!-- Empty State (Hidden by default) -->
+    <div id="empty-state" class="hidden flex-col items-center justify-center text-center py-16 px-4 bg-white border border-zinc-200 rounded-xl shadow-vercel">
+      <div class="w-12 h-12 rounded-full bg-zinc-100 border border-zinc-200 flex items-center justify-center text-zinc-500 mb-3">
+        <i data-lucide="package-search" class="w-6 h-6"></i>
+      </div>
+      <h3 class="text-base font-semibold text-zinc-950">Barang tidak ditemukan</h3>
+      <p class="text-sm text-zinc-500 mt-1 max-w-md">
+        Coba ubah kata kunci pencarian, pilih kategori lain, atau tampilkan barang yang sudah tersalurkan.
+      </p>
+      <button
+        type="button"
+        onclick="resetFilters()"
+        class="mt-4 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium bg-zinc-950 text-white hover:bg-zinc-800 transition-colors"
+      >
+        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+        <span>Reset Filter Katalog</span>
+      </button>
+    </div>
+
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- MINIMAL VERCEL-STYLE FOOTER                                           -->
+  <!-- ===================================================================== -->
+  <footer class="border-t border-zinc-200 bg-white mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
+      <div class="flex items-center gap-2">
+        <span class="font-semibold text-zinc-900">GanesaThrift</span>
+        <span>&bull;</span>
+        <span>Sirkulasi Barang Bekas &amp; Hibah Komunitas ITB</span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <span class="hidden md:inline font-mono text-[11px] text-zinc-400">PIN Demo Default: 1234</span>
+        <button
+          id="reset-demo-btn"
+          type="button"
+          onclick="handleResetDemoClick()"
+          class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 text-zinc-700 font-medium transition-colors cursor-pointer"
+        >
+          <i data-lucide="refresh-cw" class="w-3 h-3"></i>
+          <span id="reset-demo-label">Reset Data Demo</span>
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 1: DETAIL BARANG, BOOKING & AKSI PENJUAL (PIN)                  -->
+  <!-- ===================================================================== -->
+  <div
+    id="detail-modal"
+    class="hidden fixed inset-0 z-50 overflow-y-auto bg-zinc-950/50 backdrop-blur-[2px] p-3 sm:p-6 flex items-start sm:items-center justify-center"
+    onclick="handleBackdropClick(event, 'detail-modal')"
+  >
+    <div
+      id="detail-modal-card"
+      class="relative w-full max-w-2xl bg-white border border-zinc-200 rounded-2xl shadow-modal overflow-hidden animate-modal-in my-auto"
+      onclick="event.stopPropagation()"
+    >
+      <!-- Top Bar -->
+      <div class="flex items-center justify-between px-5 py-3.5 border-b border-zinc-200 bg-zinc-50/70">
+        <div class="flex items-center gap-2">
+          <span id="detail-category-badge" class="px-2 py-0.5 rounded text-[11px] font-mono font-medium bg-zinc-200/70 text-zinc-700">
+            Kategori
+          </span>
+          <span id="detail-status-pill"></span>
+        </div>
+        <button
+          type="button"
+          onclick="closeDetailModal()"
+          class="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-950 hover:bg-zinc-200/60 transition-colors cursor-pointer"
+          aria-label="Tutup modal"
+        >
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Modal Content -->
+      <div id="detail-modal-body" class="max-h-[82vh] overflow-y-auto">
+        <!-- Populated dynamically when an item is selected -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 2: FORM UPLOAD BARANG (+ JUAL / HIBAHKAN BARANG)                -->
+  <!-- ===================================================================== -->
+  <div
+    id="upload-modal"
+    class="hidden fixed inset-0 z-50 overflow-y-auto bg-zinc-950/50 backdrop-blur-[2px] p-3 sm:p-6 flex items-start sm:items-center justify-center"
+    onclick="handleBackdropClick(event, 'upload-modal')"
+  >
+    <div
+      class="relative w-full max-w-xl bg-white border border-zinc-200 rounded-2xl shadow-modal overflow-hidden animate-modal-in my-auto"
+      onclick="event.stopPropagation()"
+    >
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between px-5 py-4 border-b border-zinc-200 bg-zinc-50/70">
+        <div>
+          <h2 class="text-base font-bold text-zinc-950">Jual / Hibahkan Barang</h2>
+          <p class="text-xs text-zinc-500 mt-0.5">Tanpa login—langsung tayang di katalog GanesaThrift.</p>
+        </div>
+        <button
+          type="button"
+          onclick="closeUploadModal()"
+          class="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-950 hover:bg-zinc-200/60 transition-colors cursor-pointer"
+          aria-label="Tutup form upload"
+        >
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Upload Form -->
+      <form id="upload-form" onsubmit="handleUploadSubmit(event)" class="p-5 max-h-[82vh] overflow-y-auto space-y-4">
+        
+        <!-- Photo Upload + Preset Quick Selector -->
+        <div>
+          <label class="block text-xs font-semibold text-zinc-800 mb-1.5">Foto Barang <span class="text-red-500">*</span></label>
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+            <!-- Preview Box -->
+            <div class="sm:col-span-5 aspect-[4/3] rounded-xl border border-zinc-200 bg-zinc-50 overflow-hidden relative flex items-center justify-center">
+              <img id="upload-photo-preview" src="" alt="Preview barang" class="w-full h-full object-cover hidden" />
+              <div id="upload-photo-placeholder" class="text-center p-3">
+                <i data-lucide="image-plus" class="w-6 h-6 text-zinc-400 mx-auto mb-1"></i>
+                <span class="text-[11px] text-zinc-500 block">Belum ada foto</span>
+              </div>
+            </div>
+
+            <!-- File Input + Quick Sample Buttons -->
+            <div class="sm:col-span-7 space-y-2">
+              <label class="flex items-center justify-center gap-2 w-full px-3 py-2 rounded-lg border border-dashed border-zinc-300 bg-zinc-50/70 hover:bg-zinc-100 text-xs font-medium text-zinc-700 cursor-pointer transition-colors">
+                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                <span>Pilih Foto dari HP / Laptop</span>
+                <input id="upload-photo-input" type="file" accept="image/*" onchange="handlePhotoFileChange(event)" class="hidden" />
+              </label>
+
+              <div>
+                <span class="text-[11px] text-zinc-400 block mb-1">Atau gunakan foto sampel cepat:</span>
+                <div class="flex flex-wrap gap-1.5">
+                  <button type="button" onclick="selectPresetPhoto('elektronik')" class="px-2 py-1 rounded border border-zinc-200 bg-white hover:bg-zinc-100 text-[11px] font-medium text-zinc-700">Gadget</button>
+                  <button type="button" onclick="selectPresetPhoto('buku')" class="px-2 py-1 rounded border border-zinc-200 bg-white hover:bg-zinc-100 text-[11px] font-medium text-zinc-700">Buku</button>
+                  <button type="button" onclick="selectPresetPhoto('perabot')" class="px-2 py-1 rounded border border-zinc-200 bg-white hover:bg-zinc-100 text-[11px] font-medium text-zinc-700">Perabot</button>
+                  <button type="button" onclick="selectPresetPhoto('lampu')" class="px-2 py-1 rounded border border-zinc-200 bg-white hover:bg-zinc-100 text-[11px] font-medium text-zinc-700">Lampu</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Judul Barang -->
+        <div>
+          <label for="upload-title" class="block text-xs font-semibold text-zinc-800 mb-1">Judul Barang <span class="text-red-500">*</span></label>
+          <input
+            id="upload-title"
+            type="text"
+            required
+            placeholder="Contoh: Kalkulus Purcell Edisi 9 / Kipas Angin Kos"
+            class="w-full px-3 py-2 text-sm bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-950 focus:ring-1 focus:ring-zinc-950"
+          />
+        </div>
+
+        <!-- Kategori & Skala Kondisi -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label for="upload-category" class="block text-xs font-semibold text-zinc-800 mb-1">Kategori <span class="text-red-500">*</span></label>
+            <select
+              id="upload-category"
+              class="w-full px-3 py-2 text-sm bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-950 focus:ring-1 focus:ring-zinc-950"
+            >
+              <option value="Elektronik">Elektronik</option>
+              <option value="Perabot Kos">Perabot Kos</option>
+              <option value="Buku">Buku</option>
+            </select>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-xs font-semibold text-zinc-800">Kondisi (1–5) <span class="text-red-500">*</span></label>
+              <span id="condition-desc-label" class="text-[11px] font-mono text-zinc-500">4/5 Mulus</span>
+            </div>
+            <div id="condition-selector" class="grid grid-cols-5 gap-1.5">
+              <!-- Rendered by JS (1 to 5) -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Checkbox Gratis + Harga -->
+        <div class="p-3 rounded-xl bg-zinc-50 border border-zinc-200 space-y-2.5">
+          <label class="inline-flex items-center gap-2.5 cursor-pointer select-none">
+            <input
+              id="upload-is-free"
+              type="checkbox"
+              onchange="toggleFreeCheckbox(this.checked)"
+              class="w-4 h-4 rounded border-zinc-300 text-zinc-950 focus:ring-zinc-950 accent-zinc-950"
+            />
+            <span class="text-xs font-semibold text-zinc-900">Berikan Secara Gratis (Hibah Mahasiswa)</span>
+          </label>
+
+          <div id="price-input-wrapper">
+            <label for="upload-price" class="block text-[11px] font-medium text-zinc-600 mb-1">Harga Jual (Rp)</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-mono text-zinc-500">Rp</span>
+              <input
+                id="upload-price"
+                type="number"
+                min="0"
+                step="1000"
+                placeholder="50000"
+                class="w-full pl-9 pr-3 py-2 text-sm font-mono bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-950 focus:ring-1 focus:ring-zinc-950 disabled:bg-zinc-100 disabled:text-zinc-400"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Lokasi Kos / Kampus -->
+        <div>
+          <label for="upload-location" class="block text-xs font-semibold text-zinc-800 mb-1">Lokasi Kos / Kampus <span class="text-red-500">*</span></label>
+          <input
+            id="upload-location"
+            type="text"
+            required
+            placeholder="Contoh: Cisitu Lama, Tubagus Ismail, Jatinangor..."
+            class="w-full px-3 py-2 text-sm bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-950 focus:ring-1 focus:ring-zinc-950"
+          />
+          <div class="flex flex-wrap gap-1.5 mt-1.5">
+            <button type="button" onclick="setUploadLocation('Cisitu Lama')" class="px-2 py-0.5 rounded text-[11px] bg-zinc-100 hover:bg-zinc-200 text-zinc-600">Cisitu Lama</button>
+            <button type="button" onclick="setUploadLocation('Tubagus Ismail')" class="px-2 py-0.5 rounded text-[11px] bg-zinc-100 hover:bg-zinc-200 text-zinc-600">Tubagus Ismail</button>
+            <button type="button" onclick="setUploadLocation('Dago Pojok')" class="px-2 py-0.5 rounded text-[11px] bg-zinc-100 hover:bg-zinc-200 text-zinc-600">Dago Pojok</button>
+            <button type="button" onclick="setUploadLocation('Jatinangor')" class="px-2 py-0.5 rounded text-[11px] bg-zinc-100 hover:bg-zinc-200 text-zinc-600">Jatinangor</button>
+            <button type="button" onclick="setUploadLocation('Plesiran')" class="px-2 py-0.5 rounded text-[11px] bg-zinc-100 hover:bg-zinc-200 text-zinc-600">Plesiran</button>
+          </div>
+        </div>
+
+        <!-- Deskripsi -->
+        <div>
+          <label for="upload-description" class="block text-xs font-semibold text-zinc-800 mb-1">Deskripsi &amp; Catatan COD <span class="text-red-500">*</span></label>
+          <textarea
+            id="upload-description"
+            rows="2"
+            required
+            placeholder="Jelaskan kondisi barang, kelengkapan, dan titik COD (misal: Gerbang Utama ITB / depan kos)..."
+            class="w-full px-3 py-2 text-sm bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-950 focus:ring-1 focus:ring-zinc-950"
+          ></textarea>
+        </div>
+
+        <!-- Divider: Identitas Penjual -->
+        <div class="pt-2 border-t border-zinc-200">
+          <div class="flex items-center justify-between mb-2.5">
+            <span class="text-xs font-bold uppercase tracking-wider text-zinc-500">Identitas Penjual (Tanpa Login)</span>
+            <span id="live-itb-preview" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-zinc-100 text-zinc-600 border border-zinc-200">
+              Umum
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="upload-seller-name" class="block text-xs font-semibold text-zinc-800 mb-1">Nama Penjual <span class="text-red-500">*</span></label>
+              <input
+                id="upload-seller-name"
+                type="text"
+                required
+                placeholder="Nama panggilan / lengkap"
+                class="w-full px-3 py-2 text-sm bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-950 focus:ring-1 focus:ring-zinc-950"
+              />
+            </div>
+
+            <div>
+              <label for="upload-seller-email" class="block text-xs font-semibold text-zinc-800 mb-1">Email ITB / Pribadi <span class="text-red-500">*</span></label>
+              <input
+                id="upload-seller-email"
+                type="email"
+                required
+                oninput="updateLiveItbBadge(this.value)"
+                placeholder="nim@mahasiswa.itb.ac.id"
+                class="w-full px-3 py-2 text-sm bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-950 focus:ring-1 focus:ring-zinc-950"
+              />
+            </div>
+
+            <div>
+              <label for="upload-seller-wa" class="block text-xs font-semibold text-zinc-800 mb-1">No. WhatsApp <span class="text-red-500">*</span></label>
+              <input
+                id="upload-seller-wa"
+                type="tel"
+                required
+                placeholder="6281234567890"
+                class="w-full px-3 py-2 text-sm font-mono bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-950 focus:ring-1 focus:ring-zinc-950"
+              />
+            </div>
+
+            <div>
+              <label for="upload-seller-pin" class="block text-xs font-semibold text-zinc-800 mb-1">PIN Penjual (4 Angka) <span class="text-red-500">*</span></label>
+              <input
+                id="upload-seller-pin"
+                type="text"
+                inputmode="numeric"
+                maxlength="4"
+                pattern="\d{4}"
+                required
+                placeholder="1234"
+                class="w-full px-3 py-2 text-sm font-mono tracking-widest bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-950 focus:ring-1 focus:ring-zinc-950"
+              />
+              <span class="text-[10px] text-zinc-400 block mt-0.5">Dipakai untuk menandai barang laku / batal booking.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Inline Form Error Alert -->
+        <div id="upload-error-box" class="hidden p-2.5 rounded-lg bg-red-50 border border-red-200 text-xs text-red-700 font-medium"></div>
+
+        <!-- Submit Footer -->
+        <div class="pt-3 border-t border-zinc-200 flex items-center justify-end gap-2.5">
+          <button
+            type="button"
+            onclick="closeUploadModal()"
+            class="px-4 py-2 rounded-lg text-xs sm:text-sm font-medium border border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 transition-colors cursor-pointer"
+          >
+            Batal
+          </button>
+          <button
+            type="submit"
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-medium bg-zinc-950 text-white hover:bg-zinc-800 transition-colors shadow-sm cursor-pointer"
+          >
+            <i data-lucide="check" class="w-4 h-4"></i>
+            <span>Tayangkan Barang</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- TOAST NOTIFICATION                                                    -->
+  <!-- ===================================================================== -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-[60] flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- ===================================================================== -->
+  <!-- APPLICATION LOGIC                                                     -->
+  <!-- ===================================================================== -->
+  <script>
+    // -----------------------------------------------------------------------
+    // 1. STUDIO-CRAFTED EMBEDDED SVG ARTWORKS (100% RELIABLE OFFLINE/ONLINE)
+    // -----------------------------------------------------------------------
+    function createArtworkSvg(bgGradientStart, bgGradientEnd, accentColor, labelTop, iconSvgPath, labelBottom) {
+      const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480">
+          <defs>
+            <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="${bgGradientStart}"/>
+              <stop offset="100%" stop-color="${bgGradientEnd}"/>
+            </linearGradient>
+            <pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse">
+              <circle cx="2" cy="2" r="1.2" fill="#09090B" fill-opacity="0.06"/>
+            </pattern>
+          </defs>
+          <rect width="640" height="480" fill="url(#bg)"/>
+          <rect width="640" height="480" fill="url(#dots)"/>
+          <rect x="195" y="105" width="250" height="215" rx="28" fill="#FFFFFF" stroke="#E4E4E7" stroke-width="2"/>
+          <circle cx="320" cy="212" r="64" fill="${accentColor}" fill-opacity="0.12"/>
+          <g transform="translate(284, 176) scale(3)" stroke="${accentColor}" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            ${iconSvgPath}
+          </g>
+          <text x="320" y="366" text-anchor="middle" font-family="Inter, sans-serif" font-weight="700" font-size="18" fill="#18181B">${labelTop}</text>
+          <text x="320" y="392" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="500" font-size="13" fill="#71717A">${labelBottom}</text>
+        </svg>
+      `.trim();
+      return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    }
+
+    const ARTWORKS = {
+      kalkulus: createArtworkSvg(
+        '#F4F4F5', '#E4E4E7', '#059669',
+        'Kalkulus Purcell Jilid 1 & 2',
+        '<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><path d="M8 7h6"/><path d="M8 11h8"/>',
+        'EDISI 9 • TPB ITB'
+      ),
+      monitor: createArtworkSvg(
+        '#F8FAFC', '#E2E8F0', '#18181B',
+        'Monitor LG 24MK600 IPS',
+        '<rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/>',
+        '24 INCH • 75HZ • FULL HD'
+      ),
+      meja: createArtworkSvg(
+        '#FAF5FF', '#F3E8FF', '#7C3AED',
+        'Meja Belajar Lipat Kayu',
+        '<path d="M3 7h18"/><path d="M5 7v12"/><path d="M19 7v12"/><path d="M5 12h14"/>',
+        'MINIMALIS KOS • 80x40 CM'
+      ),
+      dispenser: createArtworkSvg(
+        '#EFF6FF', '#DBEAFE', '#2563EB',
+        'Dispenser Galon Bawah',
+        '<rect x="6" y="2" width="12" height="20" rx="2"/><line x1="6" y1="10" x2="18" y2="10"/><circle cx="10" cy="6" r="1"/><circle cx="14" cy="6" r="1"/>',
+        'COSMOS CWD-7601 • NORMAL/PANAS'
+      ),
+      arduino: createArtworkSvg(
+        '#ECFDF5', '#D1FAE5', '#059669',
+        'Arduino Uno R3 Starter Kit',
+        '<rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3"/><path d="M15 1v3"/><path d="M9 20v3"/><path d="M15 20v3"/><path d="M20 9h3"/><path d="M20 14h3"/><path d="M1 9h3"/><path d="M1 14h3"/>',
+        'PRAKTIKUM ELKA • LENGKAP'
+      ),
+      rak: createArtworkSvg(
+        '#FFFBEB', '#FEF3C7', '#D97706',
+        'Rak Buku Susun 4 Tingkat',
+        '<path d="M4 3h16v18H4z"/><path d="M4 8h16"/><path d="M4 13h16"/><path d="M4 18h16"/>',
+        'PORTABLE • KOKOH & RINGAN'
+      ),
+      diktat: createArtworkSvg(
+        '#F0FDF4', '#DCFCE7', '#16A34A',
+        'Diktat Fisika & Kimia Dasar',
+        '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>',
+        'MODUL PRAKTIKUM + CATATAN'
+      ),
+      lampu: createArtworkSvg(
+        '#F4F4F5', '#E4E4E7', '#09090B',
+        'Xiaomi Mi LED Desk Lamp',
+        '<path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2v1"/><path d="M12 7a5 5 0 0 1 5 5c0 2-1.5 3.5-2.5 4.5h-5C8.5 15.5 7 14 7 12a5 5 0 0 1 5-5z"/>',
+        'DIMMABLE • WARM & COOL'
+      )
+    };
+
+    const PRESET_UPLOAD_ARTWORKS = {
+      elektronik: ARTWORKS.monitor,
+      buku: ARTWORKS.kalkulus,
+      perabot: ARTWORKS.meja,
+      lampu: ARTWORKS.lampu
+    };
+
+    // -----------------------------------------------------------------------
+    // 2. PRE-POPULATED REALISTIC ITB DEMO DATA
+    // -----------------------------------------------------------------------
+    const STORAGE_KEY = 'ganesathrift_items_v1';
+
+    const INITIAL_DEMO_ITEMS = [
+      {
+        id: 'gt-101',
+        title: 'Buku Kalkulus Purcell Jilid 1 & 2 (Edisi 9)',
+        description: 'Hibah buat adik tingkat TPB! Buku cetak bahasa Indonesia lengkap Jilid 1 & 2. Ada sedikit stabilo rapi di bab turunan dan integral, halaman lengkap tidak ada yang robek. COD sekitar Gerbang Belakang ITB / Cisitu Lama.',
+        category: 'Buku',
+        condition: 4,
+        price: 0,
+        isFree: true,
+        location: 'Cisitu Lama',
+        sellerName: 'Raka Pratama (FTMD \'23)',
+        sellerEmail: 'raka.pratama@mahasiswa.itb.ac.id',
+        sellerWa: '6281234567801',
+        pin: '1234',
+        status: 'Tersedia',
+        buyerName: '',
+        buyerWa: '',
+        imageUrl: ARTWORKS.kalkulus,
+        createdAt: Date.now() - 1000 * 60 * 35
+      },
+      {
+        id: 'gt-102',
+        title: 'Monitor LG 24MK600 IPS 75Hz Full HD',
+        description: 'Jual cepat karena mau pindah kos pasca wisuda. Layar IPS mulus no dead pixel, bezel tipis, lengkap dengan adaptor original dan kabel HDMI. Dus masih ada. Bisa tes nyala langsung di kos Tubagus Ismail.',
+        category: 'Elektronik',
+        condition: 5,
+        price: 1150000,
+        isFree: false,
+        location: 'Tubagus Ismail',
+        sellerName: 'Nadia Kusuma (STEI \'22)',
+        sellerEmail: 'nadia.kusuma@mahasiswa.itb.ac.id',
+        sellerWa: '6281234567802',
+        pin: '1234',
+        status: 'Tersedia',
+        buyerName: '',
+        buyerWa: '',
+        imageUrl: ARTWORKS.monitor,
+        createdAt: Date.now() - 1000 * 60 * 90
+      },
+      {
+        id: 'gt-103',
+        title: 'Meja Belajar Lipat Kayu Minimalis Kos',
+        description: 'Ukuran 80x40 cm, tinggi pas buat lesehan atau pakai kursi pendek. Permukaan HPL tahan air, kaki besi kokoh dan bisa dilipat rata kalau tidak dipakai. COD area Plesiran / Tamansari.',
+        category: 'Perabot Kos',
+        condition: 4,
+        price: 85000,
+        isFree: false,
+        location: 'Plesiran',
+        sellerName: 'Dimas Saputra (FTSL \'24)',
+        sellerEmail: 'dimas.saputra@mahasiswa.itb.ac.id',
+        sellerWa: '6281234567803',
+        pin: '1234',
+        status: 'Tersedia',
+        buyerName: '',
+        buyerWa: '',
+        imageUrl: ARTWORKS.meja,
+        createdAt: Date.now() - 1000 * 60 * 150
+      },
+      {
+        id: 'gt-104',
+        title: 'Dispenser Galon Bawah Cosmos CWD-7601',
+        description: 'Praktis tanpa angkat galon berat. Fungsi air panas dan normal lancar jaya, pompa bawah masih kencang. Dijual karena selesai semester di Kampus Jatinangor.',
+        category: 'Perabot Kos',
+        condition: 4,
+        price: 450000,
+        isFree: false,
+        location: 'Jatinangor',
+        sellerName: 'Aulia Rahma (SITH \'23)',
+        sellerEmail: 'aulia.rahma@mahasiswa.itb.ac.id',
+        sellerWa: '6281234567804',
+        pin: '1234',
+        status: 'Dalam Proses',
+        buyerName: 'Fajar Nugroho (SF \'25)',
+        buyerWa: '6281298765432',
+        imageUrl: ARTWORKS.dispenser,
+        createdAt: Date.now() - 1000 * 60 * 240
+      },
+      {
+        id: 'gt-105',
+        title: 'Arduino Uno R3 Starter Kit Praktikum',
+        description: 'Lengkap: Board Arduino Uno R3 DIP + kabel USB, breadboard 830 titik, kabel jumper male-male/female, sensor ultrasonik HC-SR04, servo SG90, resistor, dan box komponen.',
+        category: 'Elektronik',
+        condition: 5,
+        price: 165000,
+        isFree: false,
+        location: 'Dago Pojok',
+        sellerName: 'Kevin Wijaya (FTI \'23)',
+        sellerEmail: 'kevin.wijaya@mahasiswa.itb.ac.id',
+        sellerWa: '6281234567805',
+        pin: '1234',
+        status: 'Tersedia',
+        buyerName: '',
+        buyerWa: '',
+        imageUrl: ARTWORKS.arduino,
+        createdAt: Date.now() - 1000 * 60 * 320
+      },
+      {
+        id: 'gt-106',
+        title: 'Rak Buku Susun 4 Tingkat Portable',
+        description: 'Rak penyimpanan serbaguna untuk buku kuliah atau peralatan kos. Rangka pipa besi ringan + ambalan kain non-woven tebal. Mudah dibongkar pasang saat pindahan.',
+        category: 'Perabot Kos',
+        condition: 3,
+        price: 60000,
+        isFree: false,
+        location: 'Sangkuriang',
+        sellerName: 'Ibu Siti (Pengelola Kos)',
+        sellerEmail: 'siti.kos.sangkuriang@gmail.com',
+        sellerWa: '6281234567806',
+        pin: '1234',
+        status: 'Tersedia',
+        buyerName: '',
+        buyerWa: '',
+        imageUrl: ARTWORKS.rak,
+        createdAt: Date.now() - 1000 * 60 * 410
+      },
+      {
+        id: 'gt-107',
+        title: 'Diktat Fisika Dasar IA & Kimia Dasar + Modul',
+        description: 'Gratis buat mahasiswa TPB yang butuh referensi tambahan dan kumpulan soal kuis/UTS tahun lalu. Bonus binder catatan kuliah rapi.',
+        category: 'Buku',
+        condition: 4,
+        price: 0,
+        isFree: true,
+        location: 'Cisitu Lama',
+        sellerName: 'Zahra Putri (FMIPA \'24)',
+        sellerEmail: 'zahra.putri@mahasiswa.itb.ac.id',
+        sellerWa: '6281234567807',
+        pin: '1234',
+        status: 'Tersedia',
+        buyerName: '',
+        buyerWa: '',
+        imageUrl: ARTWORKS.diktat,
+        createdAt: Date.now() - 1000 * 60 * 500
+      },
+      {
+        id: 'gt-108',
+        title: 'Lampu Meja Belajar LED Xiaomi Mi Desk Lamp',
+        description: 'Lampu meja minimalis dengan pengaturan tingkat kecerahan dan temperatur warna (warm ke cool white), tidak bikin mata cepat lelah saat nugas malam.',
+        category: 'Elektronik',
+        condition: 5,
+        price: 190000,
+        isFree: false,
+        location: 'Tubagus Ismail',
+        sellerName: 'Hendra Gunawan (SAPPK \'22)',
+        sellerEmail: 'hendra.g@itb.ac.id',
+        sellerWa: '6281234567808',
+        pin: '1234',
+        status: 'Tersedia',
+        buyerName: '',
+        buyerWa: '',
+        imageUrl: ARTWORKS.lampu,
+        createdAt: Date.now() - 1000 * 60 * 620
+      }
+    ];
+
+    // -----------------------------------------------------------------------
+    // 3. STATE MANAGEMENT
+    // -----------------------------------------------------------------------
+    let items = [];
+    let activeCategory = 'Semua';
+    let activeStatusFilter = 'active'; // 'active' | 'all'
+    let searchQuery = '';
+    let selectedItemId = null;
+    let isBookingFormOpen = false;
+    let uploadCondition = 4;
+    let uploadPhotoDataUrl = '';
+    let resetConfirmPending = false;
+    let resetConfirmTimer = null;
+
+    const CATEGORIES = ['Semua', 'Gratis', 'Elektronik', 'Perabot Kos', 'Buku'];
+
+    const CONDITION_LABELS = {
+      1: '1/5 Perlu Perbaikan',
+      2: '2/5 Bekas Pakai',
+      3: '3/5 Layak Pakai',
+      4: '4/5 Mulus',
+      5: '5/5 Seperti Baru'
+    };
+
+    // -----------------------------------------------------------------------
+    // 4. STORAGE & HELPERS
+    // -----------------------------------------------------------------------
+    function loadItems() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            items = parsed;
+            return;
+          }
+        }
+      } catch (e) {
+        console.warn('Gagal membaca localStorage, menggunakan data demo:', e);
+      }
+      items = JSON.parse(JSON.stringify(INITIAL_DEMO_ITEMS));
+      saveItems();
+    }
+
+    function saveItems() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      } catch (e) {
+        console.warn('Gagal menyimpan ke localStorage:', e);
+      }
+    }
+
+    function isItbEmail(email) {
+      if (!email || typeof email !== 'string') return false;
+      const clean = email.trim().toLowerCase();
+      return clean.endsWith('@mahasiswa.itb.ac.id') || clean.endsWith('@itb.ac.id');
+    }
+
+    function formatRupiah(amount) {
+      return 'Rp ' + Number(amount || 0).toLocaleString('id-ID');
+    }
+
+    function normalizeWhatsApp(phone) {
+      let digits = String(phone || '').replace(/\D/g, '');
+      if (digits.startsWith('0')) {
+        digits = '62' + digits.slice(1);
+      } else if (digits.startsWith('8')) {
+        digits = '62' + digits;
+      }
+      return digits;
+    }
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      const isError = type === 'error';
+      toast.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-xl border text-xs sm:text-sm font-medium shadow-lg transition-all duration-200 ${
+        isError
+          ? 'bg-red-950 text-white border-red-800'
+          : 'bg-zinc-950 text-white border-zinc-800'
+      }`;
+      toast.innerHTML = `
+        <span class="w-2 h-2 rounded-full ${isError ? 'bg-red-400' : 'bg-emerald-400'} shrink-0"></span>
+        <span>${escapeHtml(message)}</span>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(6px)';
+        setTimeout(() => toast.remove(), 220);
+      }, 3200);
+    }
+
+    // -----------------------------------------------------------------------
+    // 5. RENDERING: METRICS, FILTERS & CATALOG GRID
+    // -----------------------------------------------------------------------
+    function renderMetrics() {
+      const activeItems = items.filter(i => i.status === 'Tersedia' || i.status === 'Dalam Proses');
+      const freeItems = activeItems.filter(i => i.isFree || Number(i.price) === 0);
+      const itbItems = activeItems.filter(i => isItbEmail(i.sellerEmail));
+
+      document.getElementById('metric-active').textContent = activeItems.length;
+      document.getElementById('metric-free').textContent = freeItems.length;
+      document.getElementById('metric-itb').textContent = itbItems.length;
+    }
+
+    function renderCategoryPills() {
+      const container = document.getElementById('category-pills');
+      const statusFiltered = items.filter(item =>
+        activeStatusFilter === 'all' ? true : item.status !== 'Sudah Tersalurkan'
+      );
+
+      container.innerHTML = CATEGORIES.map(cat => {
+        const isActive = activeCategory === cat;
+        let count = 0;
+        if (cat === 'Semua') {
+          count = statusFiltered.length;
+        } else if (cat === 'Gratis') {
+          count = statusFiltered.filter(i => i.isFree || Number(i.price) === 0).length;
+        } else {
+          count = statusFiltered.filter(i => i.category === cat).length;
+        }
+
+        return `
+          <button
+            type="button"
+            onclick="selectCategory('${cat}')"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all cursor-pointer border ${
+              isActive
+                ? 'bg-zinc-950 text-white border-zinc-950 shadow-sm'
+                : 'bg-white text-zinc-600 border-zinc-200 hover:border-zinc-300 hover:text-zinc-950'
+            }"
+          >
+            ${cat === 'Gratis' ? `<span class="w-1.5 h-1.5 rounded-full ${isActive ? 'bg-emerald-400' : 'bg-emerald-500'}"></span>` : ''}
+            <span>${cat}</span>
+            <span class="font-mono text-[10px] px-1.5 py-0.2 rounded-full ${
+              isActive ? 'bg-zinc-800 text-zinc-200' : 'bg-zinc-100 text-zinc-500'
+            }">${count}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function getStatusBadgeHtml(status) {
+      if (status === 'Tersedia') {
+        return `
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-white/95 backdrop-blur-sm text-zinc-900 border border-zinc-200/90 shadow-sm">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            <span>Tersedia</span>
+          </span>
+        `;
+      }
+      if (status === 'Dalam Proses') {
+        return `
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-amber-50/95 backdrop-blur-sm text-amber-800 border border-amber-200 shadow-sm">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+            <span>Dalam Proses</span>
+          </span>
+        `;
+      }
+      return `
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-zinc-100/95 backdrop-blur-sm text-zinc-600 border border-zinc-300 shadow-sm">
+          <span class="w-1.5 h-1.5 rounded-full bg-zinc-400"></span>
+          <span>Sudah Tersalurkan</span>
+        </span>
+      `;
+    }
+
+    function getSellerBadgeHtml(email) {
+      if (isItbEmail(email)) {
+        return `
+          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm">
+            <i data-lucide="badge-check" class="w-3 h-3 text-emerald-600 shrink-0"></i>
+            <span>Mahasiswa ITB</span>
+          </span>
+        `;
+      }
+      return `
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-zinc-100 text-zinc-600 border border-zinc-200 shadow-sm">
+          Umum
+        </span>
+      `;
+    }
+
+    function renderConditionBar(score) {
+      const val = Math.min(5, Math.max(1, Number(score) || 3));
+      let segments = '';
+      for (let i = 1; i <= 5; i++) {
+        const filled = i <= val;
+        segments += `<span class="h-1.5 w-3 rounded-xs ${filled ? 'bg-zinc-900' : 'bg-zinc-200'}"></span>`;
+      }
+      return `
+        <div class="flex items-center gap-1.5" title="Kondisi ${val} dari 5">
+          <div class="flex items-center gap-0.5">${segments}</div>
+          <span class="font-mono text-[11px] font-medium text-zinc-600">Kondisi ${val}/5</span>
+        </div>
+      `;
+    }
+
+    function renderCatalog() {
+      const grid = document.getElementById('product-grid');
+      const emptyState = document.getElementById('empty-state');
+      const visibleCountEl = document.getElementById('visible-count');
+
+      const filtered = items.filter(item => {
+        // Status filter
+        if (activeStatusFilter === 'active' && item.status === 'Sudah Tersalurkan') {
+          return false;
+        }
+        // Category filter
+        if (activeCategory === 'Gratis') {
+          if (!item.isFree && Number(item.price) !== 0) return false;
+        } else if (activeCategory !== 'Semua') {
+          if (item.category !== activeCategory) return false;
+        }
+        // Search query filter
+        if (searchQuery.trim() !== '') {
+          const q = searchQuery.trim().toLowerCase();
+          const matchTitle = item.title.toLowerCase().includes(q);
+          const matchDesc = item.description.toLowerCase().includes(q);
+          const matchLoc = item.location.toLowerCase().includes(q);
+          const matchSeller = item.sellerName.toLowerCase().includes(q);
+          if (!matchTitle && !matchDesc && !matchLoc && !matchSeller) return false;
+        }
+        return true;
+      });
+
+      visibleCountEl.textContent = filtered.length;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        grid.classList.add('hidden');
+        emptyState.classList.remove('hidden');
+        emptyState.classList.add('flex');
+        lucide.createIcons();
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      emptyState.classList.remove('flex');
+      grid.classList.remove('hidden');
+
+      grid.innerHTML = filtered.map(item => {
+        const isFree = item.isFree || Number(item.price) === 0;
+        const isCompleted = item.status === 'Sudah Tersalurkan';
+
+        return `
+          <article
+            onclick="openDetailModal('${item.id}', false)"
+            class="group bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-vercel hover:shadow-vercel-hover hover:border-zinc-300 transition-all duration-200 flex flex-col cursor-pointer ${isCompleted ? 'opacity-75' : ''}"
+          >
+            <!-- 4:3 Image Container -->
+            <div class="relative aspect-[4/3] w-full bg-zinc-100 overflow-hidden border-b border-zinc-100">
+              <img
+                src="${escapeHtml(item.imageUrl)}"
+                alt="${escapeHtml(item.title)}"
+                loading="lazy"
+                class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
+              />
+
+              <!-- Top-Left: Status Pill -->
+              <div class="absolute top-2.5 left-2.5">
+                ${getStatusBadgeHtml(item.status)}
+              </div>
+
+              <!-- Top-Right: Mahasiswa ITB / Umum Badge -->
+              <div class="absolute top-2.5 right-2.5">
+                ${getSellerBadgeHtml(item.sellerEmail)}
+              </div>
+            </div>
+
+            <!-- Card Body -->
+            <div class="p-4 flex-1 flex flex-col justify-between gap-3">
+              <div>
+                <!-- Category & Location -->
+                <div class="flex items-center justify-between gap-2 text-[11px] text-zinc-500 mb-1">
+                  <span class="font-mono uppercase tracking-wider text-zinc-400">${escapeHtml(item.category)}</span>
+                  <span class="inline-flex items-center gap-1 text-zinc-600 truncate">
+                    <i data-lucide="map-pin" class="w-3 h-3 text-zinc-400 shrink-0"></i>
+                    <span class="truncate">${escapeHtml(item.location)}</span>
+                  </span>
+                </div>
+
+                <!-- Title -->
+                <h2 class="font-semibold text-[15px] text-zinc-950 line-clamp-1 group-hover:text-zinc-700 transition-colors">
+                  ${escapeHtml(item.title)}
+                </h2>
+
+                <!-- Price or GRATIS Badge -->
+                <div class="mt-2">
+                  ${
+                    isFree
+                      ? `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-xs font-mono font-bold tracking-wide bg-emerald-600 text-white">GRATIS</span>`
+                      : `<span class="font-mono font-bold text-base text-zinc-950">${formatRupiah(item.price)}</span>`
+                  }
+                </div>
+              </div>
+
+              <!-- Condition & Footer -->
+              <div class="pt-3 border-t border-zinc-100 space-y-2.5">
+                <div class="flex items-center justify-between">
+                  ${renderConditionBar(item.condition)}
+                </div>
+
+                <div class="flex items-center justify-between gap-2 pt-0.5">
+                  <span class="text-xs text-zinc-500 truncate max-w-[55%]" title="${escapeHtml(item.sellerName)}">
+                    ${escapeHtml(item.sellerName)}
+                  </span>
+
+                  <div class="flex items-center gap-1.5 shrink-0">
+                    <button
+                      type="button"
+                      onclick="event.stopPropagation(); openDetailModal('${item.id}', false)"
+                      class="px-2.5 py-1 rounded-md text-xs font-medium bg-zinc-100 hover:bg-zinc-200/80 text-zinc-900 transition-colors cursor-pointer"
+                    >
+                      Detail &amp; Booking
+                    </button>
+                    ${
+                      !isCompleted
+                        ? `<button
+                            type="button"
+                            onclick="event.stopPropagation(); openDetailModal('${item.id}', true)"
+                            title="Tandai Sudah Tersalurkan (PIN Penjual)"
+                            class="p-1.5 rounded-md border border-zinc-200 bg-white hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-700 text-zinc-500 transition-colors cursor-pointer"
+                          >
+                            <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
+                          </button>`
+                        : ''
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    function refreshAll() {
+      renderMetrics();
+      renderCategoryPills();
+      renderCatalog();
+    }
+
+    // -----------------------------------------------------------------------
+    // 6. FILTER & SEARCH HANDLERS
+    // -----------------------------------------------------------------------
+    function selectCategory(cat) {
+      activeCategory = cat;
+      renderCategoryPills();
+      renderCatalog();
+    }
+
+    function handleStatusFilter(val) {
+      activeStatusFilter = val;
+      renderCategoryPills();
+      renderCatalog();
+    }
+
+    function handleSearchInput(val) {
+      searchQuery = val;
+      const clearBtn = document.getElementById('clear-search-btn');
+      if (val.trim().length > 0) {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+      }
+      renderCatalog();
+    }
+
+    function clearSearch() {
+      searchQuery = '';
+      const input = document.getElementById('search-input');
+      input.value = '';
+      document.getElementById('clear-search-btn').classList.add('hidden');
+      renderCatalog();
+    }
+
+    function resetFilters() {
+      activeCategory = 'Semua';
+      activeStatusFilter = 'active';
+      searchQuery = '';
+      document.getElementById('search-input').value = '';
+      document.getElementById('clear-search-btn').classList.add('hidden');
+      document.getElementById('status-filter').value = 'active';
+      refreshAll();
+    }
+
+    // -----------------------------------------------------------------------
+    // 7. MODAL 1: DETAIL BARANG, BOOKING & SELLER PIN MANAGEMENT
+    // -----------------------------------------------------------------------
+    function openDetailModal(itemId, focusPinSection = false) {
+      const item = items.find(i => i.id === itemId);
+      if (!item) return;
+
+      selectedItemId = itemId;
+      isBookingFormOpen = false;
+
+      renderDetailModalContent(item);
+
+      const modal = document.getElementById('detail-modal');
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+
+      lucide.createIcons();
+
+      if (focusPinSection) {
+        setTimeout(() => {
+          const pinInput = document.getElementById('seller-pin-input');
+          const pinSection = document.getElementById('seller-pin-section');
+          if (pinSection) {
+            pinSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+          if (pinInput) {
+            pinInput.focus();
+          }
+        }, 120);
+      }
+    }
+
+    function closeDetailModal() {
+      selectedItemId = null;
+      isBookingFormOpen = false;
+      document.getElementById('detail-modal').classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    function renderDetailModalContent(item) {
+      const isFree = item.isFree || Number(item.price) === 0;
+      const waClean = normalizeWhatsApp(item.sellerWa);
+      const waMessage = encodeURIComponent(
+        `Halo ${item.sellerName}, saya tertarik dengan barang "${item.title}" di GanesaThrift ITB. Apakah barangnya masih tersedia?`
+      );
+      const waHref = `https://wa.me/${waClean}?text=${waMessage}`;
+
+      document.getElementById('detail-category-badge').textContent = item.category;
+      document.getElementById('detail-status-pill').innerHTML = getStatusBadgeHtml(item.status);
+
+      const body = document.getElementById('detail-modal-body');
+
+      // Booking section HTML based on item.status
+      let actionAreaHtml = '';
+      if (item.status === 'Tersedia') {
+        if (!isBookingFormOpen) {
+          actionAreaHtml = `
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <a
+                href="${waHref}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-900 transition-colors"
+              >
+                <i data-lucide="message-circle" class="w-4 h-4 text-emerald-600"></i>
+                <span>Tanya via WhatsApp</span>
+              </a>
+              <button
+                type="button"
+                onclick="toggleInlineBookingForm(true)"
+                class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-zinc-950 hover:bg-zinc-800 text-white transition-colors shadow-sm cursor-pointer"
+              >
+                <i data-lucide="bookmark-check" class="w-4 h-4"></i>
+                <span>Booking Sekarang</span>
+              </button>
+            </div>
+          `;
+        } else {
+          actionAreaHtml = `
+            <form onsubmit="handleBookingSubmit(event)" class="p-4 rounded-xl bg-zinc-50 border border-zinc-200 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-zinc-900">Form Booking Cepat (Kunci Barang)</span>
+                <button type="button" onclick="toggleInlineBookingForm(false)" class="text-xs text-zinc-500 hover:text-zinc-900 cursor-pointer">Batal</button>
+              </div>
+              <p class="text-[11px] text-zinc-500">
+                Setelah dibooking, status barang berubah menjadi <strong>Dalam Proses</strong> agar tidak direbut mahasiswa lain.
+              </p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div>
+                  <label class="block text-[11px] font-semibold text-zinc-700 mb-1">Nama Pembeli <span class="text-red-500">*</span></label>
+                  <input
+                    id="booking-buyer-name"
+                    type="text"
+                    required
+                    placeholder="Contoh: Budi (FTI '24)"
+                    class="w-full px-3 py-2 text-xs sm:text-sm bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-950"
+                  />
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-zinc-700 mb-1">No. WhatsApp (628...) <span class="text-red-500">*</span></label>
+                  <input
+                    id="booking-buyer-wa"
+                    type="tel"
+                    required
+                    placeholder="6281234567890"
+                    class="w-full px-3 py-2 text-xs sm:text-sm font-mono bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-950"
+                  />
+                </div>
+              </div>
+              <div id="booking-error-msg" class="hidden text-xs text-red-600 font-medium"></div>
+              <div class="flex items-center justify-end gap-2 pt-1">
+                <button
+                  type="submit"
+                  class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs sm:text-sm font-medium bg-zinc-950 text-white hover:bg-zinc-800 transition-colors cursor-pointer"
+                >
+                  <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+                  <span>Konfirmasi Booking</span>
+                </button>
+              </div>
+            </form>
+          `;
+        }
+      } else if (item.status === 'Dalam Proses') {
+        actionAreaHtml = `
+          <div class="space-y-3">
+            <div class="p-3.5 rounded-xl bg-amber-50 border border-amber-200 flex items-start gap-3">
+              <i data-lucide="clock" class="w-5 h-5 text-amber-600 shrink-0 mt-0.5"></i>
+              <div class="text-xs text-amber-900">
+                <p class="font-semibold">Sedang dibooking oleh ${escapeHtml(item.buyerName || 'Mahasiswa ITB')}</p>
+                <p class="text-amber-700 mt-0.5 font-mono">WA Pembeli: ${escapeHtml(item.buyerWa || '-')}</p>
+                <p class="text-amber-700/90 mt-1">Barang dikunci sementara selama proses COD/transaksi berlangsung.</p>
+              </div>
+            </div>
+            <a
+              href="${waHref}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-900 transition-colors"
+            >
+              <i data-lucide="message-circle" class="w-4 h-4 text-emerald-600"></i>
+              <span>Hubungi Penjual via WhatsApp</span>
+            </a>
+          </div>
+        `;
+      } else {
+        actionAreaHtml = `
+          <div class="p-3.5 rounded-xl bg-zinc-100 border border-zinc-200 flex items-center gap-3 text-xs text-zinc-700">
+            <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-600 shrink-0"></i>
+            <div>
+              <p class="font-semibold text-zinc-900">Barang ini sudah tersalurkan</p>
+              <p class="text-zinc-500 mt-0.5">Transaksi atau hibah telah selesai dikonfirmasi oleh penjual.</p>
+            </div>
+          </div>
+        `;
+      }
+
+      // Seller PIN management section
+      const isDemoPin = item.pin === '1234';
+      const sellerPinHtml = `
+        <div id="seller-pin-section" class="pt-4 border-t border-zinc-200">
+          <div class="p-4 rounded-xl bg-zinc-50/90 border border-zinc-200 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-1.5">
+                <i data-lucide="shield-check" class="w-4 h-4 text-zinc-700"></i>
+                <span class="text-xs font-bold text-zinc-900">Kelola Status (Khusus Penjual)</span>
+              </div>
+              ${
+                isDemoPin
+                  ? `<button type="button" onclick="fillDemoPin()" class="text-[11px] font-mono px-2 py-0.5 rounded bg-zinc-200/80 hover:bg-zinc-300/80 text-zinc-700 transition-colors cursor-pointer" title="Klik untuk mengisi PIN demo">
+                      Hint PIN Demo: 1234
+                    </button>`
+                  : `<span class="text-[11px] font-mono text-zinc-400">Masukkan 4-digit PIN saat upload</span>`
+              }
+            </div>
+
+            ${
+              item.status === 'Sudah Tersalurkan'
+                ? `<p class="text-xs text-zinc-500">Status barang sudah final (<strong>Sudah Tersalurkan</strong>).</p>`
+                : `
+                  <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                    <input
+                      id="seller-pin-input"
+                      type="password"
+                      inputmode="numeric"
+                      maxlength="4"
+                      placeholder="PIN 4 Angka"
+                      class="w-full sm:w-36 px-3 py-2 text-center font-mono text-sm tracking-[0.25em] bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-950"
+                    />
+                    <div class="flex flex-wrap items-center gap-2 flex-1">
+                      <button
+                        type="button"
+                        onclick="handleMarkSold()"
+                        class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium bg-emerald-600 hover:bg-emerald-700 text-white transition-colors cursor-pointer"
+                      >
+                        <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+                        <span>Tandai Sudah Tersalurkan</span>
+                      </button>
+                      ${
+                        item.status === 'Dalam Proses'
+                          ? `<button
+                              type="button"
+                              onclick="handleCancelBooking()"
+                              class="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium border border-zinc-300 bg-white hover:bg-zinc-100 text-zinc-800 transition-colors cursor-pointer"
+                            >
+                              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                              <span>Batalkan Booking</span>
+                            </button>`
+                          : ''
+                      }
+                    </div>
+                  </div>
+                  <p id="pin-error-msg" class="hidden text-xs text-red-600 font-medium"></p>
+                `
+            }
+          </div>
+        </div>
+      `;
+
+      body.innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-12">
+          <!-- Left Photo -->
+          <div class="md:col-span-5 bg-zinc-100 border-b md:border-b-0 md:border-r border-zinc-200 flex items-center justify-center">
+            <img
+              src="${escapeHtml(item.imageUrl)}"
+              alt="${escapeHtml(item.title)}"
+              class="w-full aspect-[4/3] md:aspect-square object-cover"
+            />
+          </div>
+
+          <!-- Right Details -->
+          <div class="md:col-span-7 p-5 space-y-4">
+            <div>
+              <h2 class="text-lg sm:text-xl font-bold text-zinc-950 leading-snug">
+                ${escapeHtml(item.title)}
+              </h2>
+
+              <div class="mt-2.5 flex flex-wrap items-center gap-3">
+                ${
+                  isFree
+                    ? `<span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-mono font-bold bg-emerald-600 text-white">GRATIS (HIBAH)</span>`
+                    : `<span class="font-mono font-bold text-xl text-zinc-950">${formatRupiah(item.price)}</span>`
+                }
+                ${renderConditionBar(item.condition)}
+              </div>
+
+              <div class="mt-2 inline-flex items-center gap-1.5 text-xs text-zinc-600">
+                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-zinc-400"></i>
+                <span>Lokasi: <strong class="font-medium text-zinc-900">${escapeHtml(item.location)}</strong></span>
+              </div>
+            </div>
+
+            <!-- Description -->
+            <div class="text-xs sm:text-sm text-zinc-600 leading-relaxed bg-zinc-50/70 p-3 rounded-xl border border-zinc-100">
+              ${escapeHtml(item.description)}
+            </div>
+
+            <!-- Seller Info Card -->
+            <div class="p-3 rounded-xl border border-zinc-200 bg-white flex items-center justify-between gap-3">
+              <div class="min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="text-xs font-bold text-zinc-950 truncate">${escapeHtml(item.sellerName)}</span>
+                  ${getSellerBadgeHtml(item.sellerEmail)}
+                </div>
+                <div class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] font-mono text-zinc-500">
+                  <span class="truncate">${escapeHtml(item.sellerEmail)}</span>
+                  <span>&bull;</span>
+                  <span>WA: ${escapeHtml(waClean)}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Primary Buyer Actions (WhatsApp / Booking) -->
+            ${actionAreaHtml}
+
+            <!-- Seller PIN Management -->
+            ${sellerPinHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    function toggleInlineBookingForm(show) {
+      isBookingFormOpen = show;
+      const item = items.find(i => i.id === selectedItemId);
+      if (item) {
+        renderDetailModalContent(item);
+        lucide.createIcons();
+        if (show) {
+          const nameInput = document.getElementById('booking-buyer-name');
+          if (nameInput) nameInput.focus();
+        }
+      }
+    }
+
+    function handleBookingSubmit(event) {
+      event.preventDefault();
+      const item = items.find(i => i.id === selectedItemId);
+      if (!item || item.status !== 'Tersedia') return;
+
+      const buyerName = document.getElementById('booking-buyer-name').value.trim();
+      const buyerWaRaw = document.getElementById('booking-buyer-wa').value.trim();
+      const buyerWa = normalizeWhatsApp(buyerWaRaw);
+      const errEl = document.getElementById('booking-error-msg');
+
+      if (!buyerName || buyerWa.length < 9) {
+        errEl.textContent = 'Masukkan nama pembeli dan nomor WhatsApp yang valid (minimal 9 digit).';
+        errEl.classList.remove('hidden');
+        return;
+      }
+
+      item.status = 'Dalam Proses';
+      item.buyerName = buyerName;
+      item.buyerWa = buyerWa;
+
+      saveItems();
+      refreshAll();
+      isBookingFormOpen = false;
+      renderDetailModalContent(item);
+      lucide.createIcons();
+      showToast(`Berhasil dibooking! Status "${item.title}" kini Dalam Proses.`);
+    }
+
+    function fillDemoPin() {
+      const input = document.getElementById('seller-pin-input');
+      if (input) {
+        input.value = '1234';
+        input.focus();
+      }
+    }
+
+    function validateSellerPin(item) {
+      const input = document.getElementById('seller-pin-input');
+      const errEl = document.getElementById('pin-error-msg');
+      const entered = (input ? input.value : '').trim();
+
+      if (entered !== String(item.pin)) {
+        if (errEl) {
+          errEl.textContent = 'PIN tidak cocok. Masukkan 4 digit PIN penjual yang dibuat saat upload.';
+          errEl.classList.remove('hidden');
+        }
+        if (input) {
+          input.classList.remove('animate-shake');
+          void input.offsetWidth;
+          input.classList.add('animate-shake', 'border-red-400');
+          input.focus();
+        }
+        return false;
+      }
+      return true;
+    }
+
+    function handleMarkSold() {
+      const item = items.find(i => i.id === selectedItemId);
+      if (!item) return;
+      if (!validateSellerPin(item)) return;
+
+      item.status = 'Sudah Tersalurkan';
+      saveItems();
+      refreshAll();
+      renderDetailModalContent(item);
+      lucide.createIcons();
+      showToast(`"${item.title}" ditandai Sudah Tersalurkan.`);
+    }
+
+    function handleCancelBooking() {
+      const item = items.find(i => i.id === selectedItemId);
+      if (!item) return;
+      if (!validateSellerPin(item)) return;
+
+      item.status = 'Tersedia';
+      item.buyerName = '';
+      item.buyerWa = '';
+      saveItems();
+      refreshAll();
+      renderDetailModalContent(item);
+      lucide.createIcons();
+      showToast(`Booking dibatalkan. "${item.title}" kembali Tersedia.`);
+    }
+
+    // -----------------------------------------------------------------------
+    // 8. MODAL 2: FORM UPLOAD BARANG (+ JUAL / HIBAHKAN BARANG)
+    // -----------------------------------------------------------------------
+    function openUploadModal() {
+      document.getElementById('upload-form').reset();
+      document.getElementById('upload-error-box').classList.add('hidden');
+      uploadCondition = 4;
+      uploadPhotoDataUrl = '';
+
+      // Reset photo preview
+      const preview = document.getElementById('upload-photo-preview');
+      const placeholder = document.getElementById('upload-photo-placeholder');
+      preview.src = '';
+      preview.classList.add('hidden');
+      placeholder.classList.remove('hidden');
+
+      // Reset price input
+      const priceInput = document.getElementById('upload-price');
+      priceInput.disabled = false;
+      priceInput.value = '';
+
+      // Reset live ITB badge
+      updateLiveItbBadge('');
+
+      // Render condition buttons
+      renderConditionSelector();
+
+      const modal = document.getElementById('upload-modal');
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      lucide.createIcons();
+    }
+
+    function closeUploadModal() {
+      document.getElementById('upload-modal').classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    function renderConditionSelector() {
+      const container = document.getElementById('condition-selector');
+      document.getElementById('condition-desc-label').textContent = CONDITION_LABELS[uploadCondition];
+
+      container.innerHTML = [1, 2, 3, 4, 5].map(num => {
+        const selected = uploadCondition === num;
+        return `
+          <button
+            type="button"
+            onclick="selectUploadCondition(${num})"
+            class="py-1.5 rounded-lg font-mono text-xs font-semibold border transition-all cursor-pointer ${
+              selected
+                ? 'bg-zinc-950 text-white border-zinc-950 shadow-sm'
+                : 'bg-white text-zinc-700 border-zinc-200 hover:border-zinc-400'
+            }"
+          >
+            ${num}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectUploadCondition(num) {
+      uploadCondition = num;
+      renderConditionSelector();
+    }
+
+    function toggleFreeCheckbox(isFree) {
+      const priceInput = document.getElementById('upload-price');
+      if (isFree) {
+        priceInput.value = '0';
+        priceInput.disabled = true;
+      } else {
+        priceInput.disabled = false;
+        priceInput.value = '';
+        priceInput.focus();
+      }
+    }
+
+    function setUploadLocation(loc) {
+      document.getElementById('upload-location').value = loc;
+    }
+
+    function updateLiveItbBadge(email) {
+      const badge = document.getElementById('live-itb-preview');
+      if (isItbEmail(email)) {
+        badge.className = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200';
+        badge.innerHTML = `<i data-lucide="badge-check" class="w-3 h-3 text-emerald-600"></i><span>Mahasiswa ITB</span>`;
+      } else {
+        badge.className = 'inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-zinc-100 text-zinc-600 border border-zinc-200';
+        badge.textContent = 'Umum';
+      }
+      lucide.createIcons();
+    }
+
+    function handlePhotoFileChange(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        uploadPhotoDataUrl = e.target.result;
+        showUploadPhotoPreview(uploadPhotoDataUrl);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function selectPresetPhoto(key) {
+      uploadPhotoDataUrl = PRESET_UPLOAD_ARTWORKS[key] || ARTWORKS.monitor;
+      showUploadPhotoPreview(uploadPhotoDataUrl);
+    }
+
+    function showUploadPhotoPreview(dataUrl) {
+      const preview = document.getElementById('upload-photo-preview');
+      const placeholder = document.getElementById('upload-photo-placeholder');
+      preview.src = dataUrl;
+      preview.classList.remove('hidden');
+      placeholder.classList.add('hidden');
+    }
+
+    function handleUploadSubmit(event) {
+      event.preventDefault();
+      const errorBox = document.getElementById('upload-error-box');
+      errorBox.classList.add('hidden');
+
+      const title = document.getElementById('upload-title').value.trim();
+      const category = document.getElementById('upload-category').value;
+      const isFree = document.getElementById('upload-is-free').checked;
+      const rawPrice = Number(document.getElementById('upload-price').value || 0);
+      const location = document.getElementById('upload-location').value.trim();
+      const description = document.getElementById('upload-description').value.trim();
+      const sellerName = document.getElementById('upload-seller-name').value.trim();
+      const sellerEmail = document.getElementById('upload-seller-email').value.trim();
+      const sellerWa = normalizeWhatsApp(document.getElementById('upload-seller-wa').value.trim());
+      const pin = document.getElementById('upload-seller-pin').value.trim();
+
+      if (!title || !location || !description || !sellerName || !sellerEmail) {
+        errorBox.textContent = 'Mohon lengkapi semua kolom bertanda wajib (*).';
+        errorBox.classList.remove('hidden');
+        return;
+      }
+
+      if (!isFree && rawPrice <= 0) {
+        errorBox.textContent = 'Masukkan harga jual yang valid atau centang "Berikan Secara Gratis".';
+        errorBox.classList.remove('hidden');
+        return;
+      }
+
+      if (sellerWa.length < 9) {
+        errorBox.textContent = 'Nomor WhatsApp tidak valid. Gunakan format 628... atau 08...';
+        errorBox.classList.remove('hidden');
+        return;
+      }
+
+      if (!/^\d{4}$/.test(pin)) {
+        errorBox.textContent = 'PIN Penjual harus terdiri dari tepat 4 angka (contoh: 1234).';
+        errorBox.classList.remove('hidden');
+        return;
+      }
+
+      // Fallback artwork matching category if user didn't upload a file
+      let finalImage = uploadPhotoDataUrl;
+      if (!finalImage) {
+        if (category === 'Buku') finalImage = ARTWORKS.kalkulus;
+        else if (category === 'Perabot Kos') finalImage = ARTWORKS.meja;
+        else finalImage = ARTWORKS.monitor;
+      }
+
+      const newItem = {
+        id: 'gt-' + Date.now(),
+        title,
+        description,
+        category,
+        condition: uploadCondition,
+        price: isFree ? 0 : rawPrice,
+        isFree: isFree || rawPrice === 0,
+        location,
+        sellerName,
+        sellerEmail,
+        sellerWa,
+        pin,
+        status: 'Tersedia',
+        buyerName: '',
+        buyerWa: '',
+        imageUrl: finalImage,
+        createdAt: Date.now()
+      };
+
+      items.unshift(newItem);
+      saveItems();
+
+      // Switch to Semua category if current category hides the newly added item
+      if (activeCategory !== 'Semua') {
+        if (activeCategory === 'Gratis' && !newItem.isFree) activeCategory = 'Semua';
+        else if (activeCategory !== 'Gratis' && activeCategory !== newItem.category) activeCategory = 'Semua';
+      }
+
+      refreshAll();
+      closeUploadModal();
+      showToast(`"${newItem.title}" berhasil ditayangkan ke katalog!`);
+    }
+
+    // -----------------------------------------------------------------------
+    // 9. RESET DEMO DATA (2-STEP INLINE CONFIRMATION - NO BROWSER CONFIRM())
+    // -----------------------------------------------------------------------
+    function handleResetDemoClick() {
+      const labelEl = document.getElementById('reset-demo-label');
+      const btnEl = document.getElementById('reset-demo-btn');
+
+      if (!resetConfirmPending) {
+        resetConfirmPending = true;
+        labelEl.textContent = 'Klik lagi untuk konfirmasi';
+        btnEl.classList.add('border-red-300', 'bg-red-50', 'text-red-700');
+
+        clearTimeout(resetConfirmTimer);
+        resetConfirmTimer = setTimeout(() => {
+          resetConfirmPending = false;
+          labelEl.textContent = 'Reset Data Demo';
+          btnEl.classList.remove('border-red-300', 'bg-red-50', 'text-red-700');
+        }, 3500);
+        return;
+      }
+
+      clearTimeout(resetConfirmTimer);
+      resetConfirmPending = false;
+      labelEl.textContent = 'Reset Data Demo';
+      btnEl.classList.remove('border-red-300', 'bg-red-50', 'text-red-700');
+
+      items = JSON.parse(JSON.stringify(INITIAL_DEMO_ITEMS));
+      saveItems();
+      resetFilters();
+      showToast('Data demo GanesaThrift berhasil dikembalikan ke kondisi awal.');
+    }
+
+    // -----------------------------------------------------------------------
+    // 10. KEYBOARD & BACKDROP MODAL CONTROLS
+    // -----------------------------------------------------------------------
+    function handleBackdropClick(event, modalId) {
+      if (event.target.id === modalId) {
+        if (modalId === 'detail-modal') closeDetailModal();
+        if (modalId === 'upload-modal') closeUploadModal();
+      }
+    }
+
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        if (!document.getElementById('detail-modal').classList.contains('hidden')) {
+          closeDetailModal();
+        }
+        if (!document.getElementById('upload-modal').classList.contains('hidden')) {
+          closeUploadModal();
+        }
+      }
+    });
+
+    // -----------------------------------------------------------------------
+    // 11. INITIALIZE APP
+    // -----------------------------------------------------------------------
+    window.addEventListener('DOMContentLoaded', () => {
+      loadItems();
+      refreshAll();
+    });
+  </script>
+</body>
+</html>
