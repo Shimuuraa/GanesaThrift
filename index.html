@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GanesaThrift — Pasar Barang Bekas & Hibah Mahasiswa ITB</title>
-  
-  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <title>GanesaThrift — Pasar barang bekas &amp; hibah mahasiswa ITB</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -17,16 +17,23 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            sans: ['Plus Jakarta Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
             mono: ['JetBrains Mono', 'monospace'],
           },
           colors: {
-            canvas: '#FAFAFA',
+            gt: {
+              navy: '#2F4156',
+              navyDark: '#1E2B3A',
+              teal: '#567C8D',
+              sky: '#C8D9E6',
+              beige: '#F5EFEB',
+              white: '#FFFFFF',
+            }
           },
           boxShadow: {
-            'vercel': '0 1px 2px 0 rgba(0, 0, 0, 0.04)',
-            'vercel-hover': '0 8px 24px -4px rgba(0, 0, 0, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04)',
-            'modal': '0 24px 48px -12px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.06)',
+            'soft': '0 2px 10px -2px rgba(47, 65, 86, 0.06)',
+            'card-hover': '0 14px 30px -8px rgba(47, 65, 86, 0.14)',
+            'modal': '0 28px 60px -15px rgba(30, 43, 58, 0.28)',
           }
         }
       }
@@ -41,44 +48,49 @@
 
   <style>
     body {
-      background-color: #FAFAFA;
-      color: #09090B;
-      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+      background-color: #FFFFFF;
+      color: #2F4156;
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Vercel-style subtle dot matrix background for hero */
-    .hero-dot-pattern {
-      background-image: radial-gradient(#D4D4D8 1px, transparent 1px);
-      background-size: 20px 20px;
-    }
-
-    .hero-radial-mask {
-      mask-image: radial-gradient(ellipse 85% 75% at 50% 35%, #000 55%, transparent 100%);
-      -webkit-mask-image: radial-gradient(ellipse 85% 75% at 50% 35%, #000 55%, transparent 100%);
-    }
-
     /* Glassmorphic sticky header */
-    .glass-header {
-      background: rgba(250, 250, 250, 0.82);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
     }
 
-    /* Smooth modal animation */
+    /* Cyera-inspired Introduction Stage */
+    .intro-bg {
+      background: radial-gradient(circle at 75% 25%, rgba(86, 124, 141, 0.36) 0%, rgba(47, 65, 86, 0.96) 48%, #182330 100%);
+    }
+
+    .intro-grid {
+      background-image:
+        linear-gradient(to right, rgba(200, 217, 230, 0.07) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(200, 217, 230, 0.07) 1px, transparent 1px);
+      background-size: 44px 44px;
+    }
+
+    @keyframes radarSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes pulseFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+
     @keyframes modalScaleIn {
       from {
         opacity: 0;
-        transform: translateY(8px) scale(0.985);
+        transform: translateY(10px) scale(0.985);
       }
       to {
         opacity: 1;
         transform: translateY(0) scale(1);
       }
-    }
-
-    .animate-modal-in {
-      animation: modalScaleIn 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
     @keyframes shakeError {
@@ -87,11 +99,22 @@
       40%, 80% { transform: translateX(5px); }
     }
 
+    .animate-radar {
+      animation: radarSpin 28s linear infinite;
+    }
+
+    .animate-float {
+      animation: pulseFloat 4.5s ease-in-out infinite;
+    }
+
+    .animate-modal-in {
+      animation: modalScaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
     .animate-shake {
       animation: shakeError 0.32s ease-in-out;
     }
 
-    /* Hide scrollbar for horizontal pill bar on mobile */
     .no-scrollbar::-webkit-scrollbar {
       display: none;
     }
@@ -101,209 +124,499 @@
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col selection:bg-zinc-900 selection:text-white">
+<body class="min-h-screen flex flex-col selection:bg-gt-navy selection:text-white">
 
   <!-- ===================================================================== -->
-  <!-- SUPABASE CONFIG NOTICE BANNER (DISMISSIBLE IN LOCAL FALLBACK MODE)    -->
+  <!-- CYERA-INSPIRED INTERACTIVE INTRODUCTION OVERLAY                       -->
   <!-- ===================================================================== -->
-  <div id="supabase-setup-banner" class="hidden bg-amber-50 border-b border-amber-200 text-amber-950 px-4 py-2.5 text-xs">
-    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
-      <div class="flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-amber-500 shrink-0"></span>
-        <span>
-          <strong>Mode Lokal (Belum Terhubung Supabase)</strong> — isi <code class="font-mono bg-amber-100/80 px-1 py-0.5 rounded">SUPABASE_URL</code> &amp; <code class="font-mono bg-amber-100/80 px-1 py-0.5 rounded">SUPABASE_ANON_KEY</code> di file <code class="font-mono bg-amber-100/80 px-1 py-0.5 rounded">index.html</code> agar data sinkron antar perangkat.
-        </span>
+  <div
+    id="intro-overlay"
+    class="fixed inset-0 z-50 intro-bg text-white overflow-y-auto transition-opacity duration-500"
+  >
+    <div class="absolute inset-0 intro-grid pointer-events-none"></div>
+
+    <!-- Decorative Rotating Radar Rings -->
+    <div class="pointer-events-none fixed right-[-120px] top-[-120px] w-[520px] h-[520px] rounded-full border border-gt-sky/15 flex items-center justify-center opacity-60">
+      <div class="w-[360px] h-[360px] rounded-full border border-dashed border-gt-teal/35 animate-radar"></div>
+    </div>
+
+    <div class="relative min-h-screen max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col justify-between">
+      <!-- Intro Top Bar -->
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-white/95 p-1.5 flex items-center justify-center shadow-lg">
+            <!-- GaneshaThrift Vector Logo -->
+            <svg viewBox="0 0 120 100" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="gtLogoGradIntro" x1="10" y1="85" x2="110" y2="15" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#1D63DC"/>
+                  <stop offset="50%" stop-color="#14969C"/>
+                  <stop offset="100%" stop-color="#22C55E"/>
+                </linearGradient>
+              </defs>
+              <path d="M16 47C19 32 30 22 44 19" stroke="url(#gtLogoGradIntro)" stroke-width="4.5" stroke-linecap="round"/>
+              <path d="M39 14L47 19L40 25" fill="url(#gtLogoGradIntro)"/>
+              <path d="M89 19C101 23 108 33 108 45" stroke="url(#gtLogoGradIntro)" stroke-width="4.5" stroke-linecap="round"/>
+              <path d="M102 41L108 49L114 41" fill="url(#gtLogoGradIntro)"/>
+              <path d="M53 16H73L79 30L86 33H43L49 30L53 16Z" stroke="url(#gtLogoGradIntro)" stroke-width="4" stroke-linejoin="round"/>
+              <path d="M51 24H67" stroke="url(#gtLogoGradIntro)" stroke-width="3.5" stroke-linecap="round"/>
+              <path d="M25 83V52C25 39 35 33 48 33H78C87 33 93 40 93 50V66C93 77 85 83 74 83H67V62" stroke="url(#gtLogoGradIntro)" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M36 83C36 72 44 65 53 65C62 65 67 72 67 83" stroke="url(#gtLogoGradIntro)" stroke-width="4.2" stroke-linecap="round"/>
+              <path d="M46 33C46 47 54 55 66 55V33" stroke="url(#gtLogoGradIntro)" stroke-width="4" stroke-linejoin="round"/>
+              <path d="M77 56C87 58 97 56 104 49C99 61 88 65 76 63" stroke="url(#gtLogoGradIntro)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="77" cy="43" r="3" fill="url(#gtLogoGradIntro)"/>
+              <path d="M19 67C19 56 22 48 26 43" stroke="url(#gtLogoGradIntro)" stroke-width="3.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <span class="font-extrabold text-lg tracking-tight text-white">GanesaThrift</span>
+            <span class="block text-[11px] font-mono text-gt-sky/80">ITB CIRCULAR ECOSYSTEM</span>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onclick="closeIntroOverlay()"
+          class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium bg-white/10 hover:bg-white/20 text-gt-sky border border-white/15 transition-colors cursor-pointer"
+        >
+          <span>Lewati Intro</span>
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </button>
       </div>
-      <button
-        type="button"
-        onclick="dismissSetupBanner()"
-        class="p-1 rounded hover:bg-amber-200/60 text-amber-800 shrink-0 cursor-pointer"
-        aria-label="Tutup pemberitahuan"
-      >
-        <i data-lucide="x" class="w-3.5 h-3.5"></i>
-      </button>
+
+      <!-- Intro Main Interactive Stage -->
+      <div class="my-auto py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        <!-- Left Story & CTA -->
+        <div class="lg:col-span-7 space-y-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gt-teal/25 border border-gt-sky/25 text-xs font-mono text-gt-sky">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            <span>DISCOVER &bull; THRIFT &bull; HIBAH KAMPUS</span>
+          </div>
+
+          <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-[1.12] text-white">
+            Pasar barang bekas &amp; hibah mahasiswa <span class="text-gt-sky">ITB.</span>
+          </h1>
+
+          <p class="text-sm sm:text-base text-gt-sky/85 leading-relaxed max-w-2xl">
+            Setiap akhir semester dan wisuda, ratusan buku TPB, elektronik, dan perabot kos berpindah tangan. GanesaThrift menghubungkan mahasiswa Ganesha, Jatinangor, Cisitu, dan Dago secara real-time tanpa login rumit.
+          </p>
+
+          <!-- Interactive Stage Switcher (Cyera-style interactive nodes) -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+            <button
+              type="button"
+              onclick="selectIntroStep(0)"
+              id="intro-step-btn-0"
+              class="text-left p-3.5 rounded-2xl border border-gt-sky/50 bg-white/12 transition-all cursor-pointer"
+            >
+              <span class="font-mono text-[11px] text-emerald-300 font-semibold">01 / TANPA LOGIN</span>
+              <p class="text-sm font-bold text-white mt-1">Unggah Instan</p>
+              <p class="text-xs text-gt-sky/75 mt-0.5">Cukup isi identitas &amp; 4-digit PIN penjual.</p>
+            </button>
+
+            <button
+              type="button"
+              onclick="selectIntroStep(1)"
+              id="intro-step-btn-1"
+              class="text-left p-3.5 rounded-2xl border border-white/15 bg-white/5 hover:bg-white/10 transition-all cursor-pointer"
+            >
+              <span class="font-mono text-[11px] text-gt-sky/75 font-semibold">02 / IDENTITAS ITB</span>
+              <p class="text-sm font-bold text-white mt-1">Lencana Mahasiswa</p>
+              <p class="text-xs text-gt-sky/75 mt-0.5">Otomatis terverifikasi via email @itb.ac.id.</p>
+            </button>
+
+            <button
+              type="button"
+              onclick="selectIntroStep(2)"
+              id="intro-step-btn-2"
+              class="text-left p-3.5 rounded-2xl border border-white/15 bg-white/5 hover:bg-white/10 transition-all cursor-pointer"
+            >
+              <span class="font-mono text-[11px] text-gt-sky/75 font-semibold">03 / REAL-TIME SYNC</span>
+              <p class="text-sm font-bold text-white mt-1">Booking &amp; COD</p>
+              <p class="text-xs text-gt-sky/75 mt-0.5">Kunci barang langsung &amp; chat via WhatsApp.</p>
+            </button>
+          </div>
+
+          <!-- Primary Enter Action -->
+          <div class="flex flex-wrap items-center gap-3 pt-2">
+            <button
+              type="button"
+              onclick="closeIntroOverlay()"
+              class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full text-sm font-bold bg-gt-sky text-gt-navyDark hover:bg-white transition-all shadow-lg cursor-pointer"
+            >
+              <span>Jelajahi Katalog Sekarang</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+
+            <button
+              type="button"
+              onclick="closeIntroOverlay(); openUploadModal();"
+              class="inline-flex items-center gap-2 px-5 py-3.5 rounded-full text-sm font-semibold bg-white/10 hover:bg-white/15 text-white border border-white/20 transition-all cursor-pointer"
+            >
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              <span>Langsung Pasang Barang</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Interactive Visual Telemetry Card -->
+        <div class="lg:col-span-5">
+          <div class="relative rounded-3xl bg-white/10 backdrop-blur-md border border-white/20 p-6 shadow-2xl animate-float">
+            <div class="flex items-center justify-between pb-4 border-b border-white/15">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                <span id="intro-preview-tag" class="font-mono text-xs text-gt-sky">LIVE NODE 01 &bull; DIRECT LISTING</span>
+              </div>
+              <span class="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-gt-navyDark/70 text-gt-sky border border-white/10">
+                Ganesha &bull; Jatinangor
+              </span>
+            </div>
+
+            <div class="py-6 flex flex-col items-center text-center">
+              <div class="w-24 h-24 rounded-2xl bg-white p-3 shadow-xl mb-4 flex items-center justify-center">
+                <svg viewBox="0 0 120 100" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="gtLogoGradCard" x1="10" y1="85" x2="110" y2="15" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#1D63DC"/>
+                      <stop offset="50%" stop-color="#14969C"/>
+                      <stop offset="100%" stop-color="#22C55E"/>
+                    </linearGradient>
+                  </defs>
+                  <path d="M16 47C19 32 30 22 44 19" stroke="url(#gtLogoGradCard)" stroke-width="4.5" stroke-linecap="round"/>
+                  <path d="M39 14L47 19L40 25" fill="url(#gtLogoGradCard)"/>
+                  <path d="M89 19C101 23 108 33 108 45" stroke="url(#gtLogoGradCard)" stroke-width="4.5" stroke-linecap="round"/>
+                  <path d="M102 41L108 49L114 41" fill="url(#gtLogoGradCard)"/>
+                  <path d="M53 16H73L79 30L86 33H43L49 30L53 16Z" stroke="url(#gtLogoGradCard)" stroke-width="4" stroke-linejoin="round"/>
+                  <path d="M51 24H67" stroke="url(#gtLogoGradCard)" stroke-width="3.5" stroke-linecap="round"/>
+                  <path d="M25 83V52C25 39 35 33 48 33H78C87 33 93 40 93 50V66C93 77 85 83 74 83H67V62" stroke="url(#gtLogoGradCard)" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M36 83C36 72 44 65 53 65C62 65 67 72 67 83" stroke="url(#gtLogoGradCard)" stroke-width="4.2" stroke-linecap="round"/>
+                  <path d="M46 33C46 47 54 55 66 55V33" stroke="url(#gtLogoGradCard)" stroke-width="4" stroke-linejoin="round"/>
+                  <path d="M77 56C87 58 97 56 104 49C99 61 88 65 76 63" stroke="url(#gtLogoGradCard)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="77" cy="43" r="3" fill="url(#gtLogoGradCard)"/>
+                  <path d="M19 67C19 56 22 48 26 43" stroke="url(#gtLogoGradCard)" stroke-width="3.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <h3 id="intro-preview-title" class="text-lg font-bold text-white">Pasang Barang dalam 30 Detik</h3>
+              <p id="intro-preview-desc" class="text-xs sm:text-sm text-gt-sky/85 mt-2 leading-relaxed">
+                Upload foto barang dari HP atau laptop, tentukan harga atau centang opsi Hibah Gratis, dan amankan transaksi dengan 4-digit PIN pribadi.
+              </p>
+            </div>
+
+            <div class="pt-4 border-t border-white/15 flex items-center justify-between text-xs font-mono text-gt-sky/80">
+              <span>Supabase Cloud Sync</span>
+              <span class="text-emerald-300 font-semibold">● ACTIVE REALTIME</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Intro Bottom Bar -->
+      <div class="flex items-center justify-between text-[11px] font-mono text-gt-sky/60 pt-4 border-t border-white/10">
+        <span>GANESATHRIFT &bull; INSTITUT TEKNOLOGI BANDUNG</span>
+        <span>TEKAN ESC UNTUK LANGSUNG MASUK</span>
+      </div>
     </div>
   </div>
 
   <!-- ===================================================================== -->
-  <!-- STICKY GLASSMORPHIC HEADER / NAVBAR                                   -->
+  <!-- STICKY GLASSMORPHIC HEADER / NAVBAR (GOCART-STYLE + PALETTE)          -->
   <!-- ===================================================================== -->
-  <header class="sticky top-0 z-40 w-full glass-header border-b border-zinc-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
-      <!-- Left: Minimalist Geometric Ganesha/Triangle Emblem + Wordmark -->
-      <button type="button" onclick="resetFilters()" class="flex items-center gap-2.5 text-left group focus:outline-none">
-        <div class="w-8 h-8 rounded-lg bg-zinc-950 text-white flex items-center justify-center shadow-sm group-hover:bg-zinc-800 transition-colors">
-          <!-- Minimalist Geometric Triangle / Arch Emblem -->
-          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 3L21 19H3L12 3Z" fill="currentColor" />
-            <path d="M12 9.5L16 16.5H8L12 9.5Z" fill="#09090B" />
+  <header class="sticky top-0 z-40 w-full glass-nav border-b border-gt-sky/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-[72px] flex items-center justify-between gap-3">
+      
+      <!-- Left: GaneshaThrift Brand Logo -->
+      <a href="#home-section" onclick="navigateToSection('home-section')" class="flex items-center gap-2.5 shrink-0 group">
+        <div class="w-9 h-9 rounded-xl bg-gt-beige border border-gt-sky/70 p-1 flex items-center justify-center group-hover:scale-105 transition-transform">
+          <svg viewBox="0 0 120 100" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="gtLogoGradNav" x1="10" y1="85" x2="110" y2="15" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#1D63DC"/>
+                <stop offset="50%" stop-color="#14969C"/>
+                <stop offset="100%" stop-color="#22C55E"/>
+              </linearGradient>
+            </defs>
+            <path d="M16 47C19 32 30 22 44 19" stroke="url(#gtLogoGradNav)" stroke-width="5" stroke-linecap="round"/>
+            <path d="M39 14L47 19L40 25" fill="url(#gtLogoGradNav)"/>
+            <path d="M89 19C101 23 108 33 108 45" stroke="url(#gtLogoGradNav)" stroke-width="5" stroke-linecap="round"/>
+            <path d="M102 41L108 49L114 41" fill="url(#gtLogoGradNav)"/>
+            <path d="M53 16H73L79 30L86 33H43L49 30L53 16Z" stroke="url(#gtLogoGradNav)" stroke-width="4.5" stroke-linejoin="round"/>
+            <path d="M51 24H67" stroke="url(#gtLogoGradNav)" stroke-width="4" stroke-linecap="round"/>
+            <path d="M25 83V52C25 39 35 33 48 33H78C87 33 93 40 93 50V66C93 77 85 83 74 83H67V62" stroke="url(#gtLogoGradNav)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M36 83C36 72 44 65 53 65C62 65 67 72 67 83" stroke="url(#gtLogoGradNav)" stroke-width="4.5" stroke-linecap="round"/>
+            <path d="M46 33C46 47 54 55 66 55V33" stroke="url(#gtLogoGradNav)" stroke-width="4.2" stroke-linejoin="round"/>
+            <path d="M77 56C87 58 97 56 104 49C99 61 88 65 76 63" stroke="url(#gtLogoGradNav)" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="77" cy="43" r="3.2" fill="url(#gtLogoGradNav)"/>
+            <path d="M19 67C19 56 22 48 26 43" stroke="url(#gtLogoGradNav)" stroke-width="3.8" stroke-linecap="round"/>
           </svg>
         </div>
-        <div class="flex items-center gap-2">
-          <span class="font-bold text-lg tracking-tight text-zinc-950">GanesaThrift</span>
-          <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-mono font-medium bg-zinc-100 text-zinc-600 border border-zinc-200">
-            ITB Campus Marketplace
-          </span>
+        <div class="flex items-baseline gap-1">
+          <span class="font-extrabold text-xl tracking-tight text-gt-navy">Ganesa<span class="text-gt-teal">Thrift</span></span>
+          <span class="hidden sm:inline-block px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-gt-teal text-white">ITB</span>
         </div>
-      </button>
+      </a>
 
-      <!-- Right: Primary CTA Button -->
-      <div class="flex items-center gap-2.5">
+      <!-- Center: Home, Shop, About Navigation -->
+      <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-gt-navy/80">
+        <a href="#home-section" onclick="navigateToSection('home-section')" class="hover:text-gt-navy transition-colors">Home</a>
+        <a href="#shop-section" onclick="navigateToSection('shop-section')" class="hover:text-gt-navy transition-colors">Shop</a>
+        <a href="#about-section" onclick="navigateToSection('about-section')" class="hover:text-gt-navy transition-colors">About</a>
+        <button type="button" onclick="openIntroOverlay()" class="text-gt-teal hover:text-gt-navy transition-colors cursor-pointer">Intro</button>
+      </nav>
+
+      <!-- Right: Pill Search Bar + Primary CTA -->
+      <div class="flex items-center gap-2.5 sm:gap-3 flex-1 md:flex-initial justify-end">
+        <div class="relative hidden sm:block w-52 lg:w-64">
+          <i data-lucide="search" class="w-4 h-4 text-gt-teal absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+          <input
+            id="nav-search-input"
+            type="text"
+            placeholder="Cari barang kampus..."
+            oninput="syncSearchFromNav(this.value)"
+            class="w-full pl-9 pr-4 py-2 text-xs sm:text-sm bg-gt-beige/90 border border-gt-sky/60 rounded-full text-gt-navy placeholder:text-gt-teal/70 focus:outline-none focus:bg-white focus:border-gt-teal transition-all"
+          />
+        </div>
+
         <button
           type="button"
           onclick="openUploadModal()"
-          class="inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2 rounded-lg text-sm font-medium bg-zinc-950 text-white hover:bg-zinc-800 active:scale-[0.99] transition-all shadow-sm cursor-pointer"
+          class="inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold bg-gt-navy text-white hover:bg-gt-navyDark active:scale-[0.99] transition-all shadow-soft cursor-pointer shrink-0"
         >
           <i data-lucide="plus" class="w-4 h-4 stroke-[2.25]"></i>
-          <span>Jual / Hibahkan Barang</span>
+          <span>Jual / Hibah</span>
         </button>
       </div>
+    </div>
+
+    <!-- Mobile Sub-Nav (Home, Shop, About, Intro) -->
+    <div class="flex md:hidden items-center justify-center gap-6 py-2 border-t border-gt-sky/40 bg-white/95 text-xs font-semibold text-gt-navy">
+      <a href="#home-section" onclick="navigateToSection('home-section')">Home</a>
+      <a href="#shop-section" onclick="navigateToSection('shop-section')">Shop</a>
+      <a href="#about-section" onclick="navigateToSection('about-section')">About</a>
+      <button type="button" onclick="openIntroOverlay()" class="text-gt-teal">Intro</button>
     </div>
   </header>
 
   <!-- ===================================================================== -->
-  <!-- COMPACT VERCEL-STYLE HERO BANNER                                      -->
+  <!-- HOME SECTION: GOCART-INSPIRED BENTO HERO BANNER                       -->
   <!-- ===================================================================== -->
-  <section class="relative overflow-hidden border-b border-zinc-200 bg-white">
-    <div class="absolute inset-0 hero-dot-pattern hero-radial-mask opacity-75 pointer-events-none"></div>
-    
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-9 sm:py-12">
-      <div class="max-w-3xl">
-        <!-- Top Subtle Badge -->
-        <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-medium bg-zinc-100/90 text-zinc-700 border border-zinc-200 mb-4">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-          <span>Ganesha &bull; Jatinangor &bull; Cisitu &bull; Dago</span>
+  <section id="home-section" class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+      
+      <!-- Left Main Bento Card (Sky Blue #C8D9E6) -->
+      <div class="lg:col-span-8 relative overflow-hidden rounded-3xl bg-gt-sky p-7 sm:p-10 lg:p-11 flex flex-col justify-between min-h-[340px] sm:min-h-[390px]">
+        <!-- Subtle decorative vector watermark on right -->
+        <div class="pointer-events-none hidden sm:flex absolute right-6 bottom-6 w-56 h-56 rounded-full bg-white/35 items-center justify-center p-8">
+          <svg viewBox="0 0 120 100" class="w-full h-full opacity-90" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="gtLogoGradHero" x1="10" y1="85" x2="110" y2="15" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#2F4156"/>
+                <stop offset="55%" stop-color="#567C8D"/>
+                <stop offset="100%" stop-color="#1E8E6E"/>
+              </linearGradient>
+            </defs>
+            <path d="M16 47C19 32 30 22 44 19" stroke="url(#gtLogoGradHero)" stroke-width="4.5" stroke-linecap="round"/>
+            <path d="M39 14L47 19L40 25" fill="url(#gtLogoGradHero)"/>
+            <path d="M89 19C101 23 108 33 108 45" stroke="url(#gtLogoGradHero)" stroke-width="4.5" stroke-linecap="round"/>
+            <path d="M102 41L108 49L114 41" fill="url(#gtLogoGradHero)"/>
+            <path d="M53 16H73L79 30L86 33H43L49 30L53 16Z" stroke="url(#gtLogoGradHero)" stroke-width="4" stroke-linejoin="round"/>
+            <path d="M51 24H67" stroke="url(#gtLogoGradHero)" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M25 83V52C25 39 35 33 48 33H78C87 33 93 40 93 50V66C93 77 85 83 74 83H67V62" stroke="url(#gtLogoGradHero)" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M36 83C36 72 44 65 53 65C62 65 67 72 67 83" stroke="url(#gtLogoGradHero)" stroke-width="4.2" stroke-linecap="round"/>
+            <path d="M46 33C46 47 54 55 66 55V33" stroke="url(#gtLogoGradHero)" stroke-width="4" stroke-linejoin="round"/>
+            <path d="M77 56C87 58 97 56 104 49C99 61 88 65 76 63" stroke="url(#gtLogoGradHero)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="77" cy="43" r="3" fill="url(#gtLogoGradHero)"/>
+            <path d="M19 67C19 56 22 48 26 43" stroke="url(#gtLogoGradHero)" stroke-width="3.5" stroke-linecap="round"/>
+          </svg>
         </div>
 
-        <!-- Hero Headline -->
-        <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-zinc-950 leading-[1.15]">
-          Pasar Barang Bekas &amp; Hibah Mahasiswa ITB
-        </h1>
-
-        <!-- Hero Subtitle -->
-        <p class="mt-3 text-sm sm:text-base text-zinc-600 leading-relaxed max-w-2xl">
-          Platform titip jual dan hibah cepat antar mahasiswa sekitar Kampus Ganesha, Jatinangor, Dago, &amp; Cisitu. Tanpa login—langsung upload, booking, atau chat WhatsApp.
-        </p>
-
-        <!-- Live Compact Metrics Pills -->
-        <div class="mt-6 flex flex-wrap items-center gap-2.5 sm:gap-3">
-          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-50 border border-zinc-200 text-xs">
-            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-            <span class="text-zinc-500">Barang Aktif:</span>
-            <span id="metric-active" class="font-mono font-semibold text-zinc-950">0</span>
+        <div class="relative z-10 max-w-xl">
+          <!-- Top Pill Badge -->
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/75 text-gt-navy text-xs font-semibold mb-5">
+            <span class="px-2 py-0.5 rounded-full bg-gt-navy text-white text-[10px] font-bold">ITB</span>
+            <span>Ganesha &bull; Jatinangor &bull; Cisitu &bull; Dago</span>
           </div>
 
-          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-50/70 border border-emerald-200/80 text-xs">
-            <i data-lucide="gift" class="w-3.5 h-3.5 text-emerald-600"></i>
-            <span class="text-emerald-800">Barang Gratis (Hibah):</span>
-            <span id="metric-free" class="font-mono font-semibold text-emerald-700">0</span>
-          </div>
+          <!-- Required Tagline Headline -->
+          <h1 class="text-2xl sm:text-4xl lg:text-[40px] font-extrabold tracking-tight text-gt-navy leading-[1.15]">
+            Pasar barang bekas &amp; hibah mahasiswa ITB
+          </h1>
 
-          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-50 border border-zinc-200 text-xs">
-            <i data-lucide="badge-check" class="w-3.5 h-3.5 text-emerald-600"></i>
-            <span class="text-zinc-500">Penjual Mahasiswa ITB:</span>
-            <span id="metric-itb" class="font-mono font-semibold text-zinc-950">0</span>
-          </div>
+          <p class="mt-3 text-xs sm:text-sm text-gt-navy/80 leading-relaxed max-w-md">
+            Sirkulasi buku kuliah, elektronik, dan perabot kos antar mahasiswa ITB. Tanpa login—langsung unggah, booking real-time, atau chat WhatsApp.
+          </p>
+        </div>
 
-          <div id="sync-status-pill" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-50 border border-zinc-200 text-xs">
-            <span id="sync-status-dot" class="w-2 h-2 rounded-full bg-zinc-400"></span>
-            <span id="sync-status-text" class="font-mono font-medium text-zinc-600">Menghubungkan...</span>
+        <!-- Bottom CTA & Live Telemetry -->
+        <div class="relative z-10 mt-7 flex flex-wrap items-center gap-3">
+          <a
+            href="#shop-section"
+            onclick="navigateToSection('shop-section')"
+            class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-xs sm:text-sm font-bold bg-gt-navy text-white hover:bg-gt-navyDark transition-all shadow-soft"
+          >
+            <span>JELAJAHI KATALOG</span>
+            <i data-lucide="arrow-down-right" class="w-4 h-4"></i>
+          </a>
+
+          <div id="sync-status-pill" class="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-white/80 text-gt-navy text-xs font-mono">
+            <span id="sync-status-dot" class="w-2 h-2 rounded-full bg-gt-teal"></span>
+            <span id="sync-status-text" class="font-semibold">Menghubungkan Supabase...</span>
           </div>
         </div>
+      </div>
+
+      <!-- Right Stacked 2 Bento Cards -->
+      <div class="lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-5">
+        
+        <!-- Top Right Card: Beige (#F5EFEB) -->
+        <div
+          onclick="selectCategory('Gratis'); navigateToSection('shop-section');"
+          class="group rounded-3xl bg-gt-beige p-6 sm:p-7 flex items-center justify-between gap-4 cursor-pointer hover:shadow-card-hover transition-all border border-gt-sky/40"
+        >
+          <div>
+            <span class="text-[11px] font-mono font-semibold uppercase tracking-wider text-gt-teal">Berbagi Kampus</span>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-gt-navy leading-tight mt-1">
+              Hibah<br/><span class="text-gt-teal">Gratis ITB</span>
+            </h2>
+            <p class="text-xs text-gt-navy/70 mt-1.5">
+              <span id="metric-free" class="font-mono font-bold text-gt-navy">0</span> barang hibah tersedia
+            </p>
+            <div class="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-gt-navy group-hover:translate-x-1 transition-transform">
+              <span>Lihat Hibah</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </div>
+          </div>
+
+          <div class="w-20 h-20 rounded-2xl bg-white flex items-center justify-center text-gt-teal shadow-soft shrink-0 group-hover:scale-105 transition-transform">
+            <i data-lucide="gift" class="w-9 h-9 stroke-[1.75]"></i>
+          </div>
+        </div>
+
+        <!-- Bottom Right Card: Soft Sky Blue (#C8D9E6/70) -->
+        <div
+          onclick="openUploadModal()"
+          class="group rounded-3xl bg-gt-sky/65 p-6 sm:p-7 flex items-center justify-between gap-4 cursor-pointer hover:shadow-card-hover transition-all border border-gt-sky"
+        >
+          <div>
+            <span class="text-[11px] font-mono font-semibold uppercase tracking-wider text-gt-navy/70">Tanpa Login</span>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-gt-navy leading-tight mt-1">
+              Punya Barang<br/><span class="text-gt-teal">Tak Terpakai?</span>
+            </h2>
+            <p class="text-xs text-gt-navy/75 mt-1.5">
+              <span id="metric-active" class="font-mono font-bold text-gt-navy">0</span> barang aktif &bull; <span id="metric-itb" class="font-mono font-bold text-gt-navy">0</span> ITB
+            </p>
+            <div class="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-gt-navy group-hover:translate-x-1 transition-transform">
+              <span>Upload Sekarang</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </div>
+          </div>
+
+          <div class="w-20 h-20 rounded-2xl bg-gt-navy text-white flex items-center justify-center shadow-soft shrink-0 group-hover:scale-105 transition-transform">
+            <i data-lucide="package-plus" class="w-9 h-9 stroke-[1.75]"></i>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Horizontal Category / Campus Quick Pills Strip (Matching image_407ddc.png) -->
+    <div class="mt-6 py-2">
+      <div id="category-pills" class="flex items-center justify-start sm:justify-center gap-2.5 overflow-x-auto no-scrollbar py-1">
+        <!-- Rendered dynamically by JS -->
       </div>
     </div>
   </section>
 
   <!-- ===================================================================== -->
-  <!-- MAIN CONTENT: SEARCH, QUICK FILTERS & CATALOG GRID                    -->
+  <!-- SHOP SECTION: CLEAN PRODUCT CATALOG GRID (MATCHING image_407d69.png)  -->
   <!-- ===================================================================== -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+  <main id="shop-section" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 pb-12">
     
-    <!-- Search & Quick Filter Bar -->
-    <div class="flex flex-col gap-4 mb-6">
-      <!-- Top Row: Search Input + Status Filter -->
-      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-        <!-- Search Input -->
-        <div class="relative flex-1 max-w-xl">
-          <i data-lucide="search" class="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-          <input
-            id="search-input"
-            type="text"
-            placeholder="Cari kalkulus, monitor, meja kos, Cisitu, Jatinangor..."
-            oninput="handleSearchInput(this.value)"
-            class="w-full pl-10 pr-9 py-2.5 text-sm bg-white border border-zinc-200 rounded-lg text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-zinc-950 focus:ring-1 focus:ring-zinc-950 transition-all shadow-vercel"
-          />
-          <button
-            id="clear-search-btn"
-            type="button"
-            onclick="clearSearch()"
-            class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-zinc-400 hover:text-zinc-700 rounded"
-            title="Hapus pencarian"
-          >
-            <i data-lucide="x" class="w-3.5 h-3.5"></i>
-          </button>
-        </div>
-
-        <!-- Status Filter Tabs / Dropdown -->
-        <div class="flex items-center gap-2 self-start sm:self-auto">
-          <label for="status-filter" class="text-xs font-medium text-zinc-500 hidden md:inline">Status:</label>
-          <div class="relative">
-            <select
-              id="status-filter"
-              onchange="handleStatusFilter(this.value)"
-              class="appearance-none bg-white border border-zinc-200 rounded-lg pl-3 pr-8 py-2 text-xs sm:text-sm font-medium text-zinc-800 hover:border-zinc-300 focus:outline-none focus:border-zinc-950 transition-colors shadow-vercel cursor-pointer"
-            >
-              <option value="active">Aktif (Tersedia &amp; Dalam Proses)</option>
-              <option value="all">Semua Termasuk Tersalurkan</option>
-            </select>
-            <i data-lucide="chevron-down" class="w-4 h-4 text-zinc-500 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-          </div>
-        </div>
-      </div>
-
-      <!-- Bottom Row: Quick Category Pills -->
-      <div class="flex items-center justify-between gap-4 border-b border-zinc-200 pb-3">
-        <div id="category-pills" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
-          <!-- Rendered dynamically by JS -->
-        </div>
-
-        <div class="hidden sm:block text-xs font-mono text-zinc-500 shrink-0">
-          Menampilkan <span id="visible-count" class="font-semibold text-zinc-900">0</span> barang
-        </div>
+    <!-- Centered Section Header ("Katalog Kampus" + "Showing X of Y products") -->
+    <div class="text-center max-w-xl mx-auto mb-7">
+      <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-gt-navy">
+        Katalog Kampus
+      </h2>
+      <div class="mt-1.5 flex items-center justify-center gap-3 text-xs sm:text-sm text-gt-teal">
+        <span>Menampilkan <strong id="visible-count" class="text-gt-navy font-semibold">0</strong> barang</span>
+        <span>&bull;</span>
+        <button
+          type="button"
+          onclick="toggleStatusFilterQuick()"
+          id="quick-status-toggle"
+          class="inline-flex items-center gap-1 font-semibold text-gt-teal hover:text-gt-navy transition-colors cursor-pointer"
+        >
+          <span id="quick-status-label">Tampilkan Semua Status</span>
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </button>
       </div>
     </div>
 
-    <!-- Responsive Product Grid -->
-    <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+    <!-- Search & Status Filter Bar -->
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-7 max-w-4xl mx-auto">
+      <div class="relative flex-1">
+        <i data-lucide="search" class="w-4 h-4 text-gt-teal absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+        <input
+          id="search-input"
+          type="text"
+          placeholder="Cari kalkulus, monitor, meja kos, Cisitu, Jatinangor..."
+          oninput="handleSearchInput(this.value)"
+          class="w-full pl-11 pr-9 py-2.5 text-sm bg-gt-beige/75 border border-gt-sky/70 rounded-full text-gt-navy placeholder:text-gt-teal/70 focus:outline-none focus:bg-white focus:border-gt-teal transition-all"
+        />
+        <button
+          id="clear-search-btn"
+          type="button"
+          onclick="clearSearch()"
+          class="hidden absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gt-teal hover:text-gt-navy rounded-full cursor-pointer"
+          title="Hapus pencarian"
+        >
+          <i data-lucide="x" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+
+      <div class="relative self-start sm:self-auto">
+        <select
+          id="status-filter"
+          onchange="handleStatusFilter(this.value)"
+          class="appearance-none bg-gt-beige/75 border border-gt-sky/70 rounded-full pl-4 pr-9 py-2.5 text-xs sm:text-sm font-semibold text-gt-navy hover:border-gt-teal focus:outline-none focus:bg-white focus:border-gt-teal transition-colors cursor-pointer"
+        >
+          <option value="active">Aktif (Tersedia &amp; Dalam Proses)</option>
+          <option value="all">Semua Termasuk Tersalurkan</option>
+        </select>
+        <i data-lucide="chevron-down" class="w-4 h-4 text-gt-teal absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+      </div>
+    </div>
+
+    <!-- 4-Column Product Grid -->
+    <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       <!-- Cards rendered dynamically by JS -->
     </div>
 
-    <!-- Empty State (Hidden by default) -->
-    <div id="empty-state" class="hidden flex-col items-center justify-center text-center py-16 px-4 bg-white border border-zinc-200 rounded-xl shadow-vercel">
-      <div class="w-12 h-12 rounded-full bg-zinc-100 border border-zinc-200 flex items-center justify-center text-zinc-500 mb-3">
-        <i data-lucide="package-search" class="w-6 h-6"></i>
+    <!-- Empty State (Live Real-time Empty Catalog) -->
+    <div id="empty-state" class="hidden flex-col items-center justify-center text-center py-16 px-4 bg-gt-beige/60 border border-gt-sky/60 rounded-3xl max-w-2xl mx-auto">
+      <div class="w-14 h-14 rounded-2xl bg-white border border-gt-sky flex items-center justify-center text-gt-teal mb-4 shadow-soft">
+        <i data-lucide="package-open" class="w-7 h-7"></i>
       </div>
-      <h3 id="empty-state-title" class="text-base font-semibold text-zinc-950">Barang tidak ditemukan</h3>
-      <p id="empty-state-desc" class="text-sm text-zinc-500 mt-1 max-w-md">
-        Coba ubah kata kunci pencarian, pilih kategori lain, atau tampilkan barang yang sudah tersalurkan.
+      <h3 id="empty-state-title" class="text-lg font-bold text-gt-navy">Belum ada barang yang tayang</h3>
+      <p id="empty-state-desc" class="text-sm text-gt-navy/75 mt-1.5 max-w-md leading-relaxed">
+        Katalog real-time masih kosong. Jadilah mahasiswa ITB pertama yang menjual atau menghibahkan barang bekas kos maupun perlengkapan kuliah!
       </p>
-      <div class="mt-4 flex flex-wrap items-center justify-center gap-2.5">
+      <div class="mt-5 flex flex-wrap items-center justify-center gap-3">
         <button
           type="button"
-          onclick="resetFilters()"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium bg-zinc-950 text-white hover:bg-zinc-800 transition-colors cursor-pointer"
+          onclick="openUploadModal()"
+          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold bg-gt-navy text-white hover:bg-gt-navyDark transition-colors shadow-soft cursor-pointer"
         >
-          <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
-          <span>Reset Filter Katalog</span>
+          <i data-lucide="plus" class="w-4 h-4"></i>
+          <span>Jual / Hibahkan Barang</span>
         </button>
         <button
-          id="empty-seed-btn"
+          id="empty-reset-filter-btn"
           type="button"
-          onclick="handleSeedDemoClick('empty')"
-          class="hidden inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 text-zinc-800 transition-colors cursor-pointer"
+          onclick="resetFilters()"
+          class="hidden inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold bg-white border border-gt-sky text-gt-navy hover:bg-gt-sky/30 transition-colors cursor-pointer"
         >
-          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-emerald-600"></i>
-          <span id="empty-seed-label">Isi / Reset 8 Data Demo</span>
+          <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+          <span>Reset Filter</span>
         </button>
       </div>
     </div>
@@ -311,56 +624,165 @@
   </main>
 
   <!-- ===================================================================== -->
-  <!-- MINIMAL VERCEL-STYLE FOOTER                                           -->
+  <!-- ABOUT SECTION: TENTANG GANESATHRIFT & CARA KERJA                      -->
   <!-- ===================================================================== -->
-  <footer class="border-t border-zinc-200 bg-white mt-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
-      <div class="flex items-center gap-2">
-        <span class="font-semibold text-zinc-900">GanesaThrift</span>
-        <span>&bull;</span>
-        <span>Sirkulasi Barang Bekas &amp; Hibah Komunitas ITB</span>
+  <section id="about-section" class="border-t border-gt-sky/50 bg-gt-beige/55 py-14 sm:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-5">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gt-sky/60 text-gt-navy text-xs font-mono font-semibold">
+            TENTANG GANESATHRIFT
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-gt-navy mt-3 leading-tight">
+            Pasar barang bekas &amp; hibah mahasiswa ITB
+          </h2>
+          <p class="text-sm text-gt-navy/80 mt-3 leading-relaxed">
+            GanesaThrift dirancang khusus untuk mempercepat sirkulasi barang layak pakai di lingkungan Institut Teknologi Bandung—mulai dari buku diktat TPB, alat praktikum, elektronik, hingga perabot kos.
+          </p>
+        </div>
+
+        <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="bg-white rounded-2xl p-5 border border-gt-sky/60 shadow-soft">
+            <div class="w-10 h-10 rounded-xl bg-gt-sky/50 text-gt-navy flex items-center justify-center mb-3">
+              <i data-lucide="zap" class="w-5 h-5"></i>
+            </div>
+            <h3 class="text-sm font-bold text-gt-navy">1. Unggah Tanpa Login</h3>
+            <p class="text-xs text-gt-navy/70 mt-1.5 leading-relaxed">
+              Tidak perlu registrasi akun rumit. Cukup masukkan nama, email, nomor WhatsApp, dan 4-digit PIN penjual.
+            </p>
+          </div>
+
+          <div class="bg-white rounded-2xl p-5 border border-gt-sky/60 shadow-soft">
+            <div class="w-10 h-10 rounded-xl bg-gt-teal/15 text-gt-teal flex items-center justify-center mb-3">
+              <i data-lucide="badge-check" class="w-5 h-5"></i>
+            </div>
+            <h3 class="text-sm font-bold text-gt-navy">2. Lencana Mahasiswa ITB</h3>
+            <p class="text-xs text-gt-navy/70 mt-1.5 leading-relaxed">
+              Penjual dengan email <span class="font-mono">@mahasiswa.itb.ac.id</span> atau <span class="font-mono">@itb.ac.id</span> otomatis mendapat lencana terverifikasi.
+            </p>
+          </div>
+
+          <div class="bg-white rounded-2xl p-5 border border-gt-sky/60 shadow-soft">
+            <div class="w-10 h-10 rounded-xl bg-gt-navy text-white flex items-center justify-center mb-3">
+              <i data-lucide="lock" class="w-5 h-5"></i>
+            </div>
+            <h3 class="text-sm font-bold text-gt-navy">3. Booking &amp; PIN Aman</h3>
+            <p class="text-xs text-gt-navy/70 mt-1.5 leading-relaxed">
+              Pembeli dapat mengunci barang ke status <em>Dalam Proses</em>, dan penjual menandai laku memakai PIN 4 angka.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- MULTI-COLUMN FOOTER (MATCHING image_407e20.png)                       -->
+  <!-- ===================================================================== -->
+  <footer class="bg-white border-t border-gt-sky/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 pb-10 border-b border-gt-sky/50">
+        
+        <!-- Brand Column -->
+        <div class="md:col-span-5 space-y-3">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-gt-beige border border-gt-sky/70 p-1 flex items-center justify-center">
+              <svg viewBox="0 0 120 100" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="gtLogoGradFoot" x1="10" y1="85" x2="110" y2="15" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#1D63DC"/>
+                    <stop offset="50%" stop-color="#14969C"/>
+                    <stop offset="100%" stop-color="#22C55E"/>
+                  </linearGradient>
+                </defs>
+                <path d="M16 47C19 32 30 22 44 19" stroke="url(#gtLogoGradFoot)" stroke-width="5" stroke-linecap="round"/>
+                <path d="M39 14L47 19L40 25" fill="url(#gtLogoGradFoot)"/>
+                <path d="M89 19C101 23 108 33 108 45" stroke="url(#gtLogoGradFoot)" stroke-width="5" stroke-linecap="round"/>
+                <path d="M102 41L108 49L114 41" fill="url(#gtLogoGradFoot)"/>
+                <path d="M53 16H73L79 30L86 33H43L49 30L53 16Z" stroke="url(#gtLogoGradFoot)" stroke-width="4.5" stroke-linejoin="round"/>
+                <path d="M51 24H67" stroke="url(#gtLogoGradFoot)" stroke-width="4" stroke-linecap="round"/>
+                <path d="M25 83V52C25 39 35 33 48 33H78C87 33 93 40 93 50V66C93 77 85 83 74 83H67V62" stroke="url(#gtLogoGradFoot)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M36 83C36 72 44 65 53 65C62 65 67 72 67 83" stroke="url(#gtLogoGradFoot)" stroke-width="4.5" stroke-linecap="round"/>
+                <path d="M46 33C46 47 54 55 66 55V33" stroke="url(#gtLogoGradFoot)" stroke-width="4.2" stroke-linejoin="round"/>
+                <path d="M77 56C87 58 97 56 104 49C99 61 88 65 76 63" stroke="url(#gtLogoGradFoot)" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="77" cy="43" r="3.2" fill="url(#gtLogoGradFoot)"/>
+                <path d="M19 67C19 56 22 48 26 43" stroke="url(#gtLogoGradFoot)" stroke-width="3.8" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="font-extrabold text-lg text-gt-navy">Ganesa<span class="text-gt-teal">Thrift</span></span>
+          </div>
+          <p class="text-xs sm:text-sm text-gt-navy/70 leading-relaxed max-w-sm">
+            Pasar barang bekas &amp; hibah mahasiswa ITB. Memudahkan jual beli dan berbagi perlengkapan kuliah maupun kos di sekitar Kampus Ganesha dan Jatinangor.
+          </p>
+        </div>
+
+        <!-- Column 2: Kategori -->
+        <div class="md:col-span-2 space-y-2.5 text-xs sm:text-sm">
+          <h4 class="font-bold text-gt-navy uppercase tracking-wider text-xs">Kategori</h4>
+          <ul class="space-y-2 text-gt-navy/75">
+            <li><button type="button" onclick="selectCategory('Gratis'); navigateToSection('shop-section');" class="hover:text-gt-navy cursor-pointer">Hibah Gratis</button></li>
+            <li><button type="button" onclick="selectCategory('Elektronik'); navigateToSection('shop-section');" class="hover:text-gt-navy cursor-pointer">Elektronik</button></li>
+            <li><button type="button" onclick="selectCategory('Perabot Kos'); navigateToSection('shop-section');" class="hover:text-gt-navy cursor-pointer">Perabot Kos</button></li>
+            <li><button type="button" onclick="selectCategory('Buku'); navigateToSection('shop-section');" class="hover:text-gt-navy cursor-pointer">Buku &amp; Diktat</button></li>
+          </ul>
+        </div>
+
+        <!-- Column 3: Navigasi -->
+        <div class="md:col-span-2 space-y-2.5 text-xs sm:text-sm">
+          <h4 class="font-bold text-gt-navy uppercase tracking-wider text-xs">Navigasi</h4>
+          <ul class="space-y-2 text-gt-navy/75">
+            <li><a href="#home-section" onclick="navigateToSection('home-section')" class="hover:text-gt-navy">Home</a></li>
+            <li><a href="#shop-section" onclick="navigateToSection('shop-section')" class="hover:text-gt-navy">Shop</a></li>
+            <li><a href="#about-section" onclick="navigateToSection('about-section')" class="hover:text-gt-navy">About</a></li>
+            <li><button type="button" onclick="openUploadModal()" class="hover:text-gt-navy cursor-pointer">Pasang Barang</button></li>
+          </ul>
+        </div>
+
+        <!-- Column 4: Titik COD Kampus -->
+        <div class="md:col-span-3 space-y-2.5 text-xs sm:text-sm">
+          <h4 class="font-bold text-gt-navy uppercase tracking-wider text-xs">Titik COD Kampus</h4>
+          <ul class="space-y-2 text-gt-navy/75">
+            <li class="flex items-center gap-2"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-gt-teal shrink-0"></i><span>Kampus ITB Ganesha, Bandung</span></li>
+            <li class="flex items-center gap-2"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-gt-teal shrink-0"></i><span>Kampus ITB Jatinangor</span></li>
+            <li class="flex items-center gap-2"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-gt-teal shrink-0"></i><span>Cisitu &bull; Dago &bull; Tubagus Ismail</span></li>
+          </ul>
+        </div>
+
       </div>
 
-      <div class="flex items-center gap-3">
-        <span class="hidden md:inline font-mono text-[11px] text-zinc-400">PIN Demo Default: 1234</span>
-        <button
-          id="reset-demo-btn"
-          type="button"
-          onclick="handleSeedDemoClick('footer')"
-          class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 text-zinc-700 font-medium transition-colors cursor-pointer"
-        >
-          <i data-lucide="refresh-cw" class="w-3 h-3"></i>
-          <span id="reset-demo-label">Isi / Reset 8 Data Demo</span>
-        </button>
+      <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gt-navy/60">
+        <span>Copyright &copy; 2026 GanesaThrift ITB. All Rights Reserved.</span>
+        <span class="font-mono text-[11px] text-gt-teal">Real-Time Cloud Marketplace</span>
       </div>
     </div>
   </footer>
 
   <!-- ===================================================================== -->
-  <!-- MODAL 1: DETAIL BARANG, BOOKING & AKSI PENJUAL (PIN)                  -->
+  <!-- MODAL 1: CLEAN PRODUCT DETAIL VIEW (MATCHING image_40f9a1.png)        -->
   <!-- ===================================================================== -->
   <div
     id="detail-modal"
-    class="hidden fixed inset-0 z-50 overflow-y-auto bg-zinc-950/50 backdrop-blur-[2px] p-3 sm:p-6 flex items-start sm:items-center justify-center"
+    class="hidden fixed inset-0 z-50 overflow-y-auto bg-gt-navyDark/60 backdrop-blur-[3px] p-3 sm:p-6 flex items-start sm:items-center justify-center"
     onclick="handleBackdropClick(event, 'detail-modal')"
   >
     <div
       id="detail-modal-card"
-      class="relative w-full max-w-2xl bg-white border border-zinc-200 rounded-2xl shadow-modal overflow-hidden animate-modal-in my-auto"
+      class="relative w-full max-w-4xl bg-white border border-gt-sky rounded-3xl shadow-modal overflow-hidden animate-modal-in my-auto"
       onclick="event.stopPropagation()"
     >
-      <!-- Top Bar -->
-      <div class="flex items-center justify-between px-5 py-3.5 border-b border-zinc-200 bg-zinc-50/70">
-        <div class="flex items-center gap-2">
-          <span id="detail-category-badge" class="px-2 py-0.5 rounded text-[11px] font-mono font-medium bg-zinc-200/70 text-zinc-700">
-            Kategori
-          </span>
-          <span id="detail-status-pill"></span>
+      <!-- Top Breadcrumb Bar (Home / Shop / Category) -->
+      <div class="flex items-center justify-between px-5 sm:px-7 py-3.5 border-b border-gt-sky/50 bg-gt-beige/60">
+        <div class="flex items-center gap-1.5 text-xs text-gt-navy/70 truncate">
+          <span>Home</span>
+          <span>/</span>
+          <span>Shop</span>
+          <span>/</span>
+          <span id="detail-category-badge" class="font-semibold text-gt-navy">Kategori</span>
         </div>
         <button
           type="button"
           onclick="closeDetailModal()"
-          class="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-950 hover:bg-zinc-200/60 transition-colors cursor-pointer"
+          class="p-1.5 rounded-full text-gt-navy/70 hover:text-gt-navy hover:bg-gt-sky/40 transition-colors cursor-pointer"
           aria-label="Tutup modal"
         >
           <i data-lucide="x" class="w-4 h-4"></i>
@@ -368,7 +790,7 @@
       </div>
 
       <!-- Modal Content -->
-      <div id="detail-modal-body" class="max-h-[82vh] overflow-y-auto">
+      <div id="detail-modal-body" class="max-h-[84vh] overflow-y-auto">
         <!-- Populated dynamically when an item is selected -->
       </div>
     </div>
@@ -379,23 +801,23 @@
   <!-- ===================================================================== -->
   <div
     id="upload-modal"
-    class="hidden fixed inset-0 z-50 overflow-y-auto bg-zinc-950/50 backdrop-blur-[2px] p-3 sm:p-6 flex items-start sm:items-center justify-center"
+    class="hidden fixed inset-0 z-50 overflow-y-auto bg-gt-navyDark/60 backdrop-blur-[3px] p-3 sm:p-6 flex items-start sm:items-center justify-center"
     onclick="handleBackdropClick(event, 'upload-modal')"
   >
     <div
-      class="relative w-full max-w-xl bg-white border border-zinc-200 rounded-2xl shadow-modal overflow-hidden animate-modal-in my-auto"
+      class="relative w-full max-w-xl bg-white border border-gt-sky rounded-3xl shadow-modal overflow-hidden animate-modal-in my-auto"
       onclick="event.stopPropagation()"
     >
       <!-- Modal Header -->
-      <div class="flex items-center justify-between px-5 py-4 border-b border-zinc-200 bg-zinc-50/70">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gt-sky/50 bg-gt-beige/70">
         <div>
-          <h2 class="text-base font-bold text-zinc-950">Jual / Hibahkan Barang</h2>
-          <p class="text-xs text-zinc-500 mt-0.5">Tanpa login—langsung tayang di katalog GanesaThrift.</p>
+          <h2 class="text-base sm:text-lg font-extrabold text-gt-navy">Jual / Hibahkan Barang</h2>
+          <p class="text-xs text-gt-teal mt-0.5">Tanpa login—langsung tayang real-time di katalog GanesaThrift.</p>
         </div>
         <button
           type="button"
           onclick="closeUploadModal()"
-          class="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-950 hover:bg-zinc-200/60 transition-colors cursor-pointer"
+          class="p-1.5 rounded-full text-gt-navy/70 hover:text-gt-navy hover:bg-gt-sky/40 transition-colors cursor-pointer"
           aria-label="Tutup form upload"
         >
           <i data-lucide="x" class="w-4 h-4"></i>
@@ -403,61 +825,52 @@
       </div>
 
       <!-- Upload Form -->
-      <form id="upload-form" onsubmit="handleUploadSubmit(event)" class="p-5 max-h-[82vh] overflow-y-auto space-y-4">
+      <form id="upload-form" onsubmit="handleUploadSubmit(event)" class="p-6 max-h-[82vh] overflow-y-auto space-y-4">
         
-        <!-- Photo Upload + Preset Quick Selector -->
+        <!-- Photo Upload -->
         <div>
-          <label class="block text-xs font-semibold text-zinc-800 mb-1.5">Foto Barang <span class="text-red-500">*</span></label>
-          <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+          <label class="block text-xs font-bold text-gt-navy mb-1.5">Foto Barang <span class="text-red-500">*</span></label>
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-3.5 items-center">
             <!-- Preview Box -->
-            <div class="sm:col-span-5 aspect-[4/3] rounded-xl border border-zinc-200 bg-zinc-50 overflow-hidden relative flex items-center justify-center">
+            <div class="sm:col-span-5 aspect-square rounded-2xl border border-gt-sky bg-gt-beige overflow-hidden relative flex items-center justify-center">
               <img id="upload-photo-preview" src="" alt="Preview barang" class="w-full h-full object-cover hidden" />
               <div id="upload-photo-placeholder" class="text-center p-3">
-                <i data-lucide="image-plus" class="w-6 h-6 text-zinc-400 mx-auto mb-1"></i>
-                <span class="text-[11px] text-zinc-500 block">Belum ada foto</span>
+                <i data-lucide="image-plus" class="w-7 h-7 text-gt-teal mx-auto mb-1"></i>
+                <span class="text-[11px] font-medium text-gt-navy/70 block">Belum ada foto</span>
               </div>
             </div>
 
-            <!-- File Input + Quick Sample Buttons -->
+            <!-- File Input -->
             <div class="sm:col-span-7 space-y-2">
-              <label class="flex items-center justify-center gap-2 w-full px-3 py-2 rounded-lg border border-dashed border-zinc-300 bg-zinc-50/70 hover:bg-zinc-100 text-xs font-medium text-zinc-700 cursor-pointer transition-colors">
-                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
-                <span>Pilih Foto dari HP / Laptop</span>
+              <label class="flex flex-col items-center justify-center gap-1.5 w-full px-4 py-5 rounded-2xl border-2 border-dashed border-gt-sky bg-gt-beige/50 hover:bg-gt-sky/25 text-xs font-semibold text-gt-navy cursor-pointer transition-colors text-center">
+                <i data-lucide="camera" class="w-5 h-5 text-gt-teal"></i>
+                <span>Pilih atau Ambil Foto Barang</span>
+                <span class="text-[11px] font-normal text-gt-navy/60">Format JPG, PNG, atau WEBP dari HP/Laptop</span>
                 <input id="upload-photo-input" type="file" accept="image/*" onchange="handlePhotoFileChange(event)" class="hidden" />
               </label>
-
-              <div>
-                <span class="text-[11px] text-zinc-400 block mb-1">Atau gunakan foto sampel cepat:</span>
-                <div class="flex flex-wrap gap-1.5">
-                  <button type="button" onclick="selectPresetPhoto('elektronik')" class="px-2 py-1 rounded border border-zinc-200 bg-white hover:bg-zinc-100 text-[11px] font-medium text-zinc-700">Gadget</button>
-                  <button type="button" onclick="selectPresetPhoto('buku')" class="px-2 py-1 rounded border border-zinc-200 bg-white hover:bg-zinc-100 text-[11px] font-medium text-zinc-700">Buku</button>
-                  <button type="button" onclick="selectPresetPhoto('perabot')" class="px-2 py-1 rounded border border-zinc-200 bg-white hover:bg-zinc-100 text-[11px] font-medium text-zinc-700">Perabot</button>
-                  <button type="button" onclick="selectPresetPhoto('lampu')" class="px-2 py-1 rounded border border-zinc-200 bg-white hover:bg-zinc-100 text-[11px] font-medium text-zinc-700">Lampu</button>
-                </div>
-              </div>
             </div>
           </div>
         </div>
 
         <!-- Judul Barang -->
         <div>
-          <label for="upload-title" class="block text-xs font-semibold text-zinc-800 mb-1">Judul Barang <span class="text-red-500">*</span></label>
+          <label for="upload-title" class="block text-xs font-bold text-gt-navy mb-1">Judul Barang <span class="text-red-500">*</span></label>
           <input
             id="upload-title"
             type="text"
             required
             placeholder="Contoh: Kalkulus Purcell Edisi 9 / Kipas Angin Kos"
-            class="w-full px-3 py-2 text-sm bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-950 focus:ring-1 focus:ring-zinc-950"
+            class="w-full px-3.5 py-2.5 text-sm bg-white border border-gt-sky rounded-xl text-gt-navy focus:outline-none focus:border-gt-navy"
           />
         </div>
 
         <!-- Kategori & Skala Kondisi -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label for="upload-category" class="block text-xs font-semibold text-zinc-800 mb-1">Kategori <span class="text-red-500">*</span></label>
+            <label for="upload-category" class="block text-xs font-bold text-gt-navy mb-1">Kategori <span class="text-red-500">*</span></label>
             <select
               id="upload-category"
-              class="w-full px-3 py-2 text-sm bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-950 focus:ring-1 focus:ring-zinc-950"
+              class="w-full px-3.5 py-2.5 text-sm bg-white border border-gt-sky rounded-xl text-gt-navy focus:outline-none focus:border-gt-navy"
             >
               <option value="Elektronik">Elektronik</option>
               <option value="Perabot Kos">Perabot Kos</option>
@@ -467,8 +880,8 @@
 
           <div>
             <div class="flex items-center justify-between mb-1">
-              <label class="text-xs font-semibold text-zinc-800">Kondisi (1–5) <span class="text-red-500">*</span></label>
-              <span id="condition-desc-label" class="text-[11px] font-mono text-zinc-500">4/5 Mulus</span>
+              <label class="text-xs font-bold text-gt-navy">Kondisi (1–5) <span class="text-red-500">*</span></label>
+              <span id="condition-desc-label" class="text-[11px] font-mono text-gt-teal">4/5 Mulus</span>
             </div>
             <div id="condition-selector" class="grid grid-cols-5 gap-1.5">
               <!-- Rendered by JS (1 to 5) -->
@@ -477,28 +890,28 @@
         </div>
 
         <!-- Checkbox Gratis + Harga -->
-        <div class="p-3 rounded-xl bg-zinc-50 border border-zinc-200 space-y-2.5">
+        <div class="p-3.5 rounded-2xl bg-gt-beige/80 border border-gt-sky/70 space-y-2.5">
           <label class="inline-flex items-center gap-2.5 cursor-pointer select-none">
             <input
               id="upload-is-free"
               type="checkbox"
               onchange="toggleFreeCheckbox(this.checked)"
-              class="w-4 h-4 rounded border-zinc-300 text-zinc-950 focus:ring-zinc-950 accent-zinc-950"
+              class="w-4 h-4 rounded border-gt-sky text-gt-navy focus:ring-gt-navy accent-gt-navy"
             />
-            <span class="text-xs font-semibold text-zinc-900">Berikan Secara Gratis (Hibah Mahasiswa)</span>
+            <span class="text-xs font-bold text-gt-navy">Berikan Secara Gratis (Hibah Mahasiswa)</span>
           </label>
 
           <div id="price-input-wrapper">
-            <label for="upload-price" class="block text-[11px] font-medium text-zinc-600 mb-1">Harga Jual (Rp)</label>
+            <label for="upload-price" class="block text-[11px] font-semibold text-gt-navy/75 mb-1">Harga Jual (Rp)</label>
             <div class="relative">
-              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-mono text-zinc-500">Rp</span>
+              <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-mono font-semibold text-gt-teal">Rp</span>
               <input
                 id="upload-price"
                 type="number"
                 min="0"
                 step="1000"
                 placeholder="50000"
-                class="w-full pl-9 pr-3 py-2 text-sm font-mono bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-950 focus:ring-1 focus:ring-zinc-950 disabled:bg-zinc-100 disabled:text-zinc-400"
+                class="w-full pl-10 pr-3.5 py-2 text-sm font-mono bg-white border border-gt-sky rounded-xl text-gt-navy focus:outline-none focus:border-gt-navy disabled:bg-gt-sky/30 disabled:text-gt-navy/40"
               />
             </div>
           </div>
@@ -506,81 +919,81 @@
 
         <!-- Lokasi Kos / Kampus -->
         <div>
-          <label for="upload-location" class="block text-xs font-semibold text-zinc-800 mb-1">Lokasi Kos / Kampus <span class="text-red-500">*</span></label>
+          <label for="upload-location" class="block text-xs font-bold text-gt-navy mb-1">Lokasi Kos / Kampus <span class="text-red-500">*</span></label>
           <input
             id="upload-location"
             type="text"
             required
             placeholder="Contoh: Cisitu Lama, Tubagus Ismail, Jatinangor..."
-            class="w-full px-3 py-2 text-sm bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-950 focus:ring-1 focus:ring-zinc-950"
+            class="w-full px-3.5 py-2.5 text-sm bg-white border border-gt-sky rounded-xl text-gt-navy focus:outline-none focus:border-gt-navy"
           />
           <div class="flex flex-wrap gap-1.5 mt-1.5">
-            <button type="button" onclick="setUploadLocation('Cisitu Lama')" class="px-2 py-0.5 rounded text-[11px] bg-zinc-100 hover:bg-zinc-200 text-zinc-600">Cisitu Lama</button>
-            <button type="button" onclick="setUploadLocation('Tubagus Ismail')" class="px-2 py-0.5 rounded text-[11px] bg-zinc-100 hover:bg-zinc-200 text-zinc-600">Tubagus Ismail</button>
-            <button type="button" onclick="setUploadLocation('Dago Pojok')" class="px-2 py-0.5 rounded text-[11px] bg-zinc-100 hover:bg-zinc-200 text-zinc-600">Dago Pojok</button>
-            <button type="button" onclick="setUploadLocation('Jatinangor')" class="px-2 py-0.5 rounded text-[11px] bg-zinc-100 hover:bg-zinc-200 text-zinc-600">Jatinangor</button>
-            <button type="button" onclick="setUploadLocation('Plesiran')" class="px-2 py-0.5 rounded text-[11px] bg-zinc-100 hover:bg-zinc-200 text-zinc-600">Plesiran</button>
+            <button type="button" onclick="setUploadLocation('Cisitu Lama')" class="px-2.5 py-0.5 rounded-full text-[11px] bg-gt-beige hover:bg-gt-sky/50 text-gt-navy font-medium cursor-pointer">Cisitu Lama</button>
+            <button type="button" onclick="setUploadLocation('Tubagus Ismail')" class="px-2.5 py-0.5 rounded-full text-[11px] bg-gt-beige hover:bg-gt-sky/50 text-gt-navy font-medium cursor-pointer">Tubagus Ismail</button>
+            <button type="button" onclick="setUploadLocation('Dago Pojok')" class="px-2.5 py-0.5 rounded-full text-[11px] bg-gt-beige hover:bg-gt-sky/50 text-gt-navy font-medium cursor-pointer">Dago Pojok</button>
+            <button type="button" onclick="setUploadLocation('Jatinangor')" class="px-2.5 py-0.5 rounded-full text-[11px] bg-gt-beige hover:bg-gt-sky/50 text-gt-navy font-medium cursor-pointer">Jatinangor</button>
+            <button type="button" onclick="setUploadLocation('Plesiran')" class="px-2.5 py-0.5 rounded-full text-[11px] bg-gt-beige hover:bg-gt-sky/50 text-gt-navy font-medium cursor-pointer">Plesiran</button>
           </div>
         </div>
 
         <!-- Deskripsi -->
         <div>
-          <label for="upload-description" class="block text-xs font-semibold text-zinc-800 mb-1">Deskripsi &amp; Catatan COD <span class="text-red-500">*</span></label>
+          <label for="upload-description" class="block text-xs font-bold text-gt-navy mb-1">Deskripsi &amp; Catatan COD <span class="text-red-500">*</span></label>
           <textarea
             id="upload-description"
             rows="2"
             required
             placeholder="Jelaskan kondisi barang, kelengkapan, dan titik COD (misal: Gerbang Utama ITB / depan kos)..."
-            class="w-full px-3 py-2 text-sm bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-950 focus:ring-1 focus:ring-zinc-950"
+            class="w-full px-3.5 py-2.5 text-sm bg-white border border-gt-sky rounded-xl text-gt-navy focus:outline-none focus:border-gt-navy"
           ></textarea>
         </div>
 
         <!-- Divider: Identitas Penjual -->
-        <div class="pt-2 border-t border-zinc-200">
+        <div class="pt-3 border-t border-gt-sky/60">
           <div class="flex items-center justify-between mb-2.5">
-            <span class="text-xs font-bold uppercase tracking-wider text-zinc-500">Identitas Penjual (Tanpa Login)</span>
-            <span id="live-itb-preview" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-zinc-100 text-zinc-600 border border-zinc-200">
+            <span class="text-xs font-extrabold uppercase tracking-wider text-gt-navy/70">Identitas Penjual</span>
+            <span id="live-itb-preview" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-gt-beige text-gt-navy border border-gt-sky">
               Umum
             </span>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label for="upload-seller-name" class="block text-xs font-semibold text-zinc-800 mb-1">Nama Penjual <span class="text-red-500">*</span></label>
+              <label for="upload-seller-name" class="block text-xs font-bold text-gt-navy mb-1">Nama Penjual <span class="text-red-500">*</span></label>
               <input
                 id="upload-seller-name"
                 type="text"
                 required
-                placeholder="Nama panggilan / lengkap"
-                class="w-full px-3 py-2 text-sm bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-950 focus:ring-1 focus:ring-zinc-950"
+                placeholder="Nama panggilan / angkatan"
+                class="w-full px-3.5 py-2 text-sm bg-white border border-gt-sky rounded-xl text-gt-navy focus:outline-none focus:border-gt-navy"
               />
             </div>
 
             <div>
-              <label for="upload-seller-email" class="block text-xs font-semibold text-zinc-800 mb-1">Email ITB / Pribadi <span class="text-red-500">*</span></label>
+              <label for="upload-seller-email" class="block text-xs font-bold text-gt-navy mb-1">Email ITB / Pribadi <span class="text-red-500">*</span></label>
               <input
                 id="upload-seller-email"
                 type="email"
                 required
                 oninput="updateLiveItbBadge(this.value)"
                 placeholder="nim@mahasiswa.itb.ac.id"
-                class="w-full px-3 py-2 text-sm bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-950 focus:ring-1 focus:ring-zinc-950"
+                class="w-full px-3.5 py-2 text-sm bg-white border border-gt-sky rounded-xl text-gt-navy focus:outline-none focus:border-gt-navy"
               />
             </div>
 
             <div>
-              <label for="upload-seller-wa" class="block text-xs font-semibold text-zinc-800 mb-1">No. WhatsApp <span class="text-red-500">*</span></label>
+              <label for="upload-seller-wa" class="block text-xs font-bold text-gt-navy mb-1">No. WhatsApp <span class="text-red-500">*</span></label>
               <input
                 id="upload-seller-wa"
                 type="tel"
                 required
                 placeholder="6281234567890"
-                class="w-full px-3 py-2 text-sm font-mono bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-950 focus:ring-1 focus:ring-zinc-950"
+                class="w-full px-3.5 py-2 text-sm font-mono bg-white border border-gt-sky rounded-xl text-gt-navy focus:outline-none focus:border-gt-navy"
               />
             </div>
 
             <div>
-              <label for="upload-seller-pin" class="block text-xs font-semibold text-zinc-800 mb-1">PIN Penjual (4 Angka) <span class="text-red-500">*</span></label>
+              <label for="upload-seller-pin" class="block text-xs font-bold text-gt-navy mb-1">PIN Penjual (4 Angka) <span class="text-red-500">*</span></label>
               <input
                 id="upload-seller-pin"
                 type="text"
@@ -588,30 +1001,30 @@
                 maxlength="4"
                 pattern="\d{4}"
                 required
-                placeholder="1234"
-                class="w-full px-3 py-2 text-sm font-mono tracking-widest bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-950 focus:ring-1 focus:ring-zinc-950"
+                placeholder="••••"
+                class="w-full px-3.5 py-2 text-sm font-mono tracking-widest bg-white border border-gt-sky rounded-xl text-gt-navy focus:outline-none focus:border-gt-navy"
               />
-              <span class="text-[10px] text-zinc-400 block mt-0.5">Dipakai untuk menandai barang laku / batal booking.</span>
+              <span class="text-[10px] text-gt-teal block mt-0.5">Simpan PIN ini untuk menandai barang laku.</span>
             </div>
           </div>
         </div>
 
         <!-- Inline Form Error Alert -->
-        <div id="upload-error-box" class="hidden p-2.5 rounded-lg bg-red-50 border border-red-200 text-xs text-red-700 font-medium"></div>
+        <div id="upload-error-box" class="hidden p-3 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 font-semibold"></div>
 
         <!-- Submit Footer -->
-        <div class="pt-3 border-t border-zinc-200 flex items-center justify-end gap-2.5">
+        <div class="pt-3 border-t border-gt-sky/60 flex items-center justify-end gap-2.5">
           <button
             type="button"
             onclick="closeUploadModal()"
-            class="px-4 py-2 rounded-lg text-xs sm:text-sm font-medium border border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 transition-colors cursor-pointer"
+            class="px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold border border-gt-sky bg-white text-gt-navy hover:bg-gt-beige transition-colors cursor-pointer"
           >
             Batal
           </button>
           <button
             id="upload-submit-btn"
             type="submit"
-            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-medium bg-zinc-950 text-white hover:bg-zinc-800 disabled:opacity-60 disabled:cursor-not-allowed transition-colors shadow-sm cursor-pointer"
+            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold bg-gt-navy text-white hover:bg-gt-navyDark disabled:opacity-60 disabled:cursor-not-allowed transition-colors shadow-soft cursor-pointer"
           >
             <i data-lucide="check" class="w-4 h-4"></i>
             <span id="upload-submit-label">Tayangkan Barang</span>
@@ -627,291 +1040,113 @@
   <div id="toast-container" class="fixed bottom-5 right-5 z-[60] flex flex-col gap-2 pointer-events-none"></div>
 
   <!-- ===================================================================== -->
-  <!-- APPLICATION LOGIC                                                     -->
+  <!-- APPLICATION LOGIC (100% REAL-TIME SUPABASE - NO DEMO DATA)            -->
   <!-- ===================================================================== -->
   <script>
     // -----------------------------------------------------------------------
-    // 0. KONFIGURASI SUPABASE (ISI URL & ANON KEY PROYEK SUPABASE KAMU)
+    // 0. KONFIGURASI SUPABASE LIVE
     // -----------------------------------------------------------------------
     const SUPABASE_URL = 'https://rogpfzhhkdmugcwmhqbb.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_1I5L7Y9rWl_MntxPEwRupA_Ev3LX7Ff';
 
-    const IS_SUPABASE_CONFIGURED =
-      typeof SUPABASE_URL === 'string' &&
-      SUPABASE_URL.startsWith('https://') &&
-      typeof SUPABASE_ANON_KEY === 'string' &&
-      SUPABASE_ANON_KEY.trim() !== '' &&
-      SUPABASE_ANON_KEY !== 'ISI_DENGAN_ANON_PUBLIC_KEY_SUPABASE_KAMU';
-
-    const supabaseClient =
-      IS_SUPABASE_CONFIGURED && window.supabase
-        ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-        : null;
+    const supabaseClient = window.supabase
+      ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+      : null;
 
     // -----------------------------------------------------------------------
-    // 1. STUDIO-CRAFTED EMBEDDED SVG ARTWORKS (100% RELIABLE OFFLINE/ONLINE)
+    // 1. FALLBACK PLACEHOLDER SVG (ONLY IF IMAGE URL FAILS TO LOAD)
     // -----------------------------------------------------------------------
-    function createArtworkSvg(bgGradientStart, bgGradientEnd, accentColor, labelTop, iconSvgPath, labelBottom) {
-      const svg = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480">
-          <defs>
-            <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="${bgGradientStart}"/>
-              <stop offset="100%" stop-color="${bgGradientEnd}"/>
-            </linearGradient>
-            <pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse">
-              <circle cx="2" cy="2" r="1.2" fill="#09090B" fill-opacity="0.06"/>
-            </pattern>
-          </defs>
-          <rect width="640" height="480" fill="url(#bg)"/>
-          <rect width="640" height="480" fill="url(#dots)"/>
-          <rect x="195" y="105" width="250" height="215" rx="28" fill="#FFFFFF" stroke="#E4E4E7" stroke-width="2"/>
-          <circle cx="320" cy="212" r="64" fill="${accentColor}" fill-opacity="0.12"/>
-          <g transform="translate(284, 176) scale(3)" stroke="${accentColor}" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            ${iconSvgPath}
-          </g>
-          <text x="320" y="366" text-anchor="middle" font-family="Inter, sans-serif" font-weight="700" font-size="18" fill="#18181B">${labelTop}</text>
-          <text x="320" y="392" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="500" font-size="13" fill="#71717A">${labelBottom}</text>
-        </svg>
-      `.trim();
-      return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
-    }
-
-    const ARTWORKS = {
-      kalkulus: createArtworkSvg(
-        '#F4F4F5', '#E4E4E7', '#059669',
-        'Kalkulus Purcell Jilid 1 & 2',
-        '<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><path d="M8 7h6"/><path d="M8 11h8"/>',
-        'EDISI 9 • TPB ITB'
-      ),
-      monitor: createArtworkSvg(
-        '#F8FAFC', '#E2E8F0', '#18181B',
-        'Monitor LG 24MK600 IPS',
-        '<rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/>',
-        '24 INCH • 75HZ • FULL HD'
-      ),
-      meja: createArtworkSvg(
-        '#FAF5FF', '#F3E8FF', '#7C3AED',
-        'Meja Belajar Lipat Kayu',
-        '<path d="M3 7h18"/><path d="M5 7v12"/><path d="M19 7v12"/><path d="M5 12h14"/>',
-        'MINIMALIS KOS • 80x40 CM'
-      ),
-      dispenser: createArtworkSvg(
-        '#EFF6FF', '#DBEAFE', '#2563EB',
-        'Dispenser Galon Bawah',
-        '<rect x="6" y="2" width="12" height="20" rx="2"/><line x1="6" y1="10" x2="18" y2="10"/><circle cx="10" cy="6" r="1"/><circle cx="14" cy="6" r="1"/>',
-        'COSMOS CWD-7601 • NORMAL/PANAS'
-      ),
-      arduino: createArtworkSvg(
-        '#ECFDF5', '#D1FAE5', '#059669',
-        'Arduino Uno R3 Starter Kit',
-        '<rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3"/><path d="M15 1v3"/><path d="M9 20v3"/><path d="M15 20v3"/><path d="M20 9h3"/><path d="M20 14h3"/><path d="M1 9h3"/><path d="M1 14h3"/>',
-        'PRAKTIKUM ELKA • LENGKAP'
-      ),
-      rak: createArtworkSvg(
-        '#FFFBEB', '#FEF3C7', '#D97706',
-        'Rak Buku Susun 4 Tingkat',
-        '<path d="M4 3h16v18H4z"/><path d="M4 8h16"/><path d="M4 13h16"/><path d="M4 18h16"/>',
-        'PORTABLE • KOKOH & RINGAN'
-      ),
-      diktat: createArtworkSvg(
-        '#F0FDF4', '#DCFCE7', '#16A34A',
-        'Diktat Fisika & Kimia Dasar',
-        '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>',
-        'MODUL PRAKTIKUM + CATATAN'
-      ),
-      lampu: createArtworkSvg(
-        '#F4F4F5', '#E4E4E7', '#09090B',
-        'Xiaomi Mi LED Desk Lamp',
-        '<path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2v1"/><path d="M12 7a5 5 0 0 1 5 5c0 2-1.5 3.5-2.5 4.5h-5C8.5 15.5 7 14 7 12a5 5 0 0 1 5-5z"/>',
-        'DIMMABLE • WARM & COOL'
-      )
-    };
-
-    const PRESET_UPLOAD_ARTWORKS = {
-      elektronik: ARTWORKS.monitor,
-      buku: ARTWORKS.kalkulus,
-      perabot: ARTWORKS.meja,
-      lampu: ARTWORKS.lampu
-    };
+    const FALLBACK_PLACEHOLDER_SVG = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(`
+      <svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+        <rect width="400" height="400" fill="#F5EFEB"/>
+        <rect x="145" y="135" width="110" height="95" rx="18" fill="#FFFFFF" stroke="#C8D9E6" stroke-width="3"/>
+        <circle cx="182" cy="170" r="10" fill="#567C8D"/>
+        <path d="M155 215L185 185L205 205L222 190L245 215H155Z" fill="#2F4156"/>
+        <text x="200" y="268" text-anchor="middle" font-family="sans-serif" font-weight="700" font-size="14" fill="#2F4156">GanesaThrift ITB</text>
+      </svg>
+    `.trim());
 
     // -----------------------------------------------------------------------
-    // 2. PRE-POPULATED REALISTIC ITB DEMO DATA
+    // 2. INTRO OVERLAY CONTROLLER (CYERA-INSPIRED EXPERIENCE)
     // -----------------------------------------------------------------------
-    const STORAGE_KEY = 'ganesathrift_items_v1';
-
-    const INITIAL_DEMO_ITEMS = [
+    const INTRO_STEPS = [
       {
-        id: 'gt-101',
-        title: 'Buku Kalkulus Purcell Jilid 1 & 2 (Edisi 9)',
-        description: 'Hibah buat adik tingkat TPB! Buku cetak bahasa Indonesia lengkap Jilid 1 & 2. Ada sedikit stabilo rapi di bab turunan dan integral, halaman lengkap tidak ada yang robek. COD sekitar Gerbang Belakang ITB / Cisitu Lama.',
-        category: 'Buku',
-        condition: 4,
-        price: 0,
-        isFree: true,
-        location: 'Cisitu Lama',
-        sellerName: 'Raka Pratama (FTMD \'23)',
-        sellerEmail: 'raka.pratama@mahasiswa.itb.ac.id',
-        sellerWa: '6281234567801',
-        pin: '1234',
-        status: 'Tersedia',
-        buyerName: '',
-        buyerWa: '',
-        imageUrl: ARTWORKS.kalkulus,
-        createdAt: Date.now() - 1000 * 60 * 35
+        tag: 'LIVE NODE 01 • DIRECT LISTING',
+        title: 'Pasang Barang dalam 30 Detik',
+        desc: 'Upload foto barang dari HP atau laptop, tentukan harga atau centang opsi Hibah Gratis, dan amankan transaksi dengan 4-digit PIN pribadi.'
       },
       {
-        id: 'gt-102',
-        title: 'Monitor LG 24MK600 IPS 75Hz Full HD',
-        description: 'Jual cepat karena mau pindah kos pasca wisuda. Layar IPS mulus no dead pixel, bezel tipis, lengkap dengan adaptor original dan kabel HDMI. Dus masih ada. Bisa tes nyala langsung di kos Tubagus Ismail.',
-        category: 'Elektronik',
-        condition: 5,
-        price: 1150000,
-        isFree: false,
-        location: 'Tubagus Ismail',
-        sellerName: 'Nadia Kusuma (STEI \'22)',
-        sellerEmail: 'nadia.kusuma@mahasiswa.itb.ac.id',
-        sellerWa: '6281234567802',
-        pin: '1234',
-        status: 'Tersedia',
-        buyerName: '',
-        buyerWa: '',
-        imageUrl: ARTWORKS.monitor,
-        createdAt: Date.now() - 1000 * 60 * 90
+        tag: 'LIVE NODE 02 • CAMPUS TRUST',
+        title: 'Verifikasi Otomatis @itb.ac.id',
+        desc: 'Setiap penjual yang menggunakan email @mahasiswa.itb.ac.id atau @itb.ac.id otomatis mendapatkan lencana Mahasiswa ITB untuk kepercayaan transaksi.'
       },
       {
-        id: 'gt-103',
-        title: 'Meja Belajar Lipat Kayu Minimalis Kos',
-        description: 'Ukuran 80x40 cm, tinggi pas buat lesehan atau pakai kursi pendek. Permukaan HPL tahan air, kaki besi kokoh dan bisa dilipat rata kalau tidak dipakai. COD area Plesiran / Tamansari.',
-        category: 'Perabot Kos',
-        condition: 4,
-        price: 85000,
-        isFree: false,
-        location: 'Plesiran',
-        sellerName: 'Dimas Saputra (FTSL \'24)',
-        sellerEmail: 'dimas.saputra@mahasiswa.itb.ac.id',
-        sellerWa: '6281234567803',
-        pin: '1234',
-        status: 'Tersedia',
-        buyerName: '',
-        buyerWa: '',
-        imageUrl: ARTWORKS.meja,
-        createdAt: Date.now() - 1000 * 60 * 150
-      },
-      {
-        id: 'gt-104',
-        title: 'Dispenser Galon Bawah Cosmos CWD-7601',
-        description: 'Praktis tanpa angkat galon berat. Fungsi air panas dan normal lancar jaya, pompa bawah masih kencang. Dijual karena selesai semester di Kampus Jatinangor.',
-        category: 'Perabot Kos',
-        condition: 4,
-        price: 450000,
-        isFree: false,
-        location: 'Jatinangor',
-        sellerName: 'Aulia Rahma (SITH \'23)',
-        sellerEmail: 'aulia.rahma@mahasiswa.itb.ac.id',
-        sellerWa: '6281234567804',
-        pin: '1234',
-        status: 'Dalam Proses',
-        buyerName: 'Fajar Nugroho (SF \'25)',
-        buyerWa: '6281298765432',
-        imageUrl: ARTWORKS.dispenser,
-        createdAt: Date.now() - 1000 * 60 * 240
-      },
-      {
-        id: 'gt-105',
-        title: 'Arduino Uno R3 Starter Kit Praktikum',
-        description: 'Lengkap: Board Arduino Uno R3 DIP + kabel USB, breadboard 830 titik, kabel jumper male-male/female, sensor ultrasonik HC-SR04, servo SG90, resistor, dan box komponen.',
-        category: 'Elektronik',
-        condition: 5,
-        price: 165000,
-        isFree: false,
-        location: 'Dago Pojok',
-        sellerName: 'Kevin Wijaya (FTI \'23)',
-        sellerEmail: 'kevin.wijaya@mahasiswa.itb.ac.id',
-        sellerWa: '6281234567805',
-        pin: '1234',
-        status: 'Tersedia',
-        buyerName: '',
-        buyerWa: '',
-        imageUrl: ARTWORKS.arduino,
-        createdAt: Date.now() - 1000 * 60 * 320
-      },
-      {
-        id: 'gt-106',
-        title: 'Rak Buku Susun 4 Tingkat Portable',
-        description: 'Rak penyimpanan serbaguna untuk buku kuliah atau peralatan kos. Rangka pipa besi ringan + ambalan kain non-woven tebal. Mudah dibongkar pasang saat pindahan.',
-        category: 'Perabot Kos',
-        condition: 3,
-        price: 60000,
-        isFree: false,
-        location: 'Sangkuriang',
-        sellerName: 'Ibu Siti (Pengelola Kos)',
-        sellerEmail: 'siti.kos.sangkuriang@gmail.com',
-        sellerWa: '6281234567806',
-        pin: '1234',
-        status: 'Tersedia',
-        buyerName: '',
-        buyerWa: '',
-        imageUrl: ARTWORKS.rak,
-        createdAt: Date.now() - 1000 * 60 * 410
-      },
-      {
-        id: 'gt-107',
-        title: 'Diktat Fisika Dasar IA & Kimia Dasar + Modul',
-        description: 'Gratis buat mahasiswa TPB yang butuh referensi tambahan dan kumpulan soal kuis/UTS tahun lalu. Bonus binder catatan kuliah rapi.',
-        category: 'Buku',
-        condition: 4,
-        price: 0,
-        isFree: true,
-        location: 'Cisitu Lama',
-        sellerName: 'Zahra Putri (FMIPA \'24)',
-        sellerEmail: 'zahra.putri@mahasiswa.itb.ac.id',
-        sellerWa: '6281234567807',
-        pin: '1234',
-        status: 'Tersedia',
-        buyerName: '',
-        buyerWa: '',
-        imageUrl: ARTWORKS.diktat,
-        createdAt: Date.now() - 1000 * 60 * 500
-      },
-      {
-        id: 'gt-108',
-        title: 'Lampu Meja Belajar LED Xiaomi Mi Desk Lamp',
-        description: 'Lampu meja minimalis dengan pengaturan tingkat kecerahan dan temperatur warna (warm ke cool white), tidak bikin mata cepat lelah saat nugas malam.',
-        category: 'Elektronik',
-        condition: 5,
-        price: 190000,
-        isFree: false,
-        location: 'Tubagus Ismail',
-        sellerName: 'Hendra Gunawan (SAPPK \'22)',
-        sellerEmail: 'hendra.g@itb.ac.id',
-        sellerWa: '6281234567808',
-        pin: '1234',
-        status: 'Tersedia',
-        buyerName: '',
-        buyerWa: '',
-        imageUrl: ARTWORKS.lampu,
-        createdAt: Date.now() - 1000 * 60 * 620
+        tag: 'LIVE NODE 03 • REALTIME BOOKING',
+        title: 'Kunci Barang & COD Sekitar Kampus',
+        desc: 'Klik Booking Sekarang untuk mengunci status barang menjadi Dalam Proses secara real-time di semua perangkat, lalu koordinasi COD lewat WhatsApp.'
       }
     ];
+
+    function selectIntroStep(index) {
+      const step = INTRO_STEPS[index] || INTRO_STEPS[0];
+      document.getElementById('intro-preview-tag').textContent = step.tag;
+      document.getElementById('intro-preview-title').textContent = step.title;
+      document.getElementById('intro-preview-desc').textContent = step.desc;
+
+      [0, 1, 2].forEach(i => {
+        const btn = document.getElementById(`intro-step-btn-${i}`);
+        if (!btn) return;
+        if (i === index) {
+          btn.className = 'text-left p-3.5 rounded-2xl border border-gt-sky/60 bg-white/15 transition-all cursor-pointer';
+        } else {
+          btn.className = 'text-left p-3.5 rounded-2xl border border-white/15 bg-white/5 hover:bg-white/10 transition-all cursor-pointer';
+        }
+      });
+    }
+
+    function openIntroOverlay() {
+      const overlay = document.getElementById('intro-overlay');
+      if (!overlay) return;
+      overlay.classList.remove('hidden', 'opacity-0');
+      document.body.style.overflow = 'hidden';
+      lucide.createIcons();
+    }
+
+    function closeIntroOverlay() {
+      const overlay = document.getElementById('intro-overlay');
+      if (!overlay) return;
+      overlay.classList.add('opacity-0');
+      try {
+        sessionStorage.setItem('ganesathrift_intro_seen', '1');
+      } catch (e) {}
+      setTimeout(() => {
+        overlay.classList.add('hidden');
+        document.body.style.overflow = '';
+      }, 320);
+    }
+
+    function navigateToSection(sectionId) {
+      const el = document.getElementById(sectionId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
 
     // -----------------------------------------------------------------------
     // 3. STATE MANAGEMENT
     // -----------------------------------------------------------------------
     let items = [];
     let isLoadingItems = true;
-    let isRealtimeConnected = false;
     let realtimeChannel = null;
     let activeCategory = 'Semua';
     let activeStatusFilter = 'active'; // 'active' | 'all'
     let searchQuery = '';
     let selectedItemId = null;
     let isBookingFormOpen = false;
+    let activeDetailTab = 'description'; // 'description' | 'seller'
     let uploadCondition = 4;
     let uploadPhotoDataUrl = '';
     let uploadCompressedBlob = null;
-    let resetConfirmPending = false;
-    let resetConfirmTimer = null;
 
     const CATEGORIES = ['Semua', 'Gratis', 'Elektronik', 'Perabot Kos', 'Buku'];
 
@@ -924,7 +1159,7 @@
     };
 
     // -----------------------------------------------------------------------
-    // 4. DATABASE MAPPERS, SUPABASE SYNC & LOCALSTORAGE FALLBACK
+    // 4. SUPABASE REAL-TIME DATA LAYER
     // -----------------------------------------------------------------------
     function mapDbRowToItem(row) {
       return {
@@ -939,11 +1174,11 @@
         sellerName: row.seller_name || '',
         sellerEmail: row.seller_email || '',
         sellerWa: row.seller_wa || '',
-        pin: String(row.pin || '1234'),
+        pin: String(row.pin || ''),
         status: row.status || 'Tersedia',
         buyerName: row.buyer_name || '',
         buyerWa: row.buyer_wa || '',
-        imageUrl: row.image_url || ARTWORKS.monitor,
+        imageUrl: row.image_url || FALLBACK_PLACEHOLDER_SVG,
         createdAt: row.created_at ? new Date(row.created_at).getTime() : Date.now()
       };
     }
@@ -969,56 +1204,19 @@
     }
 
     function updateSyncStatusBadge(mode, detailText = '') {
-      const pill = document.getElementById('sync-status-pill');
       const dot = document.getElementById('sync-status-dot');
       const text = document.getElementById('sync-status-text');
-      if (!pill || !dot || !text) return;
+      if (!dot || !text) return;
 
       if (mode === 'supabase') {
-        pill.className = 'inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-50/80 border border-emerald-200 text-xs';
         dot.className = 'w-2 h-2 rounded-full bg-emerald-500 animate-pulse';
-        text.className = 'font-mono font-semibold text-emerald-800';
-        text.textContent = detailText || 'Live Sync: Supabase';
+        text.textContent = detailText || 'Live Sync: Aktif';
       } else if (mode === 'error') {
-        pill.className = 'inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-red-50 border border-red-200 text-xs';
         dot.className = 'w-2 h-2 rounded-full bg-red-500';
-        text.className = 'font-mono font-medium text-red-700';
-        text.textContent = detailText || 'Koneksi Supabase Terputus';
+        text.textContent = detailText || 'Koneksi Terputus';
       } else {
-        pill.className = 'inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-50/70 border border-amber-200/80 text-xs';
-        dot.className = 'w-2 h-2 rounded-full bg-amber-500';
-        text.className = 'font-mono font-medium text-amber-800';
-        text.textContent = detailText || 'Mode Lokal (Browser)';
-      }
-    }
-
-    function dismissSetupBanner() {
-      const banner = document.getElementById('supabase-setup-banner');
-      if (banner) banner.classList.add('hidden');
-    }
-
-    function loadItemsFromLocal() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            items = parsed;
-            return;
-          }
-        }
-      } catch (e) {
-        console.warn('Gagal membaca localStorage, menggunakan data demo:', e);
-      }
-      items = JSON.parse(JSON.stringify(INITIAL_DEMO_ITEMS));
-      saveItemsToLocal();
-    }
-
-    function saveItemsToLocal() {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-      } catch (e) {
-        console.warn('Gagal menyimpan ke localStorage:', e);
+        dot.className = 'w-2 h-2 rounded-full bg-gt-teal';
+        text.textContent = detailText || 'Menghubungkan...';
       }
     }
 
@@ -1038,10 +1236,9 @@
 
         items = Array.isArray(data) ? data.map(mapDbRowToItem) : [];
         isLoadingItems = false;
-        updateSyncStatusBadge('supabase', 'Live Sync: Supabase');
+        updateSyncStatusBadge('supabase', 'Live Sync: Aktif');
         refreshAll();
 
-        // Sync open detail modal if open
         if (selectedItemId) {
           const updatedSelected = items.find(i => i.id === selectedItemId);
           if (updatedSelected) {
@@ -1054,8 +1251,8 @@
       } catch (err) {
         console.error('Supabase fetch error:', err);
         isLoadingItems = false;
-        updateSyncStatusBadge('error', 'Error Tabel Supabase');
-        showToast('Gagal memuat data dari Supabase. Pastikan tabel "items" & policy publik sudah dibuat.', 'error');
+        updateSyncStatusBadge('error', 'Gagal Memuat Database');
+        showToast('Gagal memuat katalog dari Supabase: ' + (err.message || 'Cek koneksi'), 'error');
         refreshAll();
       }
     }
@@ -1067,15 +1264,14 @@
       }
 
       realtimeChannel = supabaseClient
-        .channel('public:items-sync')
+        .channel('public:items-live-channel')
         .on(
           'postgres_changes',
           { event: '*', schema: 'public', table: 'items' },
           (payload) => {
             if (payload.eventType === 'INSERT' && payload.new) {
               const incoming = mapDbRowToItem(payload.new);
-              const exists = items.some(i => i.id === incoming.id);
-              if (!exists) {
+              if (!items.some(i => i.id === incoming.id)) {
                 items.unshift(incoming);
               }
             } else if (payload.eventType === 'UPDATE' && payload.new) {
@@ -1102,29 +1298,20 @@
           }
         )
         .subscribe((status) => {
-          isRealtimeConnected = status === 'SUBSCRIBED';
-          if (isRealtimeConnected) {
-            updateSyncStatusBadge('supabase', 'Live Sync: Supabase');
+          if (status === 'SUBSCRIBED') {
+            updateSyncStatusBadge('supabase', 'Live Sync: Aktif');
           }
         });
     }
 
     async function initAppData() {
-      if (supabaseClient) {
-        dismissSetupBanner();
-        updateSyncStatusBadge('supabase', 'Menghubungkan Supabase...');
-        await fetchItemsFromSupabase(false);
-        setupSupabaseRealtime();
-      } else {
-        const banner = document.getElementById('supabase-setup-banner');
-        if (banner) banner.classList.remove('hidden');
-        updateSyncStatusBadge('local', 'Mode Lokal (Browser)');
-        loadItemsFromLocal();
-        isLoadingItems = false;
-        refreshAll();
-      }
+      await fetchItemsFromSupabase(false);
+      setupSupabaseRealtime();
     }
 
+    // -----------------------------------------------------------------------
+    // 5. FORMATTING & VALIDATION HELPERS
+    // -----------------------------------------------------------------------
     function isItbEmail(email) {
       if (!email || typeof email !== 'string') return false;
       const clean = email.trim().toLowerCase();
@@ -1158,10 +1345,10 @@
       const container = document.getElementById('toast-container');
       const toast = document.createElement('div');
       const isError = type === 'error';
-      toast.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-xl border text-xs sm:text-sm font-medium shadow-lg transition-all duration-200 ${
+      toast.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-2xl border text-xs sm:text-sm font-semibold shadow-lg transition-all duration-200 ${
         isError
           ? 'bg-red-950 text-white border-red-800'
-          : 'bg-zinc-950 text-white border-zinc-800'
+          : 'bg-gt-navy text-white border-gt-teal/50'
       }`;
       toast.innerHTML = `
         <span class="w-2 h-2 rounded-full ${isError ? 'bg-red-400' : 'bg-emerald-400'} shrink-0"></span>
@@ -1172,11 +1359,11 @@
         toast.style.opacity = '0';
         toast.style.transform = 'translateY(6px)';
         setTimeout(() => toast.remove(), 220);
-      }, 3200);
+      }, 3400);
     }
 
     // -----------------------------------------------------------------------
-    // 5. RENDERING: METRICS, FILTERS & CATALOG GRID
+    // 6. RENDERING: METRICS, CATEGORY STRIP & GOCART-STYLE PRODUCT CARDS
     // -----------------------------------------------------------------------
     function renderMetrics() {
       const activeItems = items.filter(i => i.status === 'Tersedia' || i.status === 'Dalam Proses');
@@ -1209,26 +1396,35 @@
           <button
             type="button"
             onclick="selectCategory('${cat}')"
-            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all cursor-pointer border ${
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all cursor-pointer ${
               isActive
-                ? 'bg-zinc-950 text-white border-zinc-950 shadow-sm'
-                : 'bg-white text-zinc-600 border-zinc-200 hover:border-zinc-300 hover:text-zinc-950'
+                ? 'bg-gt-navy text-white shadow-soft'
+                : 'bg-gt-beige text-gt-navy/75 hover:bg-gt-sky/45 hover:text-gt-navy'
             }"
           >
-            ${cat === 'Gratis' ? `<span class="w-1.5 h-1.5 rounded-full ${isActive ? 'bg-emerald-400' : 'bg-emerald-500'}"></span>` : ''}
             <span>${cat}</span>
-            <span class="font-mono text-[10px] px-1.5 py-0.2 rounded-full ${
-              isActive ? 'bg-zinc-800 text-zinc-200' : 'bg-zinc-100 text-zinc-500'
+            <span class="font-mono text-[11px] px-1.5 py-0.2 rounded-md ${
+              isActive ? 'bg-white/20 text-white' : 'bg-white text-gt-teal'
             }">${count}</span>
           </button>
         `;
       }).join('');
     }
 
+    function renderStarRating(score) {
+      const val = Math.min(5, Math.max(1, Number(score) || 4));
+      let stars = '';
+      for (let i = 1; i <= 5; i++) {
+        const active = i <= val;
+        stars += `<svg class="w-3.5 h-3.5 ${active ? 'text-gt-teal fill-gt-teal' : 'text-gt-sky fill-gt-sky/50'}" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>`;
+      }
+      return `<div class="flex items-center gap-0.5" title="Kondisi ${val}/5">${stars}</div>`;
+    }
+
     function getStatusBadgeHtml(status) {
       if (status === 'Tersedia') {
         return `
-          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-white/95 backdrop-blur-sm text-zinc-900 border border-zinc-200/90 shadow-sm">
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-white/95 text-gt-navy shadow-soft">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
             <span>Tersedia</span>
           </span>
@@ -1236,48 +1432,16 @@
       }
       if (status === 'Dalam Proses') {
         return `
-          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-amber-50/95 backdrop-blur-sm text-amber-800 border border-amber-200 shadow-sm">
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50/95 text-amber-800 border border-amber-200 shadow-soft">
             <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
             <span>Dalam Proses</span>
           </span>
         `;
       }
       return `
-        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-zinc-100/95 backdrop-blur-sm text-zinc-600 border border-zinc-300 shadow-sm">
-          <span class="w-1.5 h-1.5 rounded-full bg-zinc-400"></span>
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-gt-navy/90 text-white shadow-soft">
           <span>Sudah Tersalurkan</span>
         </span>
-      `;
-    }
-
-    function getSellerBadgeHtml(email) {
-      if (isItbEmail(email)) {
-        return `
-          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm">
-            <i data-lucide="badge-check" class="w-3 h-3 text-emerald-600 shrink-0"></i>
-            <span>Mahasiswa ITB</span>
-          </span>
-        `;
-      }
-      return `
-        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-zinc-100 text-zinc-600 border border-zinc-200 shadow-sm">
-          Umum
-        </span>
-      `;
-    }
-
-    function renderConditionBar(score) {
-      const val = Math.min(5, Math.max(1, Number(score) || 3));
-      let segments = '';
-      for (let i = 1; i <= 5; i++) {
-        const filled = i <= val;
-        segments += `<span class="h-1.5 w-3 rounded-xs ${filled ? 'bg-zinc-900' : 'bg-zinc-200'}"></span>`;
-      }
-      return `
-        <div class="flex items-center gap-1.5" title="Kondisi ${val} dari 5">
-          <div class="flex items-center gap-0.5">${segments}</div>
-          <span class="font-mono text-[11px] font-medium text-zinc-600">Kondisi ${val}/5</span>
-        </div>
       `;
     }
 
@@ -1292,31 +1456,24 @@
         emptyState.classList.remove('flex');
         grid.classList.remove('hidden');
         grid.innerHTML = Array.from({ length: 4 }).map(() => `
-          <div class="bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-vercel animate-pulse">
-            <div class="aspect-[4/3] w-full bg-zinc-100"></div>
-            <div class="p-4 space-y-3">
-              <div class="h-3 bg-zinc-100 rounded w-1/3"></div>
-              <div class="h-4 bg-zinc-200 rounded w-3/4"></div>
-              <div class="h-5 bg-zinc-100 rounded w-1/2"></div>
-              <div class="pt-3 border-t border-zinc-100 h-6 bg-zinc-50 rounded"></div>
-            </div>
+          <div class="animate-pulse space-y-3">
+            <div class="aspect-square w-full rounded-2xl bg-gt-beige"></div>
+            <div class="h-4 bg-gt-beige rounded w-3/4"></div>
+            <div class="h-3.5 bg-gt-beige rounded w-1/3"></div>
           </div>
         `).join('');
         return;
       }
 
       const filtered = items.filter(item => {
-        // Status filter
         if (activeStatusFilter === 'active' && item.status === 'Sudah Tersalurkan') {
           return false;
         }
-        // Category filter
         if (activeCategory === 'Gratis') {
           if (!item.isFree && Number(item.price) !== 0) return false;
         } else if (activeCategory !== 'Semua') {
           if (item.category !== activeCategory) return false;
         }
-        // Search query filter
         if (searchQuery.trim() !== '') {
           const q = searchQuery.trim().toLowerCase();
           const matchTitle = item.title.toLowerCase().includes(q);
@@ -1338,16 +1495,16 @@
 
         const emptyTitle = document.getElementById('empty-state-title');
         const emptyDesc = document.getElementById('empty-state-desc');
-        const emptySeedBtn = document.getElementById('empty-seed-btn');
+        const resetFilterBtn = document.getElementById('empty-reset-filter-btn');
 
         if (items.length === 0) {
-          emptyTitle.textContent = 'Katalog masih kosong';
-          emptyDesc.textContent = 'Belum ada barang di database. Kamu bisa langsung upload barang baru atau isi 8 data demo ITB.';
-          emptySeedBtn.classList.remove('hidden');
+          emptyTitle.textContent = 'Belum ada barang yang tayang';
+          emptyDesc.textContent = 'Katalog real-time masih kosong. Jadilah mahasiswa ITB pertama yang menjual atau menghibahkan barang bekas kos maupun perlengkapan kuliah!';
+          resetFilterBtn.classList.add('hidden');
         } else {
           emptyTitle.textContent = 'Barang tidak ditemukan';
-          emptyDesc.textContent = 'Coba ubah kata kunci pencarian, pilih kategori lain, atau tampilkan barang yang sudah tersalurkan.';
-          emptySeedBtn.classList.add('hidden');
+          emptyDesc.textContent = 'Tidak ada barang yang cocok dengan filter atau kata kunci pencarian saat ini.';
+          resetFilterBtn.classList.remove('hidden');
         }
 
         lucide.createIcons();
@@ -1361,92 +1518,57 @@
       grid.innerHTML = filtered.map(item => {
         const isFree = item.isFree || Number(item.price) === 0;
         const isCompleted = item.status === 'Sudah Tersalurkan';
+        const isItb = isItbEmail(item.sellerEmail);
 
         return `
           <article
-            onclick="openDetailModal('${item.id}', false)"
-            class="group bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-vercel hover:shadow-vercel-hover hover:border-zinc-300 transition-all duration-200 flex flex-col cursor-pointer ${isCompleted ? 'opacity-75' : ''}"
+            onclick="openDetailModal('${item.id}', 'description')"
+            class="group flex flex-col cursor-pointer ${isCompleted ? 'opacity-65' : ''}"
           >
-            <!-- 4:3 Image Container -->
-            <div class="relative aspect-[4/3] w-full bg-zinc-100 overflow-hidden border-b border-zinc-100">
+            <!-- Square Rounded Beige Image Container (Matching image_407d69.png) -->
+            <div class="relative aspect-square w-full rounded-2xl bg-gt-beige overflow-hidden border border-gt-sky/40 group-hover:shadow-card-hover transition-all duration-300">
               <img
                 src="${escapeHtml(item.imageUrl)}"
                 alt="${escapeHtml(item.title)}"
+                onerror="this.onerror=null;this.src='${FALLBACK_PLACEHOLDER_SVG}'"
                 loading="lazy"
-                class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
 
               <!-- Top-Left: Status Pill -->
-              <div class="absolute top-2.5 left-2.5">
+              <div class="absolute top-3 left-3">
                 ${getStatusBadgeHtml(item.status)}
               </div>
 
-              <!-- Top-Right: Mahasiswa ITB / Umum Badge -->
-              <div class="absolute top-2.5 right-2.5">
-                ${getSellerBadgeHtml(item.sellerEmail)}
-              </div>
+              <!-- Top-Right: ITB Verified Pill -->
+              ${
+                isItb
+                  ? `<div class="absolute top-3 right-3">
+                      <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-gt-navy text-white shadow-soft">
+                        <i data-lucide="badge-check" class="w-3 h-3 text-gt-sky"></i>
+                        <span>ITB</span>
+                      </span>
+                    </div>`
+                  : ''
+              }
             </div>
 
-            <!-- Card Body -->
-            <div class="p-4 flex-1 flex flex-col justify-between gap-3">
-              <div>
-                <!-- Category & Location -->
-                <div class="flex items-center justify-between gap-2 text-[11px] text-zinc-500 mb-1">
-                  <span class="font-mono uppercase tracking-wider text-zinc-400">${escapeHtml(item.category)}</span>
-                  <span class="inline-flex items-center gap-1 text-zinc-600 truncate">
-                    <i data-lucide="map-pin" class="w-3 h-3 text-zinc-400 shrink-0"></i>
-                    <span class="truncate">${escapeHtml(item.location)}</span>
-                  </span>
-                </div>
-
-                <!-- Title -->
-                <h2 class="font-semibold text-[15px] text-zinc-950 line-clamp-1 group-hover:text-zinc-700 transition-colors">
+            <!-- Clean Bottom Meta Row (Title left, Price right, Stars + Location below) -->
+            <div class="pt-3 px-0.5 flex flex-col gap-1">
+              <div class="flex items-start justify-between gap-2">
+                <h3 class="font-semibold text-sm text-gt-navy line-clamp-1 group-hover:text-gt-teal transition-colors">
                   ${escapeHtml(item.title)}
-                </h2>
-
-                <!-- Price or GRATIS Badge -->
-                <div class="mt-2">
-                  ${
-                    isFree
-                      ? `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-xs font-mono font-bold tracking-wide bg-emerald-600 text-white">GRATIS</span>`
-                      : `<span class="font-mono font-bold text-base text-zinc-950">${formatRupiah(item.price)}</span>`
-                  }
-                </div>
+                </h3>
+                ${
+                  isFree
+                    ? `<span class="font-mono text-xs font-extrabold text-gt-teal shrink-0">GRATIS</span>`
+                    : `<span class="font-mono text-sm font-bold text-gt-navy shrink-0">${formatRupiah(item.price)}</span>`
+                }
               </div>
 
-              <!-- Condition & Footer -->
-              <div class="pt-3 border-t border-zinc-100 space-y-2.5">
-                <div class="flex items-center justify-between">
-                  ${renderConditionBar(item.condition)}
-                </div>
-
-                <div class="flex items-center justify-between gap-2 pt-0.5">
-                  <span class="text-xs text-zinc-500 truncate max-w-[55%]" title="${escapeHtml(item.sellerName)}">
-                    ${escapeHtml(item.sellerName)}
-                  </span>
-
-                  <div class="flex items-center gap-1.5 shrink-0">
-                    <button
-                      type="button"
-                      onclick="event.stopPropagation(); openDetailModal('${item.id}', false)"
-                      class="px-2.5 py-1 rounded-md text-xs font-medium bg-zinc-100 hover:bg-zinc-200/80 text-zinc-900 transition-colors cursor-pointer"
-                    >
-                      Detail &amp; Booking
-                    </button>
-                    ${
-                      !isCompleted
-                        ? `<button
-                            type="button"
-                            onclick="event.stopPropagation(); openDetailModal('${item.id}', true)"
-                            title="Tandai Sudah Tersalurkan (PIN Penjual)"
-                            class="p-1.5 rounded-md border border-zinc-200 bg-white hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-700 text-zinc-500 transition-colors cursor-pointer"
-                          >
-                            <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
-                          </button>`
-                        : ''
-                    }
-                  </div>
-                </div>
+              <div class="flex items-center justify-between gap-2">
+                ${renderStarRating(item.condition)}
+                <span class="text-[11px] text-gt-navy/60 truncate max-w-[50%]">${escapeHtml(item.location)}</span>
               </div>
             </div>
           </article>
@@ -1463,7 +1585,7 @@
     }
 
     // -----------------------------------------------------------------------
-    // 6. FILTER & SEARCH HANDLERS
+    // 7. FILTER & SEARCH HANDLERS
     // -----------------------------------------------------------------------
     function selectCategory(cat) {
       activeCategory = cat;
@@ -1473,12 +1595,34 @@
 
     function handleStatusFilter(val) {
       activeStatusFilter = val;
+      const label = document.getElementById('quick-status-label');
+      if (label) {
+        label.textContent = val === 'active' ? 'Tampilkan Semua Status' : 'Hanya Barang Aktif';
+      }
       renderCategoryPills();
       renderCatalog();
     }
 
+    function toggleStatusFilterQuick() {
+      const nextVal = activeStatusFilter === 'active' ? 'all' : 'active';
+      document.getElementById('status-filter').value = nextVal;
+      handleStatusFilter(nextVal);
+    }
+
+    function syncSearchFromNav(val) {
+      document.getElementById('search-input').value = val;
+      handleSearchInput(val);
+      if (val.trim().length > 0) {
+        navigateToSection('shop-section');
+      }
+    }
+
     function handleSearchInput(val) {
       searchQuery = val;
+      const navInput = document.getElementById('nav-search-input');
+      if (navInput && navInput.value !== val) {
+        navInput.value = val;
+      }
       const clearBtn = document.getElementById('clear-search-btn');
       if (val.trim().length > 0) {
         clearBtn.classList.remove('hidden');
@@ -1490,8 +1634,9 @@
 
     function clearSearch() {
       searchQuery = '';
-      const input = document.getElementById('search-input');
-      input.value = '';
+      document.getElementById('search-input').value = '';
+      const navInput = document.getElementById('nav-search-input');
+      if (navInput) navInput.value = '';
       document.getElementById('clear-search-btn').classList.add('hidden');
       renderCatalog();
     }
@@ -1501,20 +1646,25 @@
       activeStatusFilter = 'active';
       searchQuery = '';
       document.getElementById('search-input').value = '';
+      const navInput = document.getElementById('nav-search-input');
+      if (navInput) navInput.value = '';
       document.getElementById('clear-search-btn').classList.add('hidden');
       document.getElementById('status-filter').value = 'active';
+      const label = document.getElementById('quick-status-label');
+      if (label) label.textContent = 'Tampilkan Semua Status';
       refreshAll();
     }
 
     // -----------------------------------------------------------------------
-    // 7. MODAL 1: DETAIL BARANG, BOOKING & SELLER PIN MANAGEMENT
+    // 8. MODAL 1: CLEAN PRODUCT DETAIL VIEW (MATCHING image_40f9a1.png)
     // -----------------------------------------------------------------------
-    function openDetailModal(itemId, focusPinSection = false) {
+    function openDetailModal(itemId, defaultTab = 'description') {
       const item = items.find(i => i.id === itemId);
       if (!item) return;
 
       selectedItemId = itemId;
       isBookingFormOpen = false;
+      activeDetailTab = defaultTab;
 
       renderDetailModalContent(item);
 
@@ -1523,19 +1673,6 @@
       document.body.style.overflow = 'hidden';
 
       lucide.createIcons();
-
-      if (focusPinSection) {
-        setTimeout(() => {
-          const pinInput = document.getElementById('seller-pin-input');
-          const pinSection = document.getElementById('seller-pin-section');
-          if (pinSection) {
-            pinSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }
-          if (pinInput) {
-            pinInput.focus();
-          }
-        }, 120);
-      }
     }
 
     function closeDetailModal() {
@@ -1545,161 +1682,166 @@
       document.body.style.overflow = '';
     }
 
+    function switchDetailTab(tabName) {
+      activeDetailTab = tabName;
+      const item = items.find(i => i.id === selectedItemId);
+      if (item) {
+        renderDetailModalContent(item);
+        lucide.createIcons();
+        if (tabName === 'seller') {
+          setTimeout(() => {
+            const pinInput = document.getElementById('seller-pin-input');
+            if (pinInput) pinInput.focus();
+          }, 80);
+        }
+      }
+    }
+
     function renderDetailModalContent(item) {
       const isFree = item.isFree || Number(item.price) === 0;
+      const isItb = isItbEmail(item.sellerEmail);
       const waClean = normalizeWhatsApp(item.sellerWa);
       const waMessage = encodeURIComponent(
         `Halo ${item.sellerName}, saya tertarik dengan barang "${item.title}" di GanesaThrift ITB. Apakah barangnya masih tersedia?`
       );
       const waHref = `https://wa.me/${waClean}?text=${waMessage}`;
 
-      document.getElementById('detail-category-badge').textContent = item.category;
-      document.getElementById('detail-status-pill').innerHTML = getStatusBadgeHtml(item.status);
+      document.getElementById('detail-category-badge').textContent = `${item.category} / ${item.title}`;
 
       const body = document.getElementById('detail-modal-body');
 
-      // Booking section HTML based on item.status
-      let actionAreaHtml = '';
+      // Primary Buyer Action Area
+      let primaryActionsHtml = '';
       if (item.status === 'Tersedia') {
         if (!isBookingFormOpen) {
-          actionAreaHtml = `
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              <a
-                href="${waHref}"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-900 transition-colors"
-              >
-                <i data-lucide="message-circle" class="w-4 h-4 text-emerald-600"></i>
-                <span>Tanya via WhatsApp</span>
-              </a>
+          primaryActionsHtml = `
+            <div class="flex flex-wrap items-center gap-3 pt-2">
               <button
                 type="button"
                 onclick="toggleInlineBookingForm(true)"
-                class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-zinc-950 hover:bg-zinc-800 text-white transition-colors shadow-sm cursor-pointer"
+                class="flex-1 min-w-[165px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-sm font-bold bg-gt-navy hover:bg-gt-navyDark text-white transition-all shadow-soft cursor-pointer"
               >
                 <i data-lucide="bookmark-check" class="w-4 h-4"></i>
                 <span>Booking Sekarang</span>
               </button>
+              <a
+                href="${waHref}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex-1 min-w-[165px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-sm font-bold border border-gt-teal text-gt-teal hover:bg-gt-teal hover:text-white transition-all"
+              >
+                <i data-lucide="message-circle" class="w-4 h-4"></i>
+                <span>Tanya via WhatsApp</span>
+              </a>
             </div>
           `;
         } else {
-          actionAreaHtml = `
-            <form onsubmit="handleBookingSubmit(event)" class="p-4 rounded-xl bg-zinc-50 border border-zinc-200 space-y-3">
+          primaryActionsHtml = `
+            <form onsubmit="handleBookingSubmit(event)" class="p-4 rounded-2xl bg-gt-beige border border-gt-sky space-y-3 mt-2">
               <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-zinc-900">Form Booking Cepat (Kunci Barang)</span>
-                <button type="button" onclick="toggleInlineBookingForm(false)" class="text-xs text-zinc-500 hover:text-zinc-900 cursor-pointer">Batal</button>
+                <span class="text-xs font-extrabold text-gt-navy">Konfirmasi Booking Barang</span>
+                <button type="button" onclick="toggleInlineBookingForm(false)" class="text-xs font-semibold text-gt-teal hover:text-gt-navy cursor-pointer">Batal</button>
               </div>
-              <p class="text-[11px] text-zinc-500">
-                Setelah dibooking, status barang berubah menjadi <strong>Dalam Proses</strong> agar tidak direbut mahasiswa lain.
+              <p class="text-[11px] text-gt-navy/75">
+                Status barang akan langsung berubah menjadi <strong>Dalam Proses</strong> di semua perangkat agar tidak diambil orang lain.
               </p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 <div>
-                  <label class="block text-[11px] font-semibold text-zinc-700 mb-1">Nama Pembeli <span class="text-red-500">*</span></label>
+                  <label class="block text-[11px] font-bold text-gt-navy mb-1">Nama Pembeli <span class="text-red-500">*</span></label>
                   <input
                     id="booking-buyer-name"
                     type="text"
                     required
-                    placeholder="Contoh: Budi (FTI '24)"
-                    class="w-full px-3 py-2 text-xs sm:text-sm bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-950"
+                    placeholder="Nama & jurusan/angkatan"
+                    class="w-full px-3 py-2 text-xs sm:text-sm bg-white border border-gt-sky rounded-xl text-gt-navy focus:outline-none focus:border-gt-navy"
                   />
                 </div>
                 <div>
-                  <label class="block text-[11px] font-semibold text-zinc-700 mb-1">No. WhatsApp (628...) <span class="text-red-500">*</span></label>
+                  <label class="block text-[11px] font-bold text-gt-navy mb-1">No. WhatsApp <span class="text-red-500">*</span></label>
                   <input
                     id="booking-buyer-wa"
                     type="tel"
                     required
                     placeholder="6281234567890"
-                    class="w-full px-3 py-2 text-xs sm:text-sm font-mono bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-950"
+                    class="w-full px-3 py-2 text-xs sm:text-sm font-mono bg-white border border-gt-sky rounded-xl text-gt-navy focus:outline-none focus:border-gt-navy"
                   />
                 </div>
               </div>
-              <div id="booking-error-msg" class="hidden text-xs text-red-600 font-medium"></div>
-              <div class="flex items-center justify-end gap-2 pt-1">
-                <button
-                  id="booking-submit-btn"
-                  type="submit"
-                  class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs sm:text-sm font-medium bg-zinc-950 text-white hover:bg-zinc-800 disabled:opacity-60 transition-colors cursor-pointer"
-                >
-                  <i data-lucide="lock" class="w-3.5 h-3.5"></i>
-                  <span id="booking-submit-label">Konfirmasi Booking</span>
-                </button>
-              </div>
+              <div id="booking-error-msg" class="hidden text-xs text-red-600 font-semibold"></div>
+              <button
+                id="booking-submit-btn"
+                type="submit"
+                class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-gt-navy text-white hover:bg-gt-navyDark disabled:opacity-60 transition-colors cursor-pointer"
+              >
+                <i data-lucide="lock" class="w-4 h-4"></i>
+                <span id="booking-submit-label">Kunci Barang Sekarang</span>
+              </button>
             </form>
           `;
         }
       } else if (item.status === 'Dalam Proses') {
-        actionAreaHtml = `
-          <div class="space-y-3">
-            <div class="p-3.5 rounded-xl bg-amber-50 border border-amber-200 flex items-start gap-3">
+        primaryActionsHtml = `
+          <div class="space-y-3 pt-2">
+            <div class="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 flex items-start gap-3">
               <i data-lucide="clock" class="w-5 h-5 text-amber-600 shrink-0 mt-0.5"></i>
-              <div class="text-xs text-amber-900">
-                <p class="font-semibold">Sedang dibooking oleh ${escapeHtml(item.buyerName || 'Mahasiswa ITB')}</p>
-                <p class="text-amber-700 mt-0.5 font-mono">WA Pembeli: ${escapeHtml(item.buyerWa || '-')}</p>
-                <p class="text-amber-700/90 mt-1">Barang dikunci sementara selama proses COD/transaksi berlangsung.</p>
+              <div class="text-xs text-amber-950">
+                <p class="font-bold">Sedang dibooking oleh ${escapeHtml(item.buyerName || 'Mahasiswa ITB')}</p>
+                <p class="font-mono text-amber-800 mt-0.5">WA Pembeli: ${escapeHtml(item.buyerWa || '-')}</p>
               </div>
             </div>
             <a
               href="${waHref}"
               target="_blank"
               rel="noopener noreferrer"
-              class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-900 transition-colors"
+              class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-bold border border-gt-teal text-gt-teal hover:bg-gt-teal hover:text-white transition-colors"
             >
-              <i data-lucide="message-circle" class="w-4 h-4 text-emerald-600"></i>
+              <i data-lucide="message-circle" class="w-4 h-4"></i>
               <span>Hubungi Penjual via WhatsApp</span>
             </a>
           </div>
         `;
       } else {
-        actionAreaHtml = `
-          <div class="p-3.5 rounded-xl bg-zinc-100 border border-zinc-200 flex items-center gap-3 text-xs text-zinc-700">
-            <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-600 shrink-0"></i>
+        primaryActionsHtml = `
+          <div class="p-3.5 rounded-2xl bg-gt-beige border border-gt-sky flex items-center gap-3 text-xs text-gt-navy mt-2">
+            <i data-lucide="check-circle-2" class="w-5 h-5 text-gt-teal shrink-0"></i>
             <div>
-              <p class="font-semibold text-zinc-900">Barang ini sudah tersalurkan</p>
-              <p class="text-zinc-500 mt-0.5">Transaksi atau hibah telah selesai dikonfirmasi oleh penjual.</p>
+              <p class="font-bold">Barang ini sudah tersalurkan</p>
+              <p class="text-gt-navy/70 mt-0.5">Transaksi atau hibah telah selesai dikonfirmasi oleh penjual.</p>
             </div>
           </div>
         `;
       }
 
-      // Seller PIN management section
-      const isDemoPin = item.pin === '1234';
-      const sellerPinHtml = `
-        <div id="seller-pin-section" class="pt-4 border-t border-zinc-200">
-          <div class="p-4 rounded-xl bg-zinc-50/90 border border-zinc-200 space-y-3">
-            <div class="flex flex-wrap items-center justify-between gap-2">
-              <div class="flex items-center gap-1.5">
-                <i data-lucide="shield-check" class="w-4 h-4 text-zinc-700"></i>
-                <span class="text-xs font-bold text-zinc-900">Kelola Status (Khusus Penjual)</span>
-              </div>
-              ${
-                isDemoPin
-                  ? `<button type="button" onclick="fillDemoPin()" class="text-[11px] font-mono px-2 py-0.5 rounded bg-zinc-200/80 hover:bg-zinc-300/80 text-zinc-700 transition-colors cursor-pointer" title="Klik untuk mengisi PIN demo">
-                      Hint PIN Demo: 1234
-                    </button>`
-                  : `<span class="text-[11px] font-mono text-zinc-400">Masukkan 4-digit PIN saat upload</span>`
-              }
+      // Bottom Tab Content (Description vs Seller PIN Management)
+      const tabBodyHtml =
+        activeDetailTab === 'description'
+          ? `
+            <div class="text-xs sm:text-sm text-gt-navy/80 leading-relaxed max-w-2xl">
+              ${escapeHtml(item.description)}
             </div>
-
-            ${
-              item.status === 'Sudah Tersalurkan'
-                ? `<p class="text-xs text-zinc-500">Status barang sudah final (<strong>Sudah Tersalurkan</strong>).</p>`
-                : `
-                  <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-                    <input
-                      id="seller-pin-input"
-                      type="password"
-                      inputmode="numeric"
-                      maxlength="4"
-                      placeholder="PIN 4 Angka"
-                      class="w-full sm:w-36 px-3 py-2 text-center font-mono text-sm tracking-[0.25em] bg-white border border-zinc-200 rounded-lg focus:outline-none focus:border-zinc-950"
-                    />
-                    <div class="flex flex-wrap items-center gap-2 flex-1">
+          `
+          : `
+            <div class="max-w-lg space-y-3">
+              <p class="text-xs text-gt-navy/75">
+                Masukkan <strong>4-digit PIN penjual</strong> yang kamu buat saat mengunggah barang ini untuk mengubah status menjadi <em>Sudah Tersalurkan</em> atau membatalkan booking.
+              </p>
+              ${
+                item.status === 'Sudah Tersalurkan'
+                  ? `<p class="text-xs font-semibold text-gt-teal">Status barang ini sudah final (Sudah Tersalurkan).</p>`
+                  : `
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+                      <input
+                        id="seller-pin-input"
+                        type="password"
+                        inputmode="numeric"
+                        maxlength="4"
+                        placeholder="PIN 4 Angka"
+                        class="w-full sm:w-36 px-3.5 py-2.5 text-center font-mono text-sm tracking-[0.25em] bg-gt-beige border border-gt-sky rounded-xl text-gt-navy focus:outline-none focus:bg-white focus:border-gt-navy"
+                      />
                       <button
                         type="button"
                         onclick="handleMarkSold()"
-                        class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium bg-emerald-600 hover:bg-emerald-700 text-white transition-colors cursor-pointer"
+                        class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold bg-gt-navy hover:bg-gt-navyDark text-white transition-colors cursor-pointer"
                       >
                         <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
                         <span>Tandai Sudah Tersalurkan</span>
@@ -1709,7 +1851,7 @@
                           ? `<button
                               type="button"
                               onclick="handleCancelBooking()"
-                              class="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium border border-zinc-300 bg-white hover:bg-zinc-100 text-zinc-800 transition-colors cursor-pointer"
+                              class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold border border-gt-sky bg-white hover:bg-gt-beige text-gt-navy transition-colors cursor-pointer"
                             >
                               <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
                               <span>Batalkan Booking</span>
@@ -1717,72 +1859,120 @@
                           : ''
                       }
                     </div>
-                  </div>
-                  <p id="pin-error-msg" class="hidden text-xs text-red-600 font-medium"></p>
-                `
-            }
-          </div>
-        </div>
-      `;
+                    <p id="pin-error-msg" class="hidden text-xs text-red-600 font-semibold"></p>
+                  `
+              }
+            </div>
+          `;
 
       body.innerHTML = `
-        <div class="grid grid-cols-1 md:grid-cols-12">
-          <!-- Left Photo -->
-          <div class="md:col-span-5 bg-zinc-100 border-b md:border-b-0 md:border-r border-zinc-200 flex items-center justify-center">
-            <img
-              src="${escapeHtml(item.imageUrl)}"
-              alt="${escapeHtml(item.title)}"
-              class="w-full aspect-[4/3] md:aspect-square object-cover"
-            />
-          </div>
+        <div class="p-5 sm:p-8 space-y-8">
+          <!-- Top 2-Column Product Showcase (Matching image_40f9a1.png) -->
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 items-start">
+            
+            <!-- Left Gallery Column (Thumbnail + Large Beige Box) -->
+            <div class="md:col-span-6 flex flex-col-reverse sm:flex-row gap-3">
+              <div class="w-16 h-16 rounded-xl bg-gt-beige border-2 border-gt-navy overflow-hidden shrink-0">
+                <img
+                  src="${escapeHtml(item.imageUrl)}"
+                  alt="Thumbnail"
+                  onerror="this.onerror=null;this.src='${FALLBACK_PLACEHOLDER_SVG}'"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <div class="relative flex-1 aspect-square rounded-2xl bg-gt-beige border border-gt-sky/50 overflow-hidden">
+                <img
+                  src="${escapeHtml(item.imageUrl)}"
+                  alt="${escapeHtml(item.title)}"
+                  onerror="this.onerror=null;this.src='${FALLBACK_PLACEHOLDER_SVG}'"
+                  class="w-full h-full object-cover"
+                />
+                <div class="absolute top-3 left-3">
+                  ${getStatusBadgeHtml(item.status)}
+                </div>
+              </div>
+            </div>
 
-          <!-- Right Details -->
-          <div class="md:col-span-7 p-5 space-y-4">
-            <div>
-              <h2 class="text-lg sm:text-xl font-bold text-zinc-950 leading-snug">
-                ${escapeHtml(item.title)}
-              </h2>
+            <!-- Right Product Info Column -->
+            <div class="md:col-span-6 space-y-4">
+              <div>
+                <h2 class="text-xl sm:text-2xl font-extrabold text-gt-navy leading-snug">
+                  ${escapeHtml(item.title)}
+                </h2>
 
-              <div class="mt-2.5 flex flex-wrap items-center gap-3">
+                <div class="mt-2 flex items-center gap-2.5">
+                  ${renderStarRating(item.condition)}
+                  <span class="text-xs font-medium text-gt-teal">${CONDITION_LABELS[item.condition] || '4/5 Mulus'}</span>
+                </div>
+              </div>
+
+              <!-- Price -->
+              <div class="pt-1">
                 ${
                   isFree
-                    ? `<span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-mono font-bold bg-emerald-600 text-white">GRATIS (HIBAH)</span>`
-                    : `<span class="font-mono font-bold text-xl text-zinc-950">${formatRupiah(item.price)}</span>`
+                    ? `<span class="inline-flex items-center px-3 py-1 rounded-lg text-sm font-mono font-extrabold bg-gt-teal text-white">GRATIS (HIBAH)</span>`
+                    : `<span class="text-2xl sm:text-3xl font-extrabold text-gt-navy font-mono">${formatRupiah(item.price)}</span>`
                 }
-                ${renderConditionBar(item.condition)}
               </div>
 
-              <div class="mt-2 inline-flex items-center gap-1.5 text-xs text-zinc-600">
-                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-zinc-400"></i>
-                <span>Lokasi: <strong class="font-medium text-zinc-900">${escapeHtml(item.location)}</strong></span>
+              <!-- Campus Tag Line -->
+              <div class="inline-flex items-center gap-1.5 text-xs font-medium text-gt-teal">
+                <i data-lucide="tag" class="w-3.5 h-3.5"></i>
+                <span>Lokasi COD: <strong class="text-gt-navy">${escapeHtml(item.location)}</strong></span>
               </div>
-            </div>
 
-            <!-- Description -->
-            <div class="text-xs sm:text-sm text-zinc-600 leading-relaxed bg-zinc-50/70 p-3 rounded-xl border border-zinc-100">
-              ${escapeHtml(item.description)}
-            </div>
+              <!-- Primary Action Buttons -->
+              ${primaryActionsHtml}
 
-            <!-- Seller Info Card -->
-            <div class="p-3 rounded-xl border border-zinc-200 bg-white flex items-center justify-between gap-3">
-              <div class="min-w-0">
-                <div class="flex items-center gap-2 flex-wrap">
-                  <span class="text-xs font-bold text-zinc-950 truncate">${escapeHtml(item.sellerName)}</span>
-                  ${getSellerBadgeHtml(item.sellerEmail)}
+              <!-- Structured Trust Info Rows (Matching image_40f9a1.png) -->
+              <div class="pt-4 border-t border-gt-sky/60 space-y-2.5 text-xs text-gt-navy/75">
+                <div class="flex items-center gap-2.5">
+                  <i data-lucide="map-pin" class="w-4 h-4 text-gt-teal shrink-0"></i>
+                  <span>COD Sekitar Kampus ITB (${escapeHtml(item.location)})</span>
                 </div>
-                <div class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] font-mono text-zinc-500">
-                  <span class="truncate">${escapeHtml(item.sellerEmail)}</span>
-                  <span>&bull;</span>
-                  <span>WA: ${escapeHtml(waClean)}</span>
+                <div class="flex items-center gap-2.5">
+                  <i data-lucide="badge-check" class="w-4 h-4 text-gt-teal shrink-0"></i>
+                  <span>
+                    Penjual: <strong class="text-gt-navy">${escapeHtml(item.sellerName)}</strong>
+                    ${isItb ? '<span class="ml-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-gt-navy text-white">Mahasiswa ITB</span>' : '<span class="ml-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gt-beige text-gt-navy">Umum</span>'}
+                  </span>
+                </div>
+                <div class="flex items-center gap-2.5">
+                  <i data-lucide="shield-check" class="w-4 h-4 text-gt-teal shrink-0"></i>
+                  <span>WA Penjual: <span class="font-mono text-gt-navy">${escapeHtml(waClean)}</span></span>
                 </div>
               </div>
             </div>
+          </div>
 
-            <!-- Primary Buyer Actions (WhatsApp / Booking) -->
-            ${actionAreaHtml}
+          <!-- Bottom Tabs: Deskripsi & Kelola Status (PIN Penjual) -->
+          <div class="pt-2">
+            <div class="flex items-center gap-6 border-b border-gt-sky/60 mb-4">
+              <button
+                type="button"
+                onclick="switchDetailTab('description')"
+                class="pb-2.5 text-xs sm:text-sm font-bold border-b-2 transition-colors cursor-pointer ${
+                  activeDetailTab === 'description'
+                    ? 'border-gt-navy text-gt-navy'
+                    : 'border-transparent text-gt-navy/50 hover:text-gt-navy'
+                }"
+              >
+                Deskripsi Barang
+              </button>
+              <button
+                type="button"
+                onclick="switchDetailTab('seller')"
+                class="pb-2.5 text-xs sm:text-sm font-bold border-b-2 transition-colors cursor-pointer ${
+                  activeDetailTab === 'seller'
+                    ? 'border-gt-navy text-gt-navy'
+                    : 'border-transparent text-gt-navy/50 hover:text-gt-navy'
+                }"
+              >
+                Kelola Status (PIN Penjual)
+              </button>
+            </div>
 
-            <!-- Seller PIN Management -->
-            ${sellerPinHtml}
+            ${tabBodyHtml}
           </div>
         </div>
       `;
@@ -1804,7 +1994,7 @@
     async function handleBookingSubmit(event) {
       event.preventDefault();
       const item = items.find(i => i.id === selectedItemId);
-      if (!item || item.status !== 'Tersedia') return;
+      if (!item || item.status !== 'Tersedia' || !supabaseClient) return;
 
       const buyerName = document.getElementById('booking-buyer-name').value.trim();
       const buyerWaRaw = document.getElementById('booking-buyer-wa').value.trim();
@@ -1819,68 +2009,46 @@
         return;
       }
 
-      if (supabaseClient) {
-        if (submitBtn) submitBtn.disabled = true;
-        if (submitLabel) submitLabel.textContent = 'Mengunci Barang...';
-        try {
-          const { data, error } = await supabaseClient
-            .from('items')
-            .update({
-              status: 'Dalam Proses',
-              buyer_name: buyerName,
-              buyer_wa: buyerWa
-            })
-            .eq('id', item.id)
-            .eq('status', 'Tersedia')
-            .select();
+      if (submitBtn) submitBtn.disabled = true;
+      if (submitLabel) submitLabel.textContent = 'Mengunci Barang...';
 
-          if (error) throw error;
+      try {
+        const { data, error } = await supabaseClient
+          .from('items')
+          .update({
+            status: 'Dalam Proses',
+            buyer_name: buyerName,
+            buyer_wa: buyerWa
+          })
+          .eq('id', item.id)
+          .eq('status', 'Tersedia')
+          .select();
 
-          if (!data || data.length === 0) {
-            await fetchItemsFromSupabase(true);
-            showToast('Maaf, barang ini baru saja dibooking mahasiswa lain!', 'error');
-            return;
-          }
+        if (error) throw error;
 
-          const updated = mapDbRowToItem(data[0]);
-          const idx = items.findIndex(i => i.id === updated.id);
-          if (idx !== -1) items[idx] = updated;
-
-          refreshAll();
-          isBookingFormOpen = false;
-          renderDetailModalContent(updated);
-          lucide.createIcons();
-          showToast(`Berhasil dibooking! Status "${updated.title}" kini Dalam Proses.`);
-        } catch (err) {
-          console.error('Supabase booking error:', err);
-          if (errEl) {
-            errEl.textContent = 'Gagal memproses booking ke Supabase. Coba lagi.';
-            errEl.classList.remove('hidden');
-          }
-          if (submitBtn) submitBtn.disabled = false;
-          if (submitLabel) submitLabel.textContent = 'Konfirmasi Booking';
+        if (!data || data.length === 0) {
+          await fetchItemsFromSupabase(true);
+          showToast('Maaf, barang ini baru saja dibooking mahasiswa lain!', 'error');
+          return;
         }
-        return;
-      }
 
-      // Local fallback mode
-      item.status = 'Dalam Proses';
-      item.buyerName = buyerName;
-      item.buyerWa = buyerWa;
+        const updated = mapDbRowToItem(data[0]);
+        const idx = items.findIndex(i => i.id === updated.id);
+        if (idx !== -1) items[idx] = updated;
 
-      saveItemsToLocal();
-      refreshAll();
-      isBookingFormOpen = false;
-      renderDetailModalContent(item);
-      lucide.createIcons();
-      showToast(`Berhasil dibooking! Status "${item.title}" kini Dalam Proses.`);
-    }
-
-    function fillDemoPin() {
-      const input = document.getElementById('seller-pin-input');
-      if (input) {
-        input.value = '1234';
-        input.focus();
+        refreshAll();
+        isBookingFormOpen = false;
+        renderDetailModalContent(updated);
+        lucide.createIcons();
+        showToast(`Berhasil dibooking! Status "${updated.title}" kini Dalam Proses.`);
+      } catch (err) {
+        console.error('Supabase booking error:', err);
+        if (errEl) {
+          errEl.textContent = 'Gagal memproses booking: ' + (err.message || 'Coba lagi.');
+          errEl.classList.remove('hidden');
+        }
+        if (submitBtn) submitBtn.disabled = false;
+        if (submitLabel) submitLabel.textContent = 'Kunci Barang Sekarang';
       }
     }
 
@@ -1907,92 +2075,70 @@
 
     async function handleMarkSold() {
       const item = items.find(i => i.id === selectedItemId);
-      if (!item) return;
+      if (!item || !supabaseClient) return;
       if (!validateSellerPin(item)) return;
 
-      if (supabaseClient) {
-        try {
-          const { data, error } = await supabaseClient
-            .from('items')
-            .update({ status: 'Sudah Tersalurkan' })
-            .eq('id', item.id)
-            .eq('pin', String(item.pin))
-            .select();
+      try {
+        const { data, error } = await supabaseClient
+          .from('items')
+          .update({ status: 'Sudah Tersalurkan' })
+          .eq('id', item.id)
+          .eq('pin', String(item.pin))
+          .select();
 
-          if (error) throw error;
+        if (error) throw error;
 
-          if (data && data.length > 0) {
-            const updated = mapDbRowToItem(data[0]);
-            const idx = items.findIndex(i => i.id === updated.id);
-            if (idx !== -1) items[idx] = updated;
-            refreshAll();
-            renderDetailModalContent(updated);
-            lucide.createIcons();
-            showToast(`"${updated.title}" ditandai Sudah Tersalurkan.`);
-          }
-        } catch (err) {
-          console.error('Supabase mark sold error:', err);
-          showToast('Gagal memperbarui status barang di Supabase.', 'error');
+        if (data && data.length > 0) {
+          const updated = mapDbRowToItem(data[0]);
+          const idx = items.findIndex(i => i.id === updated.id);
+          if (idx !== -1) items[idx] = updated;
+          refreshAll();
+          renderDetailModalContent(updated);
+          lucide.createIcons();
+          showToast(`"${updated.title}" ditandai Sudah Tersalurkan.`);
         }
-        return;
+      } catch (err) {
+        console.error('Supabase mark sold error:', err);
+        showToast('Gagal memperbarui status barang: ' + (err.message || 'Error'), 'error');
       }
-
-      item.status = 'Sudah Tersalurkan';
-      saveItemsToLocal();
-      refreshAll();
-      renderDetailModalContent(item);
-      lucide.createIcons();
-      showToast(`"${item.title}" ditandai Sudah Tersalurkan.`);
     }
 
     async function handleCancelBooking() {
       const item = items.find(i => i.id === selectedItemId);
-      if (!item) return;
+      if (!item || !supabaseClient) return;
       if (!validateSellerPin(item)) return;
 
-      if (supabaseClient) {
-        try {
-          const { data, error } = await supabaseClient
-            .from('items')
-            .update({
-              status: 'Tersedia',
-              buyer_name: '',
-              buyer_wa: ''
-            })
-            .eq('id', item.id)
-            .eq('pin', String(item.pin))
-            .select();
+      try {
+        const { data, error } = await supabaseClient
+          .from('items')
+          .update({
+            status: 'Tersedia',
+            buyer_name: '',
+            buyer_wa: ''
+          })
+          .eq('id', item.id)
+          .eq('pin', String(item.pin))
+          .select();
 
-          if (error) throw error;
+        if (error) throw error;
 
-          if (data && data.length > 0) {
-            const updated = mapDbRowToItem(data[0]);
-            const idx = items.findIndex(i => i.id === updated.id);
-            if (idx !== -1) items[idx] = updated;
-            refreshAll();
-            renderDetailModalContent(updated);
-            lucide.createIcons();
-            showToast(`Booking dibatalkan. "${updated.title}" kembali Tersedia.`);
-          }
-        } catch (err) {
-          console.error('Supabase cancel booking error:', err);
-          showToast('Gagal membatalkan booking di Supabase.', 'error');
+        if (data && data.length > 0) {
+          const updated = mapDbRowToItem(data[0]);
+          const idx = items.findIndex(i => i.id === updated.id);
+          if (idx !== -1) items[idx] = updated;
+          refreshAll();
+          renderDetailModalContent(updated);
+          lucide.createIcons();
+          showToast(`Booking dibatalkan. "${updated.title}" kembali Tersedia.`);
         }
-        return;
+      } catch (err) {
+        console.error('Supabase cancel booking error:', err);
+        showToast('Gagal membatalkan booking: ' + (err.message || 'Error'), 'error');
       }
-
-      item.status = 'Tersedia';
-      item.buyerName = '';
-      item.buyerWa = '';
-      saveItemsToLocal();
-      refreshAll();
-      renderDetailModalContent(item);
-      lucide.createIcons();
-      showToast(`Booking dibatalkan. "${item.title}" kembali Tersedia.`);
     }
 
     // -----------------------------------------------------------------------
-    // 8. MODAL 2: FORM UPLOAD BARANG (+ JUAL / HIBAHKAN BARANG)
+    // 9. MODAL 2: FORM UPLOAD BARANG (+ JUAL / HIBAHKAN BARANG)
     // -----------------------------------------------------------------------
     function openUploadModal() {
       document.getElementById('upload-form').reset();
@@ -2001,28 +2147,22 @@
       uploadPhotoDataUrl = '';
       uploadCompressedBlob = null;
 
-      // Reset submit button state
       const submitBtn = document.getElementById('upload-submit-btn');
       const submitLabel = document.getElementById('upload-submit-label');
       if (submitBtn) submitBtn.disabled = false;
       if (submitLabel) submitLabel.textContent = 'Tayangkan Barang';
 
-      // Reset photo preview
       const preview = document.getElementById('upload-photo-preview');
       const placeholder = document.getElementById('upload-photo-placeholder');
       preview.src = '';
       preview.classList.add('hidden');
       placeholder.classList.remove('hidden');
 
-      // Reset price input
       const priceInput = document.getElementById('upload-price');
       priceInput.disabled = false;
       priceInput.value = '';
 
-      // Reset live ITB badge
       updateLiveItbBadge('');
-
-      // Render condition buttons
       renderConditionSelector();
 
       const modal = document.getElementById('upload-modal');
@@ -2046,10 +2186,10 @@
           <button
             type="button"
             onclick="selectUploadCondition(${num})"
-            class="py-1.5 rounded-lg font-mono text-xs font-semibold border transition-all cursor-pointer ${
+            class="py-2 rounded-xl font-mono text-xs font-bold border transition-all cursor-pointer ${
               selected
-                ? 'bg-zinc-950 text-white border-zinc-950 shadow-sm'
-                : 'bg-white text-zinc-700 border-zinc-200 hover:border-zinc-400'
+                ? 'bg-gt-navy text-white border-gt-navy shadow-soft'
+                : 'bg-white text-gt-navy border-gt-sky hover:bg-gt-beige'
             }"
           >
             ${num}
@@ -2082,16 +2222,16 @@
     function updateLiveItbBadge(email) {
       const badge = document.getElementById('live-itb-preview');
       if (isItbEmail(email)) {
-        badge.className = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200';
-        badge.innerHTML = `<i data-lucide="badge-check" class="w-3 h-3 text-emerald-600"></i><span>Mahasiswa ITB</span>`;
+        badge.className = 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-gt-navy text-white';
+        badge.innerHTML = `<i data-lucide="badge-check" class="w-3 h-3 text-gt-sky"></i><span>Mahasiswa ITB</span>`;
       } else {
-        badge.className = 'inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-zinc-100 text-zinc-600 border border-zinc-200';
+        badge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-gt-beige text-gt-navy border border-gt-sky';
         badge.textContent = 'Umum';
       }
       lucide.createIcons();
     }
 
-    function compressImageFile(file, maxWidth = 800, quality = 0.75) {
+    function compressImageFile(file, maxWidth = 900, quality = 0.78) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -2131,12 +2271,11 @@
       if (!file) return;
 
       try {
-        const { dataUrl, blob } = await compressImageFile(file, 800, 0.75);
+        const { dataUrl, blob } = await compressImageFile(file, 900, 0.78);
         uploadPhotoDataUrl = dataUrl;
         uploadCompressedBlob = blob;
         showUploadPhotoPreview(uploadPhotoDataUrl);
       } catch (err) {
-        console.warn('Kompresi foto gagal, memakai pembacaan langsung:', err);
         const reader = new FileReader();
         reader.onload = function(e) {
           uploadPhotoDataUrl = e.target.result;
@@ -2145,12 +2284,6 @@
         };
         reader.readAsDataURL(file);
       }
-    }
-
-    function selectPresetPhoto(key) {
-      uploadPhotoDataUrl = PRESET_UPLOAD_ARTWORKS[key] || ARTWORKS.monitor;
-      uploadCompressedBlob = null;
-      showUploadPhotoPreview(uploadPhotoDataUrl);
     }
 
     function showUploadPhotoPreview(dataUrl) {
@@ -2163,6 +2296,8 @@
 
     async function handleUploadSubmit(event) {
       event.preventDefault();
+      if (!supabaseClient) return;
+
       const errorBox = document.getElementById('upload-error-box');
       errorBox.classList.add('hidden');
 
@@ -2176,6 +2311,12 @@
       const sellerEmail = document.getElementById('upload-seller-email').value.trim();
       const sellerWa = normalizeWhatsApp(document.getElementById('upload-seller-wa').value.trim());
       const pin = document.getElementById('upload-seller-pin').value.trim();
+
+      if (!uploadPhotoDataUrl) {
+        errorBox.textContent = 'Mohon pilih foto barang terlebih dahulu.';
+        errorBox.classList.remove('hidden');
+        return;
+      }
 
       if (!title || !location || !description || !sellerName || !sellerEmail) {
         errorBox.textContent = 'Mohon lengkapi semua kolom bertanda wajib (*).';
@@ -2196,7 +2337,7 @@
       }
 
       if (!/^\d{4}$/.test(pin)) {
-        errorBox.textContent = 'PIN Penjual harus terdiri dari tepat 4 angka (contoh: 1234).';
+        errorBox.textContent = 'PIN Penjual harus terdiri dari tepat 4 angka.';
         errorBox.classList.remove('hidden');
         return;
       }
@@ -2206,16 +2347,10 @@
       if (submitBtn) submitBtn.disabled = true;
       if (submitLabel) submitLabel.textContent = 'Mengunggah...';
 
-      // Fallback artwork matching category if user didn't upload a file
       let finalImage = uploadPhotoDataUrl;
-      if (!finalImage) {
-        if (category === 'Buku') finalImage = ARTWORKS.kalkulus;
-        else if (category === 'Perabot Kos') finalImage = ARTWORKS.meja;
-        else finalImage = ARTWORKS.monitor;
-      }
 
-      // If Supabase is connected and user selected a photo file, upload to bucket 'item-photos'
-      if (supabaseClient && uploadCompressedBlob) {
+      // Upload compressed photo to Supabase Storage bucket 'item-photos'
+      if (uploadCompressedBlob) {
         try {
           const fileName = `item-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.jpg`;
           const { data: uploadData, error: uploadError } = await supabaseClient.storage
@@ -2232,8 +2367,6 @@
             if (publicUrlData && publicUrlData.publicUrl) {
               finalImage = publicUrlData.publicUrl;
             }
-          } else {
-            console.warn('Bucket item-photos belum tersedia/gagal upload, fallback ke foto terkompresi:', uploadError);
           }
         } catch (storageErr) {
           console.warn('Storage upload fallback ke Data URL terkompresi:', storageErr);
@@ -2241,7 +2374,6 @@
       }
 
       const newItemDraft = {
-        id: 'gt-' + Date.now(),
         title,
         description,
         category,
@@ -2256,115 +2388,38 @@
         status: 'Tersedia',
         buyerName: '',
         buyerWa: '',
-        imageUrl: finalImage,
-        createdAt: Date.now()
+        imageUrl: finalImage
       };
 
-      if (supabaseClient) {
-        try {
-          const { data, error } = await supabaseClient
-            .from('items')
-            .insert([mapItemToDbInsert(newItemDraft)])
-            .select();
+      try {
+        const { data, error } = await supabaseClient
+          .from('items')
+          .insert([mapItemToDbInsert(newItemDraft)])
+          .select();
 
-          if (error) throw error;
+        if (error) throw error;
 
-          const insertedItem = data && data.length > 0 ? mapDbRowToItem(data[0]) : newItemDraft;
-          if (!items.some(i => i.id === insertedItem.id)) {
-            items.unshift(insertedItem);
-          }
-
-          if (activeCategory !== 'Semua') {
-            if (activeCategory === 'Gratis' && !insertedItem.isFree) activeCategory = 'Semua';
-            else if (activeCategory !== 'Gratis' && activeCategory !== insertedItem.category) activeCategory = 'Semua';
-          }
-
-          refreshAll();
-          closeUploadModal();
-          showToast(`"${insertedItem.title}" berhasil ditayangkan ke cloud!`);
-        } catch (err) {
-          console.error('Supabase insert error:', err);
-          errorBox.textContent = 'Gagal menyimpan barang ke Supabase: ' + (err.message || 'Periksa izin tabel items.');
-          errorBox.classList.remove('hidden');
-          if (submitBtn) submitBtn.disabled = false;
-          if (submitLabel) submitLabel.textContent = 'Tayangkan Barang';
+        const insertedItem = data && data.length > 0 ? mapDbRowToItem(data[0]) : null;
+        if (insertedItem && !items.some(i => i.id === insertedItem.id)) {
+          items.unshift(insertedItem);
         }
-        return;
-      }
 
-      // Local fallback mode
-      items.unshift(newItemDraft);
-      saveItemsToLocal();
-
-      if (activeCategory !== 'Semua') {
-        if (activeCategory === 'Gratis' && !newItemDraft.isFree) activeCategory = 'Semua';
-        else if (activeCategory !== 'Gratis' && activeCategory !== newItemDraft.category) activeCategory = 'Semua';
-      }
-
-      refreshAll();
-      closeUploadModal();
-      showToast(`"${newItemDraft.title}" berhasil ditayangkan ke katalog!`);
-    }
-
-    // -----------------------------------------------------------------------
-    // 9. SEED / RESET 8 DEMO ITEMS (2-STEP INLINE CONFIRMATION)
-    // -----------------------------------------------------------------------
-    async function handleSeedDemoClick(source = 'footer') {
-      const labelEl = document.getElementById(source === 'empty' ? 'empty-seed-label' : 'reset-demo-label');
-      const btnEl = document.getElementById(source === 'empty' ? 'empty-seed-btn' : 'reset-demo-btn');
-
-      if (!resetConfirmPending) {
-        resetConfirmPending = true;
-        if (labelEl) labelEl.textContent = 'Klik lagi untuk konfirmasi';
-        if (btnEl) btnEl.classList.add('border-red-300', 'bg-red-50', 'text-red-700');
-
-        clearTimeout(resetConfirmTimer);
-        resetConfirmTimer = setTimeout(() => {
-          resetConfirmPending = false;
-          if (labelEl) labelEl.textContent = 'Isi / Reset 8 Data Demo';
-          if (btnEl) btnEl.classList.remove('border-red-300', 'bg-red-50', 'text-red-700');
-        }, 3500);
-        return;
-      }
-
-      clearTimeout(resetConfirmTimer);
-      resetConfirmPending = false;
-      if (labelEl) labelEl.textContent = 'Memproses...';
-      if (btnEl) btnEl.classList.remove('border-red-300', 'bg-red-50', 'text-red-700');
-
-      if (supabaseClient) {
-        try {
-          // Clear existing rows if delete policy allows, then insert fresh 8 demo items
-          await supabaseClient
-            .from('items')
-            .delete()
-            .neq('id', '00000000-0000-0000-0000-000000000000');
-
-          const demoRows = INITIAL_DEMO_ITEMS.map(mapItemToDbInsert);
-          const { error: insertError } = await supabaseClient
-            .from('items')
-            .insert(demoRows);
-
-          if (insertError) throw insertError;
-
-          await fetchItemsFromSupabase(true);
-          resetFilters();
-          showToast('8 data demo ITB berhasil diisi ke database Supabase!');
-        } catch (err) {
-          console.error('Supabase seed demo error:', err);
-          showToast('Gagal mengisi data demo ke Supabase. Cek policy tabel items.', 'error');
-        } finally {
-          if (labelEl) labelEl.textContent = 'Isi / Reset 8 Data Demo';
+        if (activeCategory !== 'Semua' && insertedItem) {
+          if (activeCategory === 'Gratis' && !insertedItem.isFree) activeCategory = 'Semua';
+          else if (activeCategory !== 'Gratis' && activeCategory !== insertedItem.category) activeCategory = 'Semua';
         }
-        return;
-      }
 
-      // Local fallback mode
-      if (labelEl) labelEl.textContent = 'Isi / Reset 8 Data Demo';
-      items = JSON.parse(JSON.stringify(INITIAL_DEMO_ITEMS));
-      saveItemsToLocal();
-      resetFilters();
-      showToast('Data demo GanesaThrift berhasil dikembalikan ke kondisi awal.');
+        refreshAll();
+        closeUploadModal();
+        navigateToSection('shop-section');
+        showToast(`"${title}" berhasil ditayangkan ke katalog real-time!`);
+      } catch (err) {
+        console.error('Supabase insert error:', err);
+        errorBox.textContent = 'Gagal menyimpan barang ke Supabase: ' + (err.message || 'Periksa izin tabel items.');
+        errorBox.classList.remove('hidden');
+        if (submitBtn) submitBtn.disabled = false;
+        if (submitLabel) submitLabel.textContent = 'Tayangkan Barang';
+      }
     }
 
     // -----------------------------------------------------------------------
@@ -2379,6 +2434,11 @@
 
     document.addEventListener('keydown', function(event) {
       if (event.key === 'Escape') {
+        const introOverlay = document.getElementById('intro-overlay');
+        if (introOverlay && !introOverlay.classList.contains('hidden')) {
+          closeIntroOverlay();
+          return;
+        }
         if (!document.getElementById('detail-modal').classList.contains('hidden')) {
           closeDetailModal();
         }
@@ -2392,6 +2452,19 @@
     // 11. INITIALIZE APP
     // -----------------------------------------------------------------------
     window.addEventListener('DOMContentLoaded', () => {
+      // Show Cyera-style intro once per tab session (re-openable via "Intro" button)
+      let introSeen = false;
+      try {
+        introSeen = sessionStorage.getItem('ganesathrift_intro_seen') === '1';
+      } catch (e) {}
+
+      if (introSeen) {
+        document.getElementById('intro-overlay').classList.add('hidden');
+      } else {
+        document.body.style.overflow = 'hidden';
+      }
+
+      lucide.createIcons();
       initAppData();
     });
   </script>
