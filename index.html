@@ -55,14 +55,14 @@
 
     /* Glassmorphic sticky header */
     .glass-nav {
-      background: rgba(255, 255, 255, 0.88);
+      background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
     }
 
-    /* Cyera-inspired Introduction Stage */
+    /* Cyera-inspired Fullscreen Opaque Introduction Stage */
     .intro-bg {
-      background: radial-gradient(circle at 75% 25%, rgba(86, 124, 141, 0.36) 0%, rgba(47, 65, 86, 0.96) 48%, #182330 100%);
+      background: radial-gradient(circle at 75% 25%, #3D566E 0%, #2F4156 48%, #182330 100%);
     }
 
     .intro-grid {
@@ -127,11 +127,11 @@
 <body class="min-h-screen flex flex-col selection:bg-gt-navy selection:text-white">
 
   <!-- ===================================================================== -->
-  <!-- CYERA-INSPIRED INTERACTIVE INTRODUCTION OVERLAY                       -->
+  <!-- FULLSCREEN INTRODUCTION SCREEN (OPAQUE - MAIN MENU COMPLETELY HIDDEN) -->
   <!-- ===================================================================== -->
   <div
     id="intro-overlay"
-    class="fixed inset-0 z-50 intro-bg text-white overflow-y-auto transition-opacity duration-500"
+    class="fixed inset-0 z-50 intro-bg text-white overflow-y-auto transition-opacity duration-300"
   >
     <div class="absolute inset-0 intro-grid pointer-events-none"></div>
 
@@ -144,40 +144,19 @@
       <!-- Intro Top Bar -->
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-white/95 p-1.5 flex items-center justify-center shadow-lg">
-            <!-- GaneshaThrift Vector Logo -->
-            <svg viewBox="0 0 120 100" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="gtLogoGradIntro" x1="10" y1="85" x2="110" y2="15" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stop-color="#1D63DC"/>
-                  <stop offset="50%" stop-color="#14969C"/>
-                  <stop offset="100%" stop-color="#22C55E"/>
-                </linearGradient>
-              </defs>
-              <path d="M16 47C19 32 30 22 44 19" stroke="url(#gtLogoGradIntro)" stroke-width="4.5" stroke-linecap="round"/>
-              <path d="M39 14L47 19L40 25" fill="url(#gtLogoGradIntro)"/>
-              <path d="M89 19C101 23 108 33 108 45" stroke="url(#gtLogoGradIntro)" stroke-width="4.5" stroke-linecap="round"/>
-              <path d="M102 41L108 49L114 41" fill="url(#gtLogoGradIntro)"/>
-              <path d="M53 16H73L79 30L86 33H43L49 30L53 16Z" stroke="url(#gtLogoGradIntro)" stroke-width="4" stroke-linejoin="round"/>
-              <path d="M51 24H67" stroke="url(#gtLogoGradIntro)" stroke-width="3.5" stroke-linecap="round"/>
-              <path d="M25 83V52C25 39 35 33 48 33H78C87 33 93 40 93 50V66C93 77 85 83 74 83H67V62" stroke="url(#gtLogoGradIntro)" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M36 83C36 72 44 65 53 65C62 65 67 72 67 83" stroke="url(#gtLogoGradIntro)" stroke-width="4.2" stroke-linecap="round"/>
-              <path d="M46 33C46 47 54 55 66 55V33" stroke="url(#gtLogoGradIntro)" stroke-width="4" stroke-linejoin="round"/>
-              <path d="M77 56C87 58 97 56 104 49C99 61 88 65 76 63" stroke="url(#gtLogoGradIntro)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-              <circle cx="77" cy="43" r="3" fill="url(#gtLogoGradIntro)"/>
-              <path d="M19 67C19 56 22 48 26 43" stroke="url(#gtLogoGradIntro)" stroke-width="3.5" stroke-linecap="round"/>
-            </svg>
+          <div class="w-12 h-11 rounded-xl bg-white p-1.5 flex items-center justify-center shadow-lg shrink-0">
+            <span class="gt-logo-slot w-full h-full flex items-center justify-center"></span>
           </div>
           <div>
             <span class="font-extrabold text-lg tracking-tight text-white">GanesaThrift</span>
-            <span class="block text-[11px] font-mono text-gt-sky/80">ITB CIRCULAR ECOSYSTEM</span>
+            <span class="block text-[11px] font-mono text-gt-sky/80">INSTITUT TEKNOLOGI BANDUNG</span>
           </div>
         </div>
 
         <button
           type="button"
           onclick="closeIntroOverlay()"
-          class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium bg-white/10 hover:bg-white/20 text-gt-sky border border-white/15 transition-colors cursor-pointer"
+          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold bg-white/10 hover:bg-white/20 text-gt-sky border border-white/15 transition-colors cursor-pointer"
         >
           <span>Lewati Intro</span>
           <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
@@ -188,28 +167,28 @@
       <div class="my-auto py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
         <!-- Left Story & CTA -->
         <div class="lg:col-span-7 space-y-6">
-          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gt-teal/25 border border-gt-sky/25 text-xs font-mono text-gt-sky">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-            <span>DISCOVER &bull; THRIFT &bull; HIBAH KAMPUS</span>
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gt-teal/25 border border-gt-sky/25 text-xs font-mono text-gt-sky">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span>THRIFT &bull; HIBAH &bull; KOMUNITAS KAMPUS</span>
           </div>
 
-          <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-[1.12] text-white">
+          <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-[1.14] text-white">
             Pasar barang bekas &amp; hibah mahasiswa <span class="text-gt-sky">ITB.</span>
           </h1>
 
           <p class="text-sm sm:text-base text-gt-sky/85 leading-relaxed max-w-2xl">
-            Setiap akhir semester dan wisuda, ratusan buku TPB, elektronik, dan perabot kos berpindah tangan. GanesaThrift menghubungkan mahasiswa Ganesha, Jatinangor, Cisitu, dan Dago secara real-time tanpa login rumit.
+            Setiap pergantian semester dan wisuda, ratusan buku kuliah, elektronik, dan perabot kos layak pakai berpindah tangan. GanesaThrift memudahkan mahasiswa Ganesha, Jatinangor, Cisitu, dan Dago saling berbagi dan bertransaksi secara praktis.
           </p>
 
-          <!-- Interactive Stage Switcher (Cyera-style interactive nodes) -->
+          <!-- Interactive 3-Step Feature Cards -->
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
             <button
               type="button"
               onclick="selectIntroStep(0)"
               id="intro-step-btn-0"
-              class="text-left p-3.5 rounded-2xl border border-gt-sky/50 bg-white/12 transition-all cursor-pointer"
+              class="text-left p-3.5 rounded-2xl border border-gt-sky/60 bg-white/15 transition-all cursor-pointer"
             >
-              <span class="font-mono text-[11px] text-emerald-300 font-semibold">01 / TANPA LOGIN</span>
+              <span class="font-mono text-[11px] text-gt-sky font-semibold">01 / TANPA LOGIN</span>
               <p class="text-sm font-bold text-white mt-1">Unggah Instan</p>
               <p class="text-xs text-gt-sky/75 mt-0.5">Cukup isi identitas &amp; 4-digit PIN penjual.</p>
             </button>
@@ -231,7 +210,7 @@
               id="intro-step-btn-2"
               class="text-left p-3.5 rounded-2xl border border-white/15 bg-white/5 hover:bg-white/10 transition-all cursor-pointer"
             >
-              <span class="font-mono text-[11px] text-gt-sky/75 font-semibold">03 / REAL-TIME SYNC</span>
+              <span class="font-mono text-[11px] text-gt-sky/75 font-semibold">03 / PRAKTIS</span>
               <p class="text-sm font-bold text-white mt-1">Booking &amp; COD</p>
               <p class="text-xs text-gt-sky/75 mt-0.5">Kunci barang langsung &amp; chat via WhatsApp.</p>
             </button>
@@ -244,7 +223,7 @@
               onclick="closeIntroOverlay()"
               class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full text-sm font-bold bg-gt-sky text-gt-navyDark hover:bg-white transition-all shadow-lg cursor-pointer"
             >
-              <span>Jelajahi Katalog Sekarang</span>
+              <span>Masuk ke Katalog</span>
               <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
 
@@ -259,13 +238,13 @@
           </div>
         </div>
 
-        <!-- Right Interactive Visual Telemetry Card -->
+        <!-- Right Visual Card with Full Uncropped Logo -->
         <div class="lg:col-span-5">
-          <div class="relative rounded-3xl bg-white/10 backdrop-blur-md border border-white/20 p-6 shadow-2xl animate-float">
+          <div class="relative rounded-3xl bg-white/10 backdrop-blur-md border border-white/20 p-6 sm:p-7 shadow-2xl animate-float">
             <div class="flex items-center justify-between pb-4 border-b border-white/15">
               <div class="flex items-center gap-2">
-                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
-                <span id="intro-preview-tag" class="font-mono text-xs text-gt-sky">LIVE NODE 01 &bull; DIRECT LISTING</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-gt-sky"></span>
+                <span id="intro-preview-tag" class="font-mono text-xs text-gt-sky">LANGKAH 01 &bull; UNGGAH INSTAN</span>
               </div>
               <span class="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-gt-navyDark/70 text-gt-sky border border-white/10">
                 Ganesha &bull; Jatinangor
@@ -273,28 +252,8 @@
             </div>
 
             <div class="py-6 flex flex-col items-center text-center">
-              <div class="w-24 h-24 rounded-2xl bg-white p-3 shadow-xl mb-4 flex items-center justify-center">
-                <svg viewBox="0 0 120 100" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <defs>
-                    <linearGradient id="gtLogoGradCard" x1="10" y1="85" x2="110" y2="15" gradientUnits="userSpaceOnUse">
-                      <stop offset="0%" stop-color="#1D63DC"/>
-                      <stop offset="50%" stop-color="#14969C"/>
-                      <stop offset="100%" stop-color="#22C55E"/>
-                    </linearGradient>
-                  </defs>
-                  <path d="M16 47C19 32 30 22 44 19" stroke="url(#gtLogoGradCard)" stroke-width="4.5" stroke-linecap="round"/>
-                  <path d="M39 14L47 19L40 25" fill="url(#gtLogoGradCard)"/>
-                  <path d="M89 19C101 23 108 33 108 45" stroke="url(#gtLogoGradCard)" stroke-width="4.5" stroke-linecap="round"/>
-                  <path d="M102 41L108 49L114 41" fill="url(#gtLogoGradCard)"/>
-                  <path d="M53 16H73L79 30L86 33H43L49 30L53 16Z" stroke="url(#gtLogoGradCard)" stroke-width="4" stroke-linejoin="round"/>
-                  <path d="M51 24H67" stroke="url(#gtLogoGradCard)" stroke-width="3.5" stroke-linecap="round"/>
-                  <path d="M25 83V52C25 39 35 33 48 33H78C87 33 93 40 93 50V66C93 77 85 83 74 83H67V62" stroke="url(#gtLogoGradCard)" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M36 83C36 72 44 65 53 65C62 65 67 72 67 83" stroke="url(#gtLogoGradCard)" stroke-width="4.2" stroke-linecap="round"/>
-                  <path d="M46 33C46 47 54 55 66 55V33" stroke="url(#gtLogoGradCard)" stroke-width="4" stroke-linejoin="round"/>
-                  <path d="M77 56C87 58 97 56 104 49C99 61 88 65 76 63" stroke="url(#gtLogoGradCard)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-                  <circle cx="77" cy="43" r="3" fill="url(#gtLogoGradCard)"/>
-                  <path d="M19 67C19 56 22 48 26 43" stroke="url(#gtLogoGradCard)" stroke-width="3.5" stroke-linecap="round"/>
-                </svg>
+              <div class="w-36 h-28 rounded-2xl bg-white p-3.5 shadow-xl mb-5 flex items-center justify-center">
+                <span class="gt-logo-slot w-full h-full flex items-center justify-center"></span>
               </div>
               <h3 id="intro-preview-title" class="text-lg font-bold text-white">Pasang Barang dalam 30 Detik</h3>
               <p id="intro-preview-desc" class="text-xs sm:text-sm text-gt-sky/85 mt-2 leading-relaxed">
@@ -303,8 +262,8 @@
             </div>
 
             <div class="pt-4 border-t border-white/15 flex items-center justify-between text-xs font-mono text-gt-sky/80">
-              <span>Supabase Cloud Sync</span>
-              <span class="text-emerald-300 font-semibold">● ACTIVE REALTIME</span>
+              <span>GanesaThrift ITB</span>
+              <span class="text-gt-sky font-semibold">Ganesha &bull; Jatinangor &bull; Cisitu</span>
             </div>
           </div>
         </div>
@@ -313,452 +272,401 @@
       <!-- Intro Bottom Bar -->
       <div class="flex items-center justify-between text-[11px] font-mono text-gt-sky/60 pt-4 border-t border-white/10">
         <span>GANESATHRIFT &bull; INSTITUT TEKNOLOGI BANDUNG</span>
-        <span>TEKAN ESC UNTUK LANGSUNG MASUK</span>
+        <span>TEKAN ESC UNTUK MASUK</span>
       </div>
     </div>
   </div>
 
   <!-- ===================================================================== -->
-  <!-- STICKY GLASSMORPHIC HEADER / NAVBAR (GOCART-STYLE + PALETTE)          -->
+  <!-- MAIN APPLICATION SHELL (HIDDEN UNTIL INTRO IS CLOSED)                 -->
   <!-- ===================================================================== -->
-  <header class="sticky top-0 z-40 w-full glass-nav border-b border-gt-sky/60">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-[72px] flex items-center justify-between gap-3">
-      
-      <!-- Left: GaneshaThrift Brand Logo -->
-      <a href="#home-section" onclick="navigateToSection('home-section')" class="flex items-center gap-2.5 shrink-0 group">
-        <div class="w-9 h-9 rounded-xl bg-gt-beige border border-gt-sky/70 p-1 flex items-center justify-center group-hover:scale-105 transition-transform">
-          <svg viewBox="0 0 120 100" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="gtLogoGradNav" x1="10" y1="85" x2="110" y2="15" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#1D63DC"/>
-                <stop offset="50%" stop-color="#14969C"/>
-                <stop offset="100%" stop-color="#22C55E"/>
-              </linearGradient>
-            </defs>
-            <path d="M16 47C19 32 30 22 44 19" stroke="url(#gtLogoGradNav)" stroke-width="5" stroke-linecap="round"/>
-            <path d="M39 14L47 19L40 25" fill="url(#gtLogoGradNav)"/>
-            <path d="M89 19C101 23 108 33 108 45" stroke="url(#gtLogoGradNav)" stroke-width="5" stroke-linecap="round"/>
-            <path d="M102 41L108 49L114 41" fill="url(#gtLogoGradNav)"/>
-            <path d="M53 16H73L79 30L86 33H43L49 30L53 16Z" stroke="url(#gtLogoGradNav)" stroke-width="4.5" stroke-linejoin="round"/>
-            <path d="M51 24H67" stroke="url(#gtLogoGradNav)" stroke-width="4" stroke-linecap="round"/>
-            <path d="M25 83V52C25 39 35 33 48 33H78C87 33 93 40 93 50V66C93 77 85 83 74 83H67V62" stroke="url(#gtLogoGradNav)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M36 83C36 72 44 65 53 65C62 65 67 72 67 83" stroke="url(#gtLogoGradNav)" stroke-width="4.5" stroke-linecap="round"/>
-            <path d="M46 33C46 47 54 55 66 55V33" stroke="url(#gtLogoGradNav)" stroke-width="4.2" stroke-linejoin="round"/>
-            <path d="M77 56C87 58 97 56 104 49C99 61 88 65 76 63" stroke="url(#gtLogoGradNav)" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="77" cy="43" r="3.2" fill="url(#gtLogoGradNav)"/>
-            <path d="M19 67C19 56 22 48 26 43" stroke="url(#gtLogoGradNav)" stroke-width="3.8" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div class="flex items-baseline gap-1">
-          <span class="font-extrabold text-xl tracking-tight text-gt-navy">Ganesa<span class="text-gt-teal">Thrift</span></span>
-          <span class="hidden sm:inline-block px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-gt-teal text-white">ITB</span>
-        </div>
-      </a>
+  <div id="main-app-shell" class="hidden min-h-screen flex-col">
 
-      <!-- Center: Home, Shop, About Navigation -->
-      <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-gt-navy/80">
-        <a href="#home-section" onclick="navigateToSection('home-section')" class="hover:text-gt-navy transition-colors">Home</a>
-        <a href="#shop-section" onclick="navigateToSection('shop-section')" class="hover:text-gt-navy transition-colors">Shop</a>
-        <a href="#about-section" onclick="navigateToSection('about-section')" class="hover:text-gt-navy transition-colors">About</a>
-        <button type="button" onclick="openIntroOverlay()" class="text-gt-teal hover:text-gt-navy transition-colors cursor-pointer">Intro</button>
-      </nav>
+    <!-- STICKY GLASSMORPHIC HEADER / NAVBAR -->
+    <header class="sticky top-0 z-40 w-full glass-nav border-b border-gt-sky/60">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-[72px] flex items-center justify-between gap-3">
+        
+        <!-- Left: GaneshaThrift Brand Logo (Full Uncropped) -->
+        <a href="#home-section" onclick="navigateToSection('home-section')" class="flex items-center gap-2.5 shrink-0 group">
+          <div class="w-11 h-10 rounded-xl bg-gt-beige border border-gt-sky/70 p-1 flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
+            <span class="gt-logo-slot w-full h-full flex items-center justify-center"></span>
+          </div>
+          <div class="flex items-baseline gap-1.5">
+            <span class="font-extrabold text-xl tracking-tight text-gt-navy">Ganesa<span class="text-gt-teal">Thrift</span></span>
+            <span class="hidden sm:inline-block px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-gt-teal text-white">ITB</span>
+          </div>
+        </a>
 
-      <!-- Right: Pill Search Bar + Primary CTA -->
-      <div class="flex items-center gap-2.5 sm:gap-3 flex-1 md:flex-initial justify-end">
-        <div class="relative hidden sm:block w-52 lg:w-64">
-          <i data-lucide="search" class="w-4 h-4 text-gt-teal absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-          <input
-            id="nav-search-input"
-            type="text"
-            placeholder="Cari barang kampus..."
-            oninput="syncSearchFromNav(this.value)"
-            class="w-full pl-9 pr-4 py-2 text-xs sm:text-sm bg-gt-beige/90 border border-gt-sky/60 rounded-full text-gt-navy placeholder:text-gt-teal/70 focus:outline-none focus:bg-white focus:border-gt-teal transition-all"
-          />
-        </div>
+        <!-- Center: Home, Shop, About Navigation -->
+        <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-gt-navy/80">
+          <a href="#home-section" onclick="navigateToSection('home-section')" class="hover:text-gt-navy transition-colors">Home</a>
+          <a href="#shop-section" onclick="navigateToSection('shop-section')" class="hover:text-gt-navy transition-colors">Shop</a>
+          <a href="#about-section" onclick="navigateToSection('about-section')" class="hover:text-gt-navy transition-colors">About</a>
+          <button type="button" onclick="openIntroOverlay()" class="text-gt-teal hover:text-gt-navy transition-colors cursor-pointer">Intro</button>
+        </nav>
 
-        <button
-          type="button"
-          onclick="openUploadModal()"
-          class="inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold bg-gt-navy text-white hover:bg-gt-navyDark active:scale-[0.99] transition-all shadow-soft cursor-pointer shrink-0"
-        >
-          <i data-lucide="plus" class="w-4 h-4 stroke-[2.25]"></i>
-          <span>Jual / Hibah</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Mobile Sub-Nav (Home, Shop, About, Intro) -->
-    <div class="flex md:hidden items-center justify-center gap-6 py-2 border-t border-gt-sky/40 bg-white/95 text-xs font-semibold text-gt-navy">
-      <a href="#home-section" onclick="navigateToSection('home-section')">Home</a>
-      <a href="#shop-section" onclick="navigateToSection('shop-section')">Shop</a>
-      <a href="#about-section" onclick="navigateToSection('about-section')">About</a>
-      <button type="button" onclick="openIntroOverlay()" class="text-gt-teal">Intro</button>
-    </div>
-  </header>
-
-  <!-- ===================================================================== -->
-  <!-- HOME SECTION: GOCART-INSPIRED BENTO HERO BANNER                       -->
-  <!-- ===================================================================== -->
-  <section id="home-section" class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-      
-      <!-- Left Main Bento Card (Sky Blue #C8D9E6) -->
-      <div class="lg:col-span-8 relative overflow-hidden rounded-3xl bg-gt-sky p-7 sm:p-10 lg:p-11 flex flex-col justify-between min-h-[340px] sm:min-h-[390px]">
-        <!-- Subtle decorative vector watermark on right -->
-        <div class="pointer-events-none hidden sm:flex absolute right-6 bottom-6 w-56 h-56 rounded-full bg-white/35 items-center justify-center p-8">
-          <svg viewBox="0 0 120 100" class="w-full h-full opacity-90" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="gtLogoGradHero" x1="10" y1="85" x2="110" y2="15" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#2F4156"/>
-                <stop offset="55%" stop-color="#567C8D"/>
-                <stop offset="100%" stop-color="#1E8E6E"/>
-              </linearGradient>
-            </defs>
-            <path d="M16 47C19 32 30 22 44 19" stroke="url(#gtLogoGradHero)" stroke-width="4.5" stroke-linecap="round"/>
-            <path d="M39 14L47 19L40 25" fill="url(#gtLogoGradHero)"/>
-            <path d="M89 19C101 23 108 33 108 45" stroke="url(#gtLogoGradHero)" stroke-width="4.5" stroke-linecap="round"/>
-            <path d="M102 41L108 49L114 41" fill="url(#gtLogoGradHero)"/>
-            <path d="M53 16H73L79 30L86 33H43L49 30L53 16Z" stroke="url(#gtLogoGradHero)" stroke-width="4" stroke-linejoin="round"/>
-            <path d="M51 24H67" stroke="url(#gtLogoGradHero)" stroke-width="3.5" stroke-linecap="round"/>
-            <path d="M25 83V52C25 39 35 33 48 33H78C87 33 93 40 93 50V66C93 77 85 83 74 83H67V62" stroke="url(#gtLogoGradHero)" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M36 83C36 72 44 65 53 65C62 65 67 72 67 83" stroke="url(#gtLogoGradHero)" stroke-width="4.2" stroke-linecap="round"/>
-            <path d="M46 33C46 47 54 55 66 55V33" stroke="url(#gtLogoGradHero)" stroke-width="4" stroke-linejoin="round"/>
-            <path d="M77 56C87 58 97 56 104 49C99 61 88 65 76 63" stroke="url(#gtLogoGradHero)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="77" cy="43" r="3" fill="url(#gtLogoGradHero)"/>
-            <path d="M19 67C19 56 22 48 26 43" stroke="url(#gtLogoGradHero)" stroke-width="3.5" stroke-linecap="round"/>
-          </svg>
-        </div>
-
-        <div class="relative z-10 max-w-xl">
-          <!-- Top Pill Badge -->
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/75 text-gt-navy text-xs font-semibold mb-5">
-            <span class="px-2 py-0.5 rounded-full bg-gt-navy text-white text-[10px] font-bold">ITB</span>
-            <span>Ganesha &bull; Jatinangor &bull; Cisitu &bull; Dago</span>
+        <!-- Right: Pill Search Bar + Primary CTA -->
+        <div class="flex items-center gap-2.5 sm:gap-3 flex-1 md:flex-initial justify-end">
+          <div class="relative hidden sm:block w-52 lg:w-64">
+            <i data-lucide="search" class="w-4 h-4 text-gt-teal absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            <input
+              id="nav-search-input"
+              type="text"
+              placeholder="Cari barang kampus..."
+              oninput="syncSearchFromNav(this.value)"
+              class="w-full pl-9 pr-4 py-2 text-xs sm:text-sm bg-gt-beige/90 border border-gt-sky/60 rounded-full text-gt-navy placeholder:text-gt-teal/70 focus:outline-none focus:bg-white focus:border-gt-teal transition-all"
+            />
           </div>
 
-          <!-- Required Tagline Headline -->
-          <h1 class="text-2xl sm:text-4xl lg:text-[40px] font-extrabold tracking-tight text-gt-navy leading-[1.15]">
-            Pasar barang bekas &amp; hibah mahasiswa ITB
-          </h1>
-
-          <p class="mt-3 text-xs sm:text-sm text-gt-navy/80 leading-relaxed max-w-md">
-            Sirkulasi buku kuliah, elektronik, dan perabot kos antar mahasiswa ITB. Tanpa login—langsung unggah, booking real-time, atau chat WhatsApp.
-          </p>
-        </div>
-
-        <!-- Bottom CTA & Live Telemetry -->
-        <div class="relative z-10 mt-7 flex flex-wrap items-center gap-3">
-          <a
-            href="#shop-section"
-            onclick="navigateToSection('shop-section')"
-            class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-xs sm:text-sm font-bold bg-gt-navy text-white hover:bg-gt-navyDark transition-all shadow-soft"
+          <button
+            type="button"
+            onclick="openUploadModal()"
+            class="inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold bg-gt-navy text-white hover:bg-gt-navyDark active:scale-[0.99] transition-all shadow-soft cursor-pointer shrink-0"
           >
-            <span>JELAJAHI KATALOG</span>
-            <i data-lucide="arrow-down-right" class="w-4 h-4"></i>
-          </a>
-
-          <div id="sync-status-pill" class="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-white/80 text-gt-navy text-xs font-mono">
-            <span id="sync-status-dot" class="w-2 h-2 rounded-full bg-gt-teal"></span>
-            <span id="sync-status-text" class="font-semibold">Menghubungkan Supabase...</span>
-          </div>
+            <i data-lucide="plus" class="w-4 h-4 stroke-[2.25]"></i>
+            <span>Jual / Hibah</span>
+          </button>
         </div>
       </div>
 
-      <!-- Right Stacked 2 Bento Cards -->
-      <div class="lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-5">
+      <!-- Mobile Sub-Nav (Home, Shop, About, Intro) -->
+      <div class="flex md:hidden items-center justify-center gap-6 py-2 border-t border-gt-sky/40 bg-white/95 text-xs font-semibold text-gt-navy">
+        <a href="#home-section" onclick="navigateToSection('home-section')">Home</a>
+        <a href="#shop-section" onclick="navigateToSection('shop-section')">Shop</a>
+        <a href="#about-section" onclick="navigateToSection('about-section')">About</a>
+        <button type="button" onclick="openIntroOverlay()" class="text-gt-teal">Intro</button>
+      </div>
+    </header>
+
+    <!-- =================================================================== -->
+    <!-- HOME SECTION: BENTO HERO BANNER                                     -->
+    <!-- =================================================================== -->
+    <section id="home-section" class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
         
-        <!-- Top Right Card: Beige (#F5EFEB) -->
-        <div
-          onclick="selectCategory('Gratis'); navigateToSection('shop-section');"
-          class="group rounded-3xl bg-gt-beige p-6 sm:p-7 flex items-center justify-between gap-4 cursor-pointer hover:shadow-card-hover transition-all border border-gt-sky/40"
-        >
-          <div>
-            <span class="text-[11px] font-mono font-semibold uppercase tracking-wider text-gt-teal">Berbagi Kampus</span>
-            <h2 class="text-xl sm:text-2xl font-extrabold text-gt-navy leading-tight mt-1">
-              Hibah<br/><span class="text-gt-teal">Gratis ITB</span>
+        <!-- Left Main Bento Card (Sky Blue #C8D9E6) -->
+        <div class="lg:col-span-8 relative overflow-hidden rounded-3xl bg-gt-sky p-7 sm:p-10 lg:p-11 flex flex-col justify-between min-h-[340px] sm:min-h-[380px]">
+          <!-- Decorative Full Uncropped Logo Card on Right -->
+          <div class="pointer-events-none hidden sm:flex absolute right-7 bottom-7 w-52 h-44 rounded-3xl bg-white/75 backdrop-blur-xs border border-white/80 items-center justify-center p-5 shadow-soft">
+            <span class="gt-logo-slot w-full h-full flex items-center justify-center"></span>
+          </div>
+
+          <div class="relative z-10 max-w-xl">
+            <!-- Top Pill Badge -->
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 text-gt-navy text-xs font-semibold mb-5">
+              <span class="px-2 py-0.5 rounded-full bg-gt-navy text-white text-[10px] font-bold">ITB</span>
+              <span>Ganesha &bull; Jatinangor &bull; Cisitu &bull; Dago</span>
+            </div>
+
+            <!-- Required Tagline Headline -->
+            <h1 class="text-2xl sm:text-4xl lg:text-[40px] font-extrabold tracking-tight text-gt-navy leading-[1.15]">
+              Pasar barang bekas &amp; hibah mahasiswa ITB
+            </h1>
+
+            <p class="mt-3 text-xs sm:text-sm text-gt-navy/80 leading-relaxed max-w-md">
+              Sirkulasi buku kuliah, elektronik, dan perabot kos antar mahasiswa ITB. Tanpa login—langsung unggah, booking, atau chat WhatsApp.
+            </p>
+          </div>
+
+          <!-- Bottom CTA -->
+          <div class="relative z-10 mt-7 flex flex-wrap items-center gap-3">
+            <a
+              href="#shop-section"
+              onclick="navigateToSection('shop-section')"
+              class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-xs sm:text-sm font-bold bg-gt-navy text-white hover:bg-gt-navyDark transition-all shadow-soft"
+            >
+              <span>JELAJAHI KATALOG</span>
+              <i data-lucide="arrow-down-right" class="w-4 h-4"></i>
+            </a>
+
+            <button
+              type="button"
+              onclick="openUploadModal()"
+              class="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-xs sm:text-sm font-bold bg-white/85 text-gt-navy hover:bg-white transition-all cursor-pointer"
+            >
+              <i data-lucide="plus" class="w-4 h-4 text-gt-teal"></i>
+              <span>Pasang Barang</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Stacked 2 Bento Cards -->
+        <div class="lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-5">
+          
+          <!-- Top Right Card: Beige (#F5EFEB) -->
+          <div
+            onclick="selectCategory('Gratis'); navigateToSection('shop-section');"
+            class="group rounded-3xl bg-gt-beige p-6 sm:p-7 flex items-center justify-between gap-4 cursor-pointer hover:shadow-card-hover transition-all border border-gt-sky/40"
+          >
+            <div>
+              <span class="text-[11px] font-mono font-semibold uppercase tracking-wider text-gt-teal">Berbagi Kampus</span>
+              <h2 class="text-xl sm:text-2xl font-extrabold text-gt-navy leading-tight mt-1">
+                Hibah<br/><span class="text-gt-teal">Gratis ITB</span>
+              </h2>
+              <p class="text-xs text-gt-navy/70 mt-1.5">
+                <span id="metric-free" class="font-mono font-bold text-gt-navy">0</span> barang hibah tersedia
+              </p>
+              <div class="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-gt-navy group-hover:translate-x-1 transition-transform">
+                <span>Lihat Hibah</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </div>
+            </div>
+
+            <div class="w-20 h-20 rounded-2xl bg-white flex items-center justify-center text-gt-teal shadow-soft shrink-0 group-hover:scale-105 transition-transform">
+              <i data-lucide="gift" class="w-9 h-9 stroke-[1.75]"></i>
+            </div>
+          </div>
+
+          <!-- Bottom Right Card: Soft Sky Blue (#C8D9E6/65) -->
+          <div
+            onclick="openUploadModal()"
+            class="group rounded-3xl bg-gt-sky/65 p-6 sm:p-7 flex items-center justify-between gap-4 cursor-pointer hover:shadow-card-hover transition-all border border-gt-sky"
+          >
+            <div>
+              <span class="text-[11px] font-mono font-semibold uppercase tracking-wider text-gt-navy/70">Tanpa Login</span>
+              <h2 class="text-xl sm:text-2xl font-extrabold text-gt-navy leading-tight mt-1">
+                Punya Barang<br/><span class="text-gt-teal">Tak Terpakai?</span>
+              </h2>
+              <p class="text-xs text-gt-navy/75 mt-1.5">
+                <span id="metric-active" class="font-mono font-bold text-gt-navy">0</span> barang aktif &bull; <span id="metric-itb" class="font-mono font-bold text-gt-navy">0</span> ITB
+              </p>
+              <div class="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-gt-navy group-hover:translate-x-1 transition-transform">
+                <span>Upload Sekarang</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </div>
+            </div>
+
+            <div class="w-20 h-20 rounded-2xl bg-gt-navy text-white flex items-center justify-center shadow-soft shrink-0 group-hover:scale-105 transition-transform">
+              <i data-lucide="package-plus" class="w-9 h-9 stroke-[1.75]"></i>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Horizontal Category Quick Pills Strip -->
+      <div class="mt-6 py-2">
+        <div id="category-pills" class="flex items-center justify-start sm:justify-center gap-2.5 overflow-x-auto no-scrollbar py-1">
+          <!-- Rendered dynamically by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- SHOP SECTION: CLEAN PRODUCT CATALOG GRID                            -->
+    <!-- =================================================================== -->
+    <main id="shop-section" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 pb-12">
+      
+      <!-- Centered Section Header -->
+      <div class="text-center max-w-xl mx-auto mb-7">
+        <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-gt-navy">
+          Katalog Kampus
+        </h2>
+        <div class="mt-1.5 flex items-center justify-center gap-3 text-xs sm:text-sm text-gt-teal">
+          <span>Menampilkan <strong id="visible-count" class="text-gt-navy font-semibold">0</strong> barang</span>
+          <span>&bull;</span>
+          <button
+            type="button"
+            onclick="toggleStatusFilterQuick()"
+            id="quick-status-toggle"
+            class="inline-flex items-center gap-1 font-semibold text-gt-teal hover:text-gt-navy transition-colors cursor-pointer"
+          >
+            <span id="quick-status-label">Tampilkan Semua Status</span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Search & Status Filter Bar -->
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-7 max-w-4xl mx-auto">
+        <div class="relative flex-1">
+          <i data-lucide="search" class="w-4 h-4 text-gt-teal absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+          <input
+            id="search-input"
+            type="text"
+            placeholder="Cari kalkulus, monitor, meja kos, Cisitu, Jatinangor..."
+            oninput="handleSearchInput(this.value)"
+            class="w-full pl-11 pr-9 py-2.5 text-sm bg-gt-beige/75 border border-gt-sky/70 rounded-full text-gt-navy placeholder:text-gt-teal/70 focus:outline-none focus:bg-white focus:border-gt-teal transition-all"
+          />
+          <button
+            id="clear-search-btn"
+            type="button"
+            onclick="clearSearch()"
+            class="hidden absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gt-teal hover:text-gt-navy rounded-full cursor-pointer"
+            title="Hapus pencarian"
+          >
+            <i data-lucide="x" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+
+        <div class="relative self-start sm:self-auto">
+          <select
+            id="status-filter"
+            onchange="handleStatusFilter(this.value)"
+            class="appearance-none bg-gt-beige/75 border border-gt-sky/70 rounded-full pl-4 pr-9 py-2.5 text-xs sm:text-sm font-semibold text-gt-navy hover:border-gt-teal focus:outline-none focus:bg-white focus:border-gt-teal transition-colors cursor-pointer"
+          >
+            <option value="active">Aktif (Tersedia &amp; Dalam Proses)</option>
+            <option value="all">Semua Termasuk Tersalurkan</option>
+          </select>
+          <i data-lucide="chevron-down" class="w-4 h-4 text-gt-teal absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+        </div>
+      </div>
+
+      <!-- 4-Column Product Grid -->
+      <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Cards rendered dynamically by JS -->
+      </div>
+
+      <!-- Clean Natural Empty State (When No Posts Yet) -->
+      <div id="empty-state" class="hidden flex-col items-center justify-center text-center py-16 px-5 bg-gt-beige/60 border border-gt-sky/60 rounded-3xl max-w-2xl mx-auto">
+        <div class="w-16 h-16 rounded-2xl bg-white border border-gt-sky flex items-center justify-center text-gt-teal mb-4 shadow-soft">
+          <i data-lucide="package-open" class="w-8 h-8"></i>
+        </div>
+        <h3 id="empty-state-title" class="text-lg sm:text-xl font-extrabold text-gt-navy">Belum ada barang yang diposting</h3>
+        <p id="empty-state-desc" class="text-xs sm:text-sm text-gt-navy/75 mt-2 max-w-md leading-relaxed">
+          Katalog masih kosong karena belum ada mahasiswa yang mengunggah barang. Jadilah yang pertama menjual atau menghibahkan barang bekas kos maupun perlengkapan kuliah!
+        </p>
+        <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
+          <button
+            type="button"
+            onclick="openUploadModal()"
+            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold bg-gt-navy text-white hover:bg-gt-navyDark transition-colors shadow-soft cursor-pointer"
+          >
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            <span>Jual / Hibahkan Barang Pertama</span>
+          </button>
+          <button
+            id="empty-reset-filter-btn"
+            type="button"
+            onclick="resetFilters()"
+            class="hidden inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold bg-white border border-gt-sky text-gt-navy hover:bg-gt-sky/30 transition-colors cursor-pointer"
+          >
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+            <span>Reset Filter</span>
+          </button>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- =================================================================== -->
+    <!-- ABOUT SECTION: TENTANG GANESATHRIFT & CARA KERJA                    -->
+    <!-- =================================================================== -->
+    <section id="about-section" class="border-t border-gt-sky/50 bg-gt-beige/55 py-14 sm:py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div class="lg:col-span-5">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gt-sky/60 text-gt-navy text-xs font-mono font-semibold">
+              TENTANG GANESATHRIFT
+            </span>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-gt-navy mt-3 leading-tight">
+              Pasar barang bekas &amp; hibah mahasiswa ITB
             </h2>
-            <p class="text-xs text-gt-navy/70 mt-1.5">
-              <span id="metric-free" class="font-mono font-bold text-gt-navy">0</span> barang hibah tersedia
-            </p>
-            <div class="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-gt-navy group-hover:translate-x-1 transition-transform">
-              <span>Lihat Hibah</span>
-              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-            </div>
-          </div>
-
-          <div class="w-20 h-20 rounded-2xl bg-white flex items-center justify-center text-gt-teal shadow-soft shrink-0 group-hover:scale-105 transition-transform">
-            <i data-lucide="gift" class="w-9 h-9 stroke-[1.75]"></i>
-          </div>
-        </div>
-
-        <!-- Bottom Right Card: Soft Sky Blue (#C8D9E6/70) -->
-        <div
-          onclick="openUploadModal()"
-          class="group rounded-3xl bg-gt-sky/65 p-6 sm:p-7 flex items-center justify-between gap-4 cursor-pointer hover:shadow-card-hover transition-all border border-gt-sky"
-        >
-          <div>
-            <span class="text-[11px] font-mono font-semibold uppercase tracking-wider text-gt-navy/70">Tanpa Login</span>
-            <h2 class="text-xl sm:text-2xl font-extrabold text-gt-navy leading-tight mt-1">
-              Punya Barang<br/><span class="text-gt-teal">Tak Terpakai?</span>
-            </h2>
-            <p class="text-xs text-gt-navy/75 mt-1.5">
-              <span id="metric-active" class="font-mono font-bold text-gt-navy">0</span> barang aktif &bull; <span id="metric-itb" class="font-mono font-bold text-gt-navy">0</span> ITB
-            </p>
-            <div class="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-gt-navy group-hover:translate-x-1 transition-transform">
-              <span>Upload Sekarang</span>
-              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-            </div>
-          </div>
-
-          <div class="w-20 h-20 rounded-2xl bg-gt-navy text-white flex items-center justify-center shadow-soft shrink-0 group-hover:scale-105 transition-transform">
-            <i data-lucide="package-plus" class="w-9 h-9 stroke-[1.75]"></i>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- Horizontal Category / Campus Quick Pills Strip (Matching image_407ddc.png) -->
-    <div class="mt-6 py-2">
-      <div id="category-pills" class="flex items-center justify-start sm:justify-center gap-2.5 overflow-x-auto no-scrollbar py-1">
-        <!-- Rendered dynamically by JS -->
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================================================================== -->
-  <!-- SHOP SECTION: CLEAN PRODUCT CATALOG GRID (MATCHING image_407d69.png)  -->
-  <!-- ===================================================================== -->
-  <main id="shop-section" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 pb-12">
-    
-    <!-- Centered Section Header ("Katalog Kampus" + "Showing X of Y products") -->
-    <div class="text-center max-w-xl mx-auto mb-7">
-      <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-gt-navy">
-        Katalog Kampus
-      </h2>
-      <div class="mt-1.5 flex items-center justify-center gap-3 text-xs sm:text-sm text-gt-teal">
-        <span>Menampilkan <strong id="visible-count" class="text-gt-navy font-semibold">0</strong> barang</span>
-        <span>&bull;</span>
-        <button
-          type="button"
-          onclick="toggleStatusFilterQuick()"
-          id="quick-status-toggle"
-          class="inline-flex items-center gap-1 font-semibold text-gt-teal hover:text-gt-navy transition-colors cursor-pointer"
-        >
-          <span id="quick-status-label">Tampilkan Semua Status</span>
-          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-        </button>
-      </div>
-    </div>
-
-    <!-- Search & Status Filter Bar -->
-    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-7 max-w-4xl mx-auto">
-      <div class="relative flex-1">
-        <i data-lucide="search" class="w-4 h-4 text-gt-teal absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-        <input
-          id="search-input"
-          type="text"
-          placeholder="Cari kalkulus, monitor, meja kos, Cisitu, Jatinangor..."
-          oninput="handleSearchInput(this.value)"
-          class="w-full pl-11 pr-9 py-2.5 text-sm bg-gt-beige/75 border border-gt-sky/70 rounded-full text-gt-navy placeholder:text-gt-teal/70 focus:outline-none focus:bg-white focus:border-gt-teal transition-all"
-        />
-        <button
-          id="clear-search-btn"
-          type="button"
-          onclick="clearSearch()"
-          class="hidden absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gt-teal hover:text-gt-navy rounded-full cursor-pointer"
-          title="Hapus pencarian"
-        >
-          <i data-lucide="x" class="w-3.5 h-3.5"></i>
-        </button>
-      </div>
-
-      <div class="relative self-start sm:self-auto">
-        <select
-          id="status-filter"
-          onchange="handleStatusFilter(this.value)"
-          class="appearance-none bg-gt-beige/75 border border-gt-sky/70 rounded-full pl-4 pr-9 py-2.5 text-xs sm:text-sm font-semibold text-gt-navy hover:border-gt-teal focus:outline-none focus:bg-white focus:border-gt-teal transition-colors cursor-pointer"
-        >
-          <option value="active">Aktif (Tersedia &amp; Dalam Proses)</option>
-          <option value="all">Semua Termasuk Tersalurkan</option>
-        </select>
-        <i data-lucide="chevron-down" class="w-4 h-4 text-gt-teal absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-      </div>
-    </div>
-
-    <!-- 4-Column Product Grid -->
-    <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      <!-- Cards rendered dynamically by JS -->
-    </div>
-
-    <!-- Empty State (Live Real-time Empty Catalog) -->
-    <div id="empty-state" class="hidden flex-col items-center justify-center text-center py-16 px-4 bg-gt-beige/60 border border-gt-sky/60 rounded-3xl max-w-2xl mx-auto">
-      <div class="w-14 h-14 rounded-2xl bg-white border border-gt-sky flex items-center justify-center text-gt-teal mb-4 shadow-soft">
-        <i data-lucide="package-open" class="w-7 h-7"></i>
-      </div>
-      <h3 id="empty-state-title" class="text-lg font-bold text-gt-navy">Belum ada barang yang tayang</h3>
-      <p id="empty-state-desc" class="text-sm text-gt-navy/75 mt-1.5 max-w-md leading-relaxed">
-        Katalog real-time masih kosong. Jadilah mahasiswa ITB pertama yang menjual atau menghibahkan barang bekas kos maupun perlengkapan kuliah!
-      </p>
-      <div class="mt-5 flex flex-wrap items-center justify-center gap-3">
-        <button
-          type="button"
-          onclick="openUploadModal()"
-          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold bg-gt-navy text-white hover:bg-gt-navyDark transition-colors shadow-soft cursor-pointer"
-        >
-          <i data-lucide="plus" class="w-4 h-4"></i>
-          <span>Jual / Hibahkan Barang</span>
-        </button>
-        <button
-          id="empty-reset-filter-btn"
-          type="button"
-          onclick="resetFilters()"
-          class="hidden inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold bg-white border border-gt-sky text-gt-navy hover:bg-gt-sky/30 transition-colors cursor-pointer"
-        >
-          <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
-          <span>Reset Filter</span>
-        </button>
-      </div>
-    </div>
-
-  </main>
-
-  <!-- ===================================================================== -->
-  <!-- ABOUT SECTION: TENTANG GANESATHRIFT & CARA KERJA                      -->
-  <!-- ===================================================================== -->
-  <section id="about-section" class="border-t border-gt-sky/50 bg-gt-beige/55 py-14 sm:py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-        <div class="lg:col-span-5">
-          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gt-sky/60 text-gt-navy text-xs font-mono font-semibold">
-            TENTANG GANESATHRIFT
-          </span>
-          <h2 class="text-2xl sm:text-3xl font-extrabold text-gt-navy mt-3 leading-tight">
-            Pasar barang bekas &amp; hibah mahasiswa ITB
-          </h2>
-          <p class="text-sm text-gt-navy/80 mt-3 leading-relaxed">
-            GanesaThrift dirancang khusus untuk mempercepat sirkulasi barang layak pakai di lingkungan Institut Teknologi Bandung—mulai dari buku diktat TPB, alat praktikum, elektronik, hingga perabot kos.
-          </p>
-        </div>
-
-        <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div class="bg-white rounded-2xl p-5 border border-gt-sky/60 shadow-soft">
-            <div class="w-10 h-10 rounded-xl bg-gt-sky/50 text-gt-navy flex items-center justify-center mb-3">
-              <i data-lucide="zap" class="w-5 h-5"></i>
-            </div>
-            <h3 class="text-sm font-bold text-gt-navy">1. Unggah Tanpa Login</h3>
-            <p class="text-xs text-gt-navy/70 mt-1.5 leading-relaxed">
-              Tidak perlu registrasi akun rumit. Cukup masukkan nama, email, nomor WhatsApp, dan 4-digit PIN penjual.
+            <p class="text-sm text-gt-navy/80 mt-3 leading-relaxed">
+              GanesaThrift dirancang khusus untuk mempercepat sirkulasi barang layak pakai di lingkungan Institut Teknologi Bandung—mulai dari buku diktat TPB, alat praktikum, elektronik, hingga perabot kos.
             </p>
           </div>
 
-          <div class="bg-white rounded-2xl p-5 border border-gt-sky/60 shadow-soft">
-            <div class="w-10 h-10 rounded-xl bg-gt-teal/15 text-gt-teal flex items-center justify-center mb-3">
-              <i data-lucide="badge-check" class="w-5 h-5"></i>
+          <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="bg-white rounded-2xl p-5 border border-gt-sky/60 shadow-soft">
+              <div class="w-10 h-10 rounded-xl bg-gt-sky/50 text-gt-navy flex items-center justify-center mb-3">
+                <i data-lucide="zap" class="w-5 h-5"></i>
+              </div>
+              <h3 class="text-sm font-bold text-gt-navy">1. Unggah Tanpa Login</h3>
+              <p class="text-xs text-gt-navy/70 mt-1.5 leading-relaxed">
+                Tidak perlu registrasi akun rumit. Cukup masukkan nama, email, nomor WhatsApp, dan 4-digit PIN penjual.
+              </p>
             </div>
-            <h3 class="text-sm font-bold text-gt-navy">2. Lencana Mahasiswa ITB</h3>
-            <p class="text-xs text-gt-navy/70 mt-1.5 leading-relaxed">
-              Penjual dengan email <span class="font-mono">@mahasiswa.itb.ac.id</span> atau <span class="font-mono">@itb.ac.id</span> otomatis mendapat lencana terverifikasi.
+
+            <div class="bg-white rounded-2xl p-5 border border-gt-sky/60 shadow-soft">
+              <div class="w-10 h-10 rounded-xl bg-gt-teal/15 text-gt-teal flex items-center justify-center mb-3">
+                <i data-lucide="badge-check" class="w-5 h-5"></i>
+              </div>
+              <h3 class="text-sm font-bold text-gt-navy">2. Lencana Mahasiswa ITB</h3>
+              <p class="text-xs text-gt-navy/70 mt-1.5 leading-relaxed">
+                Penjual dengan email <span class="font-mono">@mahasiswa.itb.ac.id</span> atau <span class="font-mono">@itb.ac.id</span> otomatis mendapat lencana terverifikasi.
+              </p>
+            </div>
+
+            <div class="bg-white rounded-2xl p-5 border border-gt-sky/60 shadow-soft">
+              <div class="w-10 h-10 rounded-xl bg-gt-navy text-white flex items-center justify-center mb-3">
+                <i data-lucide="lock" class="w-5 h-5"></i>
+              </div>
+              <h3 class="text-sm font-bold text-gt-navy">3. Booking &amp; PIN Aman</h3>
+              <p class="text-xs text-gt-navy/70 mt-1.5 leading-relaxed">
+                Pembeli dapat mengunci barang ke status <em>Dalam Proses</em>, dan penjual menandai laku memakai PIN 4 angka.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- MULTI-COLUMN FOOTER                                                 -->
+    <!-- =================================================================== -->
+    <footer class="bg-white border-t border-gt-sky/60">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 pb-10 border-b border-gt-sky/50">
+          
+          <!-- Brand Column -->
+          <div class="md:col-span-5 space-y-3">
+            <div class="flex items-center gap-2.5">
+              <div class="w-10 h-9 rounded-lg bg-gt-beige border border-gt-sky/70 p-1 flex items-center justify-center shrink-0">
+                <span class="gt-logo-slot w-full h-full flex items-center justify-center"></span>
+              </div>
+              <span class="font-extrabold text-lg text-gt-navy">Ganesa<span class="text-gt-teal">Thrift</span></span>
+            </div>
+            <p class="text-xs sm:text-sm text-gt-navy/70 leading-relaxed max-w-sm">
+              Pasar barang bekas &amp; hibah mahasiswa ITB. Memudahkan jual beli dan berbagi perlengkapan kuliah maupun kos di sekitar Kampus Ganesha dan Jatinangor.
             </p>
           </div>
 
-          <div class="bg-white rounded-2xl p-5 border border-gt-sky/60 shadow-soft">
-            <div class="w-10 h-10 rounded-xl bg-gt-navy text-white flex items-center justify-center mb-3">
-              <i data-lucide="lock" class="w-5 h-5"></i>
-            </div>
-            <h3 class="text-sm font-bold text-gt-navy">3. Booking &amp; PIN Aman</h3>
-            <p class="text-xs text-gt-navy/70 mt-1.5 leading-relaxed">
-              Pembeli dapat mengunci barang ke status <em>Dalam Proses</em>, dan penjual menandai laku memakai PIN 4 angka.
-            </p>
+          <!-- Column 2: Kategori -->
+          <div class="md:col-span-2 space-y-2.5 text-xs sm:text-sm">
+            <h4 class="font-bold text-gt-navy uppercase tracking-wider text-xs">Kategori</h4>
+            <ul class="space-y-2 text-gt-navy/75">
+              <li><button type="button" onclick="selectCategory('Gratis'); navigateToSection('shop-section');" class="hover:text-gt-navy cursor-pointer">Hibah Gratis</button></li>
+              <li><button type="button" onclick="selectCategory('Elektronik'); navigateToSection('shop-section');" class="hover:text-gt-navy cursor-pointer">Elektronik</button></li>
+              <li><button type="button" onclick="selectCategory('Perabot Kos'); navigateToSection('shop-section');" class="hover:text-gt-navy cursor-pointer">Perabot Kos</button></li>
+              <li><button type="button" onclick="selectCategory('Buku'); navigateToSection('shop-section');" class="hover:text-gt-navy cursor-pointer">Buku &amp; Diktat</button></li>
+            </ul>
           </div>
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- ===================================================================== -->
-  <!-- MULTI-COLUMN FOOTER (MATCHING image_407e20.png)                       -->
-  <!-- ===================================================================== -->
-  <footer class="bg-white border-t border-gt-sky/60">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8">
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 pb-10 border-b border-gt-sky/50">
-        
-        <!-- Brand Column -->
-        <div class="md:col-span-5 space-y-3">
-          <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-lg bg-gt-beige border border-gt-sky/70 p-1 flex items-center justify-center">
-              <svg viewBox="0 0 120 100" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <linearGradient id="gtLogoGradFoot" x1="10" y1="85" x2="110" y2="15" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stop-color="#1D63DC"/>
-                    <stop offset="50%" stop-color="#14969C"/>
-                    <stop offset="100%" stop-color="#22C55E"/>
-                  </linearGradient>
-                </defs>
-                <path d="M16 47C19 32 30 22 44 19" stroke="url(#gtLogoGradFoot)" stroke-width="5" stroke-linecap="round"/>
-                <path d="M39 14L47 19L40 25" fill="url(#gtLogoGradFoot)"/>
-                <path d="M89 19C101 23 108 33 108 45" stroke="url(#gtLogoGradFoot)" stroke-width="5" stroke-linecap="round"/>
-                <path d="M102 41L108 49L114 41" fill="url(#gtLogoGradFoot)"/>
-                <path d="M53 16H73L79 30L86 33H43L49 30L53 16Z" stroke="url(#gtLogoGradFoot)" stroke-width="4.5" stroke-linejoin="round"/>
-                <path d="M51 24H67" stroke="url(#gtLogoGradFoot)" stroke-width="4" stroke-linecap="round"/>
-                <path d="M25 83V52C25 39 35 33 48 33H78C87 33 93 40 93 50V66C93 77 85 83 74 83H67V62" stroke="url(#gtLogoGradFoot)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M36 83C36 72 44 65 53 65C62 65 67 72 67 83" stroke="url(#gtLogoGradFoot)" stroke-width="4.5" stroke-linecap="round"/>
-                <path d="M46 33C46 47 54 55 66 55V33" stroke="url(#gtLogoGradFoot)" stroke-width="4.2" stroke-linejoin="round"/>
-                <path d="M77 56C87 58 97 56 104 49C99 61 88 65 76 63" stroke="url(#gtLogoGradFoot)" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/>
-                <circle cx="77" cy="43" r="3.2" fill="url(#gtLogoGradFoot)"/>
-                <path d="M19 67C19 56 22 48 26 43" stroke="url(#gtLogoGradFoot)" stroke-width="3.8" stroke-linecap="round"/>
-              </svg>
-            </div>
-            <span class="font-extrabold text-lg text-gt-navy">Ganesa<span class="text-gt-teal">Thrift</span></span>
+          <!-- Column 3: Navigasi -->
+          <div class="md:col-span-2 space-y-2.5 text-xs sm:text-sm">
+            <h4 class="font-bold text-gt-navy uppercase tracking-wider text-xs">Navigasi</h4>
+            <ul class="space-y-2 text-gt-navy/75">
+              <li><a href="#home-section" onclick="navigateToSection('home-section')" class="hover:text-gt-navy">Home</a></li>
+              <li><a href="#shop-section" onclick="navigateToSection('shop-section')" class="hover:text-gt-navy">Shop</a></li>
+              <li><a href="#about-section" onclick="navigateToSection('about-section')" class="hover:text-gt-navy">About</a></li>
+              <li><button type="button" onclick="openUploadModal()" class="hover:text-gt-navy cursor-pointer">Pasang Barang</button></li>
+            </ul>
           </div>
-          <p class="text-xs sm:text-sm text-gt-navy/70 leading-relaxed max-w-sm">
-            Pasar barang bekas &amp; hibah mahasiswa ITB. Memudahkan jual beli dan berbagi perlengkapan kuliah maupun kos di sekitar Kampus Ganesha dan Jatinangor.
-          </p>
+
+          <!-- Column 4: Titik COD Kampus -->
+          <div class="md:col-span-3 space-y-2.5 text-xs sm:text-sm">
+            <h4 class="font-bold text-gt-navy uppercase tracking-wider text-xs">Titik COD Kampus</h4>
+            <ul class="space-y-2 text-gt-navy/75">
+              <li class="flex items-center gap-2"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-gt-teal shrink-0"></i><span>Kampus ITB Ganesha, Bandung</span></li>
+              <li class="flex items-center gap-2"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-gt-teal shrink-0"></i><span>Kampus ITB Jatinangor</span></li>
+              <li class="flex items-center gap-2"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-gt-teal shrink-0"></i><span>Cisitu &bull; Dago &bull; Tubagus Ismail</span></li>
+            </ul>
+          </div>
+
         </div>
 
-        <!-- Column 2: Kategori -->
-        <div class="md:col-span-2 space-y-2.5 text-xs sm:text-sm">
-          <h4 class="font-bold text-gt-navy uppercase tracking-wider text-xs">Kategori</h4>
-          <ul class="space-y-2 text-gt-navy/75">
-            <li><button type="button" onclick="selectCategory('Gratis'); navigateToSection('shop-section');" class="hover:text-gt-navy cursor-pointer">Hibah Gratis</button></li>
-            <li><button type="button" onclick="selectCategory('Elektronik'); navigateToSection('shop-section');" class="hover:text-gt-navy cursor-pointer">Elektronik</button></li>
-            <li><button type="button" onclick="selectCategory('Perabot Kos'); navigateToSection('shop-section');" class="hover:text-gt-navy cursor-pointer">Perabot Kos</button></li>
-            <li><button type="button" onclick="selectCategory('Buku'); navigateToSection('shop-section');" class="hover:text-gt-navy cursor-pointer">Buku &amp; Diktat</button></li>
-          </ul>
+        <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gt-navy/60">
+          <span>Copyright &copy; 2026 GanesaThrift ITB. All Rights Reserved.</span>
+          <span class="font-mono text-[11px] text-gt-teal">Institut Teknologi Bandung</span>
         </div>
-
-        <!-- Column 3: Navigasi -->
-        <div class="md:col-span-2 space-y-2.5 text-xs sm:text-sm">
-          <h4 class="font-bold text-gt-navy uppercase tracking-wider text-xs">Navigasi</h4>
-          <ul class="space-y-2 text-gt-navy/75">
-            <li><a href="#home-section" onclick="navigateToSection('home-section')" class="hover:text-gt-navy">Home</a></li>
-            <li><a href="#shop-section" onclick="navigateToSection('shop-section')" class="hover:text-gt-navy">Shop</a></li>
-            <li><a href="#about-section" onclick="navigateToSection('about-section')" class="hover:text-gt-navy">About</a></li>
-            <li><button type="button" onclick="openUploadModal()" class="hover:text-gt-navy cursor-pointer">Pasang Barang</button></li>
-          </ul>
-        </div>
-
-        <!-- Column 4: Titik COD Kampus -->
-        <div class="md:col-span-3 space-y-2.5 text-xs sm:text-sm">
-          <h4 class="font-bold text-gt-navy uppercase tracking-wider text-xs">Titik COD Kampus</h4>
-          <ul class="space-y-2 text-gt-navy/75">
-            <li class="flex items-center gap-2"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-gt-teal shrink-0"></i><span>Kampus ITB Ganesha, Bandung</span></li>
-            <li class="flex items-center gap-2"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-gt-teal shrink-0"></i><span>Kampus ITB Jatinangor</span></li>
-            <li class="flex items-center gap-2"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-gt-teal shrink-0"></i><span>Cisitu &bull; Dago &bull; Tubagus Ismail</span></li>
-          </ul>
-        </div>
-
       </div>
+    </footer>
 
-      <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gt-navy/60">
-        <span>Copyright &copy; 2026 GanesaThrift ITB. All Rights Reserved.</span>
-        <span class="font-mono text-[11px] text-gt-teal">Real-Time Cloud Marketplace</span>
-      </div>
-    </div>
-  </footer>
+  </div>
 
   <!-- ===================================================================== -->
-  <!-- MODAL 1: CLEAN PRODUCT DETAIL VIEW (MATCHING image_40f9a1.png)        -->
+  <!-- MODAL 1: CLEAN PRODUCT DETAIL VIEW                                    -->
   <!-- ===================================================================== -->
   <div
     id="detail-modal"
@@ -770,7 +678,7 @@
       class="relative w-full max-w-4xl bg-white border border-gt-sky rounded-3xl shadow-modal overflow-hidden animate-modal-in my-auto"
       onclick="event.stopPropagation()"
     >
-      <!-- Top Breadcrumb Bar (Home / Shop / Category) -->
+      <!-- Top Breadcrumb Bar -->
       <div class="flex items-center justify-between px-5 sm:px-7 py-3.5 border-b border-gt-sky/50 bg-gt-beige/60">
         <div class="flex items-center gap-1.5 text-xs text-gt-navy/70 truncate">
           <span>Home</span>
@@ -812,7 +720,7 @@
       <div class="flex items-center justify-between px-6 py-4 border-b border-gt-sky/50 bg-gt-beige/70">
         <div>
           <h2 class="text-base sm:text-lg font-extrabold text-gt-navy">Jual / Hibahkan Barang</h2>
-          <p class="text-xs text-gt-teal mt-0.5">Tanpa login—langsung tayang real-time di katalog GanesaThrift.</p>
+          <p class="text-xs text-gt-teal mt-0.5">Tanpa login—langsung tayang di katalog GanesaThrift.</p>
         </div>
         <button
           type="button"
@@ -1040,11 +948,11 @@
   <div id="toast-container" class="fixed bottom-5 right-5 z-[60] flex flex-col gap-2 pointer-events-none"></div>
 
   <!-- ===================================================================== -->
-  <!-- APPLICATION LOGIC (100% REAL-TIME SUPABASE - NO DEMO DATA)            -->
+  <!-- APPLICATION LOGIC (PURE EMPTY INITIAL STATE - ZERO DEMO DATA)         -->
   <!-- ===================================================================== -->
   <script>
     // -----------------------------------------------------------------------
-    // 0. KONFIGURASI SUPABASE LIVE
+    // 0. KONFIGURASI BACKEND
     // -----------------------------------------------------------------------
     const SUPABASE_URL = 'https://rogpfzhhkdmugcwmhqbb.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_1I5L7Y9rWl_MntxPEwRupA_Ev3LX7Ff';
@@ -1054,8 +962,63 @@
       : null;
 
     // -----------------------------------------------------------------------
-    // 1. FALLBACK PLACEHOLDER SVG (ONLY IF IMAGE URL FAILS TO LOAD)
+    // 1. FULL UNCROPPED GANESATHRIFT VECTOR LOGO (EXACT ELEPHANT + BUCKET HAT)
     // -----------------------------------------------------------------------
+    function buildFullGaneshaLogoSvg(uid) {
+      const gradId = `gtGrad_${uid}`;
+      return `
+        <svg viewBox="0 0 240 190" preserveAspectRatio="xMidYMid meet" class="w-full h-full overflow-visible" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="${gradId}" x1="25" y1="168" x2="215" y2="22" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#1B66DF"/>
+              <stop offset="50%" stop-color="#15989B"/>
+              <stop offset="100%" stop-color="#28C76F"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Top-Left Circulation Curved Arrow (Pointing Up-Right) -->
+          <path d="M28 96C34 65 55 44 85 36" stroke="url(#${gradId})" stroke-width="8" stroke-linecap="round"/>
+          <path d="M77 25L97 34L82 49Z" fill="url(#${gradId})"/>
+
+          <!-- Top-Right Circulation Curved Arrow (Pointing Down) -->
+          <path d="M178 33C198 43 209 62 210 85" stroke="url(#${gradId})" stroke-width="8" stroke-linecap="round"/>
+          <path d="M197 79L210 99L222 79Z" fill="url(#${gradId})"/>
+
+          <!-- Bucket Hat Crown & Brim -->
+          <path d="M98 54L107 24H149L159 54" stroke="url(#${gradId})" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M103 41H141" stroke="url(#${gradId})" stroke-width="7" stroke-linecap="round"/>
+          <path d="M84 64L98 54H159L174 64H84Z" stroke="url(#${gradId})" stroke-width="7.5" stroke-linejoin="round"/>
+
+          <!-- Elephant Tail (Far Left) -->
+          <path d="M55 96C47 110 43 125 43 140" stroke="url(#${gradId})" stroke-width="7" stroke-linecap="round"/>
+
+          <!-- Elephant Outer Back, Hind Leg, Belly Arch & Front Leg -->
+          <path d="M94 64C68 68 55 86 55 116V168H86V138C86 118 134 118 134 138V168H157V112" stroke="url(#${gradId})" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+          <!-- Inner Torso Ribbon & Ear Contour -->
+          <path d="M94 64C98 96 118 110 144 110V64" stroke="url(#${gradId})" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M62 168C64 118 124 102 144 134" stroke="url(#${gradId})" stroke-width="7.5" stroke-linecap="round"/>
+
+          <!-- Elephant Head Forehead & Eye -->
+          <path d="M162 64C178 73 185 88 183 106" stroke="url(#${gradId})" stroke-width="7.5" stroke-linecap="round"/>
+          <circle cx="164" cy="83" r="5.5" fill="url(#${gradId})"/>
+
+          <!-- Curved Tusk (Pointing Up-Right) -->
+          <path d="M167 109C184 112 199 109 211 101C203 119 186 125 166 121" stroke="url(#${gradId})" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+          <!-- Curved Trunk U-Turn -->
+          <path d="M183 121C183 155 170 168 153 168H144V110" stroke="url(#${gradId})" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      `.trim();
+    }
+
+    function injectAllLogos() {
+      const slots = document.querySelectorAll('.gt-logo-slot');
+      slots.forEach((slot, idx) => {
+        slot.innerHTML = buildFullGaneshaLogoSvg(idx + 1);
+      });
+    }
+
     const FALLBACK_PLACEHOLDER_SVG = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(`
       <svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
         <rect width="400" height="400" fill="#F5EFEB"/>
@@ -1067,23 +1030,23 @@
     `.trim());
 
     // -----------------------------------------------------------------------
-    // 2. INTRO OVERLAY CONTROLLER (CYERA-INSPIRED EXPERIENCE)
+    // 2. INTRO OVERLAY CONTROLLER (BLOCKS MAIN APP VISIBILITY COMPLETELY)
     // -----------------------------------------------------------------------
     const INTRO_STEPS = [
       {
-        tag: 'LIVE NODE 01 • DIRECT LISTING',
+        tag: 'LANGKAH 01 • UNGGAH INSTAN',
         title: 'Pasang Barang dalam 30 Detik',
         desc: 'Upload foto barang dari HP atau laptop, tentukan harga atau centang opsi Hibah Gratis, dan amankan transaksi dengan 4-digit PIN pribadi.'
       },
       {
-        tag: 'LIVE NODE 02 • CAMPUS TRUST',
+        tag: 'LANGKAH 02 • LENCANA KAMPUS',
         title: 'Verifikasi Otomatis @itb.ac.id',
         desc: 'Setiap penjual yang menggunakan email @mahasiswa.itb.ac.id atau @itb.ac.id otomatis mendapatkan lencana Mahasiswa ITB untuk kepercayaan transaksi.'
       },
       {
-        tag: 'LIVE NODE 03 • REALTIME BOOKING',
+        tag: 'LANGKAH 03 • BOOKING & COD',
         title: 'Kunci Barang & COD Sekitar Kampus',
-        desc: 'Klik Booking Sekarang untuk mengunci status barang menjadi Dalam Proses secara real-time di semua perangkat, lalu koordinasi COD lewat WhatsApp.'
+        desc: 'Klik Booking Sekarang untuk mengunci status barang menjadi Dalam Proses agar tidak diambil orang lain, lalu koordinasi COD lewat WhatsApp.'
       }
     ];
 
@@ -1106,23 +1069,36 @@
 
     function openIntroOverlay() {
       const overlay = document.getElementById('intro-overlay');
-      if (!overlay) return;
-      overlay.classList.remove('hidden', 'opacity-0');
-      document.body.style.overflow = 'hidden';
+      const mainShell = document.getElementById('main-app-shell');
+      if (mainShell) {
+        mainShell.classList.add('hidden');
+        mainShell.classList.remove('flex');
+      }
+      if (overlay) {
+        overlay.classList.remove('hidden', 'opacity-0');
+      }
+      window.scrollTo(0, 0);
       lucide.createIcons();
     }
 
     function closeIntroOverlay() {
       const overlay = document.getElementById('intro-overlay');
-      if (!overlay) return;
-      overlay.classList.add('opacity-0');
+      const mainShell = document.getElementById('main-app-shell');
+      if (overlay) {
+        overlay.classList.add('opacity-0');
+      }
       try {
         sessionStorage.setItem('ganesathrift_intro_seen', '1');
       } catch (e) {}
+
       setTimeout(() => {
-        overlay.classList.add('hidden');
-        document.body.style.overflow = '';
-      }, 320);
+        if (overlay) overlay.classList.add('hidden');
+        if (mainShell) {
+          mainShell.classList.remove('hidden');
+          mainShell.classList.add('flex');
+        }
+        lucide.createIcons();
+      }, 280);
     }
 
     function navigateToSection(sectionId) {
@@ -1133,17 +1109,17 @@
     }
 
     // -----------------------------------------------------------------------
-    // 3. STATE MANAGEMENT
+    // 3. STATE MANAGEMENT (ZERO DEMO DATA)
     // -----------------------------------------------------------------------
     let items = [];
     let isLoadingItems = true;
     let realtimeChannel = null;
     let activeCategory = 'Semua';
-    let activeStatusFilter = 'active'; // 'active' | 'all'
+    let activeStatusFilter = 'active';
     let searchQuery = '';
     let selectedItemId = null;
     let isBookingFormOpen = false;
-    let activeDetailTab = 'description'; // 'description' | 'seller'
+    let activeDetailTab = 'description';
     let uploadCondition = 4;
     let uploadPhotoDataUrl = '';
     let uploadCompressedBlob = null;
@@ -1159,7 +1135,7 @@
     };
 
     // -----------------------------------------------------------------------
-    // 4. SUPABASE REAL-TIME DATA LAYER
+    // 4. CLOUD DATABASE LAYER
     // -----------------------------------------------------------------------
     function mapDbRowToItem(row) {
       return {
@@ -1203,25 +1179,13 @@
       };
     }
 
-    function updateSyncStatusBadge(mode, detailText = '') {
-      const dot = document.getElementById('sync-status-dot');
-      const text = document.getElementById('sync-status-text');
-      if (!dot || !text) return;
-
-      if (mode === 'supabase') {
-        dot.className = 'w-2 h-2 rounded-full bg-emerald-500 animate-pulse';
-        text.textContent = detailText || 'Live Sync: Aktif';
-      } else if (mode === 'error') {
-        dot.className = 'w-2 h-2 rounded-full bg-red-500';
-        text.textContent = detailText || 'Koneksi Terputus';
-      } else {
-        dot.className = 'w-2 h-2 rounded-full bg-gt-teal';
-        text.textContent = detailText || 'Menghubungkan...';
+    async function fetchItemsFromCloud(silent = false) {
+      if (!supabaseClient) {
+        items = [];
+        isLoadingItems = false;
+        refreshAll();
+        return;
       }
-    }
-
-    async function fetchItemsFromSupabase(silent = false) {
-      if (!supabaseClient) return;
       if (!silent) {
         isLoadingItems = true;
         renderCatalog();
@@ -1236,7 +1200,6 @@
 
         items = Array.isArray(data) ? data.map(mapDbRowToItem) : [];
         isLoadingItems = false;
-        updateSyncStatusBadge('supabase', 'Live Sync: Aktif');
         refreshAll();
 
         if (selectedItemId) {
@@ -1249,15 +1212,14 @@
           }
         }
       } catch (err) {
-        console.error('Supabase fetch error:', err);
+        console.error('Fetch error:', err);
+        items = [];
         isLoadingItems = false;
-        updateSyncStatusBadge('error', 'Gagal Memuat Database');
-        showToast('Gagal memuat katalog dari Supabase: ' + (err.message || 'Cek koneksi'), 'error');
         refreshAll();
       }
     }
 
-    function setupSupabaseRealtime() {
+    function setupCloudRealtime() {
       if (!supabaseClient) return;
       if (realtimeChannel) {
         supabaseClient.removeChannel(realtimeChannel);
@@ -1297,16 +1259,12 @@
             refreshAll();
           }
         )
-        .subscribe((status) => {
-          if (status === 'SUBSCRIBED') {
-            updateSyncStatusBadge('supabase', 'Live Sync: Aktif');
-          }
-        });
+        .subscribe();
     }
 
     async function initAppData() {
-      await fetchItemsFromSupabase(false);
-      setupSupabaseRealtime();
+      await fetchItemsFromCloud(false);
+      setupCloudRealtime();
     }
 
     // -----------------------------------------------------------------------
@@ -1351,7 +1309,7 @@
           : 'bg-gt-navy text-white border-gt-teal/50'
       }`;
       toast.innerHTML = `
-        <span class="w-2 h-2 rounded-full ${isError ? 'bg-red-400' : 'bg-emerald-400'} shrink-0"></span>
+        <span class="w-2 h-2 rounded-full ${isError ? 'bg-red-400' : 'bg-gt-sky'} shrink-0"></span>
         <span>${escapeHtml(message)}</span>
       `;
       container.appendChild(toast);
@@ -1363,7 +1321,7 @@
     }
 
     // -----------------------------------------------------------------------
-    // 6. RENDERING: METRICS, CATEGORY STRIP & GOCART-STYLE PRODUCT CARDS
+    // 6. RENDERING: METRICS, CATEGORY STRIP & PRODUCT CARDS
     // -----------------------------------------------------------------------
     function renderMetrics() {
       const activeItems = items.filter(i => i.status === 'Tersedia' || i.status === 'Dalam Proses');
@@ -1498,8 +1456,8 @@
         const resetFilterBtn = document.getElementById('empty-reset-filter-btn');
 
         if (items.length === 0) {
-          emptyTitle.textContent = 'Belum ada barang yang tayang';
-          emptyDesc.textContent = 'Katalog real-time masih kosong. Jadilah mahasiswa ITB pertama yang menjual atau menghibahkan barang bekas kos maupun perlengkapan kuliah!';
+          emptyTitle.textContent = 'Belum ada barang yang diposting';
+          emptyDesc.textContent = 'Katalog masih kosong karena belum ada mahasiswa yang mengunggah barang. Jadilah yang pertama menjual atau menghibahkan barang bekas kos maupun perlengkapan kuliah!';
           resetFilterBtn.classList.add('hidden');
         } else {
           emptyTitle.textContent = 'Barang tidak ditemukan';
@@ -1525,7 +1483,7 @@
             onclick="openDetailModal('${item.id}', 'description')"
             class="group flex flex-col cursor-pointer ${isCompleted ? 'opacity-65' : ''}"
           >
-            <!-- Square Rounded Beige Image Container (Matching image_407d69.png) -->
+            <!-- Square Rounded Beige Image Container -->
             <div class="relative aspect-square w-full rounded-2xl bg-gt-beige overflow-hidden border border-gt-sky/40 group-hover:shadow-card-hover transition-all duration-300">
               <img
                 src="${escapeHtml(item.imageUrl)}"
@@ -1553,7 +1511,7 @@
               }
             </div>
 
-            <!-- Clean Bottom Meta Row (Title left, Price right, Stars + Location below) -->
+            <!-- Clean Bottom Meta Row -->
             <div class="pt-3 px-0.5 flex flex-col gap-1">
               <div class="flex items-start justify-between gap-2">
                 <h3 class="font-semibold text-sm text-gt-navy line-clamp-1 group-hover:text-gt-teal transition-colors">
@@ -1656,7 +1614,7 @@
     }
 
     // -----------------------------------------------------------------------
-    // 8. MODAL 1: CLEAN PRODUCT DETAIL VIEW (MATCHING image_40f9a1.png)
+    // 8. MODAL 1: CLEAN PRODUCT DETAIL VIEW
     // -----------------------------------------------------------------------
     function openDetailModal(itemId, defaultTab = 'description') {
       const item = items.find(i => i.id === itemId);
@@ -1710,7 +1668,6 @@
 
       const body = document.getElementById('detail-modal-body');
 
-      // Primary Buyer Action Area
       let primaryActionsHtml = '';
       if (item.status === 'Tersedia') {
         if (!isBookingFormOpen) {
@@ -1743,7 +1700,7 @@
                 <button type="button" onclick="toggleInlineBookingForm(false)" class="text-xs font-semibold text-gt-teal hover:text-gt-navy cursor-pointer">Batal</button>
               </div>
               <p class="text-[11px] text-gt-navy/75">
-                Status barang akan langsung berubah menjadi <strong>Dalam Proses</strong> di semua perangkat agar tidak diambil orang lain.
+                Status barang akan langsung berubah menjadi <strong>Dalam Proses</strong> agar tidak diambil mahasiswa lain.
               </p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 <div>
@@ -1812,7 +1769,6 @@
         `;
       }
 
-      // Bottom Tab Content (Description vs Seller PIN Management)
       const tabBodyHtml =
         activeDetailTab === 'description'
           ? `
@@ -1867,10 +1823,9 @@
 
       body.innerHTML = `
         <div class="p-5 sm:p-8 space-y-8">
-          <!-- Top 2-Column Product Showcase (Matching image_40f9a1.png) -->
           <div class="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 items-start">
             
-            <!-- Left Gallery Column (Thumbnail + Large Beige Box) -->
+            <!-- Left Gallery Column -->
             <div class="md:col-span-6 flex flex-col-reverse sm:flex-row gap-3">
               <div class="w-16 h-16 rounded-xl bg-gt-beige border-2 border-gt-navy overflow-hidden shrink-0">
                 <img
@@ -1924,7 +1879,7 @@
               <!-- Primary Action Buttons -->
               ${primaryActionsHtml}
 
-              <!-- Structured Trust Info Rows (Matching image_40f9a1.png) -->
+              <!-- Structured Info Rows -->
               <div class="pt-4 border-t border-gt-sky/60 space-y-2.5 text-xs text-gt-navy/75">
                 <div class="flex items-center gap-2.5">
                   <i data-lucide="map-pin" class="w-4 h-4 text-gt-teal shrink-0"></i>
@@ -1945,7 +1900,7 @@
             </div>
           </div>
 
-          <!-- Bottom Tabs: Deskripsi & Kelola Status (PIN Penjual) -->
+          <!-- Bottom Tabs -->
           <div class="pt-2">
             <div class="flex items-center gap-6 border-b border-gt-sky/60 mb-4">
               <button
@@ -2027,7 +1982,7 @@
         if (error) throw error;
 
         if (!data || data.length === 0) {
-          await fetchItemsFromSupabase(true);
+          await fetchItemsFromCloud(true);
           showToast('Maaf, barang ini baru saja dibooking mahasiswa lain!', 'error');
           return;
         }
@@ -2042,9 +1997,9 @@
         lucide.createIcons();
         showToast(`Berhasil dibooking! Status "${updated.title}" kini Dalam Proses.`);
       } catch (err) {
-        console.error('Supabase booking error:', err);
+        console.error('Booking error:', err);
         if (errEl) {
-          errEl.textContent = 'Gagal memproses booking: ' + (err.message || 'Coba lagi.');
+          errEl.textContent = 'Gagal memproses booking. Silakan coba lagi.';
           errEl.classList.remove('hidden');
         }
         if (submitBtn) submitBtn.disabled = false;
@@ -2098,8 +2053,8 @@
           showToast(`"${updated.title}" ditandai Sudah Tersalurkan.`);
         }
       } catch (err) {
-        console.error('Supabase mark sold error:', err);
-        showToast('Gagal memperbarui status barang: ' + (err.message || 'Error'), 'error');
+        console.error('Mark sold error:', err);
+        showToast('Gagal memperbarui status barang.', 'error');
       }
     }
 
@@ -2132,13 +2087,13 @@
           showToast(`Booking dibatalkan. "${updated.title}" kembali Tersedia.`);
         }
       } catch (err) {
-        console.error('Supabase cancel booking error:', err);
-        showToast('Gagal membatalkan booking: ' + (err.message || 'Error'), 'error');
+        console.error('Cancel booking error:', err);
+        showToast('Gagal membatalkan booking.', 'error');
       }
     }
 
     // -----------------------------------------------------------------------
-    // 9. MODAL 2: FORM UPLOAD BARANG (+ JUAL / HIBAHKAN BARANG)
+    // 9. MODAL 2: FORM UPLOAD BARANG
     // -----------------------------------------------------------------------
     function openUploadModal() {
       document.getElementById('upload-form').reset();
@@ -2349,7 +2304,6 @@
 
       let finalImage = uploadPhotoDataUrl;
 
-      // Upload compressed photo to Supabase Storage bucket 'item-photos'
       if (uploadCompressedBlob) {
         try {
           const fileName = `item-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.jpg`;
@@ -2369,7 +2323,7 @@
             }
           }
         } catch (storageErr) {
-          console.warn('Storage upload fallback ke Data URL terkompresi:', storageErr);
+          console.warn('Storage upload fallback:', storageErr);
         }
       }
 
@@ -2412,10 +2366,10 @@
         refreshAll();
         closeUploadModal();
         navigateToSection('shop-section');
-        showToast(`"${title}" berhasil ditayangkan ke katalog real-time!`);
+        showToast(`"${title}" berhasil ditayangkan ke katalog!`);
       } catch (err) {
-        console.error('Supabase insert error:', err);
-        errorBox.textContent = 'Gagal menyimpan barang ke Supabase: ' + (err.message || 'Periksa izin tabel items.');
+        console.error('Insert error:', err);
+        errorBox.textContent = 'Gagal menyimpan barang: ' + (err.message || 'Silakan coba lagi.');
         errorBox.classList.remove('hidden');
         if (submitBtn) submitBtn.disabled = false;
         if (submitLabel) submitLabel.textContent = 'Tayangkan Barang';
@@ -2452,16 +2406,28 @@
     // 11. INITIALIZE APP
     // -----------------------------------------------------------------------
     window.addEventListener('DOMContentLoaded', () => {
-      // Show Cyera-style intro once per tab session (re-openable via "Intro" button)
+      injectAllLogos();
+
       let introSeen = false;
       try {
         introSeen = sessionStorage.getItem('ganesathrift_intro_seen') === '1';
       } catch (e) {}
 
+      const introOverlay = document.getElementById('intro-overlay');
+      const mainShell = document.getElementById('main-app-shell');
+
       if (introSeen) {
-        document.getElementById('intro-overlay').classList.add('hidden');
+        if (introOverlay) introOverlay.classList.add('hidden');
+        if (mainShell) {
+          mainShell.classList.remove('hidden');
+          mainShell.classList.add('flex');
+        }
       } else {
-        document.body.style.overflow = 'hidden';
+        if (introOverlay) introOverlay.classList.remove('hidden');
+        if (mainShell) {
+          mainShell.classList.add('hidden');
+          mainShell.classList.remove('flex');
+        }
       }
 
       lucide.createIcons();
