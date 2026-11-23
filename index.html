@@ -60,7 +60,7 @@
       -webkit-backdrop-filter: blur(14px);
     }
 
-    /* Clean Smooth Gradient Introduction Stage (No grids, no lines) */
+    /* Clean Smooth Gradient Introduction Stage (No grids, no lines, no scrollbars) */
     .intro-bg {
       background: radial-gradient(circle at 78% 22%, #3E5871 0%, #2F4156 52%, #1C2836 100%);
       will-change: transform;
@@ -112,20 +112,20 @@
 <body class="min-h-screen flex flex-col selection:bg-gt-navy selection:text-white overflow-x-hidden">
 
   <!-- ===================================================================== -->
-  <!-- FULLSCREEN INTRODUCTION SCREEN (CLEAN & SMOOTH UPWARD GLIDE)          -->
+  <!-- FULLSCREEN INTRODUCTION SCREEN (CLEAN, NO SCROLLBARS, SMOOTH GLIDE)   -->
   <!-- ===================================================================== -->
   <div
     id="intro-overlay"
-    class="fixed inset-0 z-50 intro-bg text-white overflow-y-auto"
+    class="fixed inset-0 z-50 intro-bg text-white overflow-x-hidden overflow-y-auto no-scrollbar"
     style="transform: translateY(0);"
   >
-    <!-- Soft Ambient Glow (No lines or grids) -->
+    <!-- Soft Ambient Glow -->
     <div class="pointer-events-none fixed -top-32 -right-32 w-[480px] h-[480px] rounded-full bg-gt-sky/10 blur-3xl"></div>
     <div class="pointer-events-none fixed -bottom-32 -left-32 w-[420px] h-[420px] rounded-full bg-gt-teal/15 blur-3xl"></div>
 
-    <div class="relative min-h-screen max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex flex-col justify-between">
+    <div class="relative min-h-[100dvh] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-7 flex flex-col justify-between">
       <!-- Intro Top Bar -->
-      <div class="flex items-center justify-between">
+      <div class="flex items-center justify-between shrink-0">
         <div class="flex items-center gap-3">
           <div class="w-12 h-11 rounded-xl bg-white p-1.5 flex items-center justify-center shadow-lg shrink-0">
             <span class="gt-logo-slot w-full h-full flex items-center justify-center"></span>
@@ -147,9 +147,9 @@
       </div>
 
       <!-- Intro Main Interactive Stage -->
-      <div class="my-auto py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+      <div class="my-auto py-6 sm:py-8 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center">
         <!-- Left Story & CTA -->
-        <div class="lg:col-span-7 space-y-6">
+        <div class="lg:col-span-7 space-y-5">
           <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 text-xs font-mono text-gt-sky">
             <span class="w-2 h-2 rounded-full bg-gt-sky"></span>
             <span>THRIFT &bull; HIBAH &bull; KOMUNITAS KAMPUS</span>
@@ -163,13 +163,13 @@
             Setiap pergantian semester dan wisuda, ratusan buku kuliah, elektronik, dan perabot kos layak pakai berpindah tangan. GanesaThrift memudahkan mahasiswa Ganesha, Jatinangor, Cisitu, dan Dago saling berbagi dan bertransaksi secara praktis.
           </p>
 
-          <!-- Interactive 3-Step Feature Cards (Clean borderless glass cards) -->
+          <!-- Interactive 3-Step Feature Cards -->
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
             <button
               type="button"
               onclick="selectIntroStep(0)"
               id="intro-step-btn-0"
-              class="text-left p-4 rounded-2xl bg-white/18 shadow-soft transition-all cursor-pointer"
+              class="text-left p-3.5 sm:p-4 rounded-2xl bg-white/18 shadow-soft transition-all cursor-pointer"
             >
               <span class="font-mono text-[11px] text-gt-sky font-semibold">01 / TANPA LOGIN</span>
               <p class="text-sm font-bold text-white mt-1">Unggah Instan</p>
@@ -180,7 +180,7 @@
               type="button"
               onclick="selectIntroStep(1)"
               id="intro-step-btn-1"
-              class="text-left p-4 rounded-2xl bg-white/8 hover:bg-white/14 transition-all cursor-pointer"
+              class="text-left p-3.5 sm:p-4 rounded-2xl bg-white/8 hover:bg-white/14 transition-all cursor-pointer"
             >
               <span class="font-mono text-[11px] text-gt-sky/75 font-semibold">02 / IDENTITAS ITB</span>
               <p class="text-sm font-bold text-white mt-1">Lencana Mahasiswa</p>
@@ -191,7 +191,7 @@
               type="button"
               onclick="selectIntroStep(2)"
               id="intro-step-btn-2"
-              class="text-left p-4 rounded-2xl bg-white/8 hover:bg-white/14 transition-all cursor-pointer"
+              class="text-left p-3.5 sm:p-4 rounded-2xl bg-white/8 hover:bg-white/14 transition-all cursor-pointer"
             >
               <span class="font-mono text-[11px] text-gt-sky/75 font-semibold">03 / PRAKTIS</span>
               <p class="text-sm font-bold text-white mt-1">Booking &amp; COD</p>
@@ -200,7 +200,7 @@
           </div>
 
           <!-- Primary Enter Action -->
-          <div class="flex flex-wrap items-center gap-3 pt-2">
+          <div class="flex flex-wrap items-center gap-3 pt-1">
             <button
               type="button"
               onclick="closeIntroOverlay()"
@@ -221,9 +221,9 @@
           </div>
         </div>
 
-        <!-- Right Visual Card with Full Uncropped Logo (Clean, no lines) -->
+        <!-- Right Visual Card with Full Uncropped Logo -->
         <div class="lg:col-span-5">
-          <div class="relative rounded-3xl bg-white/10 backdrop-blur-md p-6 sm:p-8 shadow-2xl animate-float">
+          <div class="relative rounded-3xl bg-white/10 backdrop-blur-md p-6 sm:p-7 shadow-2xl animate-float">
             <div class="flex items-center justify-between pb-2">
               <div class="flex items-center gap-2">
                 <span class="w-2.5 h-2.5 rounded-full bg-gt-sky"></span>
@@ -234,7 +234,7 @@
               </span>
             </div>
 
-            <div class="py-6 flex flex-col items-center text-center">
+            <div class="py-5 flex flex-col items-center text-center">
               <div class="w-36 h-28 rounded-2xl bg-white p-3.5 shadow-xl mb-5 flex items-center justify-center">
                 <span class="gt-logo-slot w-full h-full flex items-center justify-center"></span>
               </div>
@@ -252,11 +252,8 @@
         </div>
       </div>
 
-      <!-- Intro Bottom Bar (Clean, no line) -->
-      <div class="flex items-center justify-between text-[11px] font-mono text-gt-sky/60 pt-2">
-        <span>GANESATHRIFT &bull; INSTITUT TEKNOLOGI BANDUNG</span>
-        <span>TEKAN ESC UNTUK MASUK</span>
-      </div>
+      <!-- Invisible Bottom Spacer for Balanced Vertical Centering -->
+      <div class="h-1 shrink-0" aria-hidden="true"></div>
     </div>
   </div>
 
@@ -1045,9 +1042,9 @@
         const btn = document.getElementById(`intro-step-btn-${i}`);
         if (!btn) return;
         if (i === index) {
-          btn.className = 'text-left p-4 rounded-2xl bg-white/18 shadow-soft transition-all cursor-pointer';
+          btn.className = 'text-left p-3.5 sm:p-4 rounded-2xl bg-white/18 shadow-soft transition-all cursor-pointer';
         } else {
-          btn.className = 'text-left p-4 rounded-2xl bg-white/8 hover:bg-white/14 transition-all cursor-pointer';
+          btn.className = 'text-left p-3.5 sm:p-4 rounded-2xl bg-white/8 hover:bg-white/14 transition-all cursor-pointer';
         }
       });
     }
@@ -1059,13 +1056,13 @@
       if (!overlay) return;
 
       isIntroTransitioning = true;
+      document.body.classList.add('overflow-hidden');
 
       overlay.style.transition = 'none';
       overlay.style.transform = 'translateY(-100%)';
       overlay.classList.remove('hidden');
       overlay.scrollTop = 0;
 
-      // Force layout reflow so the starting position (-100%) is registered
       void overlay.offsetHeight;
 
       overlay.style.transition = 'transform 680ms cubic-bezier(0.22, 1, 0.36, 1)';
@@ -1088,6 +1085,7 @@
       const mainShell = document.getElementById('main-app-shell');
 
       if (!overlay || overlay.classList.contains('hidden')) {
+        document.body.classList.remove('overflow-hidden');
         if (typeof onCompleteCallback === 'function') onCompleteCallback();
         return;
       }
@@ -1095,7 +1093,6 @@
       isIntroTransitioning = true;
       window.scrollTo(0, 0);
 
-      // Prepare main shell underneath while intro is still covering 100% of screen
       if (mainShell) {
         mainShell.style.transition = 'none';
         mainShell.style.transform = 'translateY(48px)';
@@ -1103,10 +1100,8 @@
         mainShell.classList.add('flex');
       }
 
-      // Force browser reflow so both starting transforms are committed
       void overlay.offsetHeight;
 
-      // Smoothly glide intro upward off-screen while main shell rises into place
       overlay.style.transition = 'transform 760ms cubic-bezier(0.22, 1, 0.36, 1)';
       overlay.style.transform = 'translateY(-100%)';
 
@@ -1123,9 +1118,9 @@
         overlay.classList.add('hidden');
         overlay.style.transition = '';
         overlay.style.transform = 'translateY(0)';
+        document.body.classList.remove('overflow-hidden');
 
         if (mainShell) {
-          // Clear transform so sticky navbar works seamlessly
           mainShell.style.transition = '';
           mainShell.style.transform = '';
         }
@@ -2456,11 +2451,13 @@
 
       if (introSeen) {
         if (introOverlay) introOverlay.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
         if (mainShell) {
           mainShell.classList.remove('hidden');
           mainShell.classList.add('flex');
         }
       } else {
+        document.body.classList.add('overflow-hidden');
         if (introOverlay) introOverlay.classList.remove('hidden');
         if (mainShell) {
           mainShell.classList.add('hidden');
