@@ -1,43 +1,43 @@
 # GanesaThrift
 
-Web marketplace barang bekas layak pakai dan hibah gratis khusus mahasiswa ITB (Ganesha, Jatinangor, dan area kos sekitarnya). Dibuat supaya mahasiswa yang pindahan kos atau lulus bisa langsung oper barang ke adik tingkat tanpa ribet bikin akun.
+A secondhand marketplace and free giveaway platform built for Institut Teknologi Bandung (ITB) students across Ganesha, Jatinangor, and nearby boarding houses (*kos*). Designed so students moving out or graduating can pass on their stuff to juniors without having to create an account.
 
-## Kenapa Dibuat?
+## Why We Built This
 
-Tiap akhir semester atau musim wisuda, banyak perabot kos, kipas, monitor, jas lab, sampai buku diktat TPB yang numpuk dan bingung mau dikemanain. GanesaThrift dibuat biar barang-barang itu cepat pindah tangan lewat sistem *booking* singkat dan ketemuan langsung (COD) di sekitar kampus.
+At the end of every semester or graduation season, plenty of usable dorm furniture, fans, monitors, lab coats, and TPB textbooks end up sitting around unused. GanesaThrift gives students a fast way to sell or give away those items and arrange direct campus meetups (COD).
 
-## Fitur yang Ada
+## Features
 
-- **Langsung Posting Tanpa Login** — Penjual cukup upload foto barang (otomatis dikompres di browser biar ringan), isi kondisi skala 1–5, pasang harga atau centang **Hibah Gratis**, lalu buat 4-digit PIN pribadi.
-- **Verifikasi Email ITB** — Penjual yang pakai email `@mahasiswa.itb.ac.id` atau `@itb.ac.id` otomatis dapat lencana **Mahasiswa ITB**.
-- **Booking & Hold 24 Jam** — Pembeli pilih titik COD, hari, dan jam ketemuan. Barang otomatis berubah status jadi `Dalam Proses` dan dapat kode booking (`GT-DDMM-XXXX`) buat lanjut koordinasi lewat WhatsApp.
-- **Kontrol Status Pakai PIN** — Penjual bisa ubah status barang jadi `Sudah Tersalurkan` atau batalkan *booking* kapan saja cukup dengan memasukkan 4-digit PIN yang dibuat di awal.
-- **Update Real-Time** — Perubahan katalog dan status *booking* langsung sinkron ke semua pengunjung tanpa perlu *refresh* halaman.
-- **Filter Kampus & Titik COD** — Mendukung pencarian cepat berdasarkan kategori, hibah gratis, barang favorit, serta 5 area COD utama (`Ganesha`, `Jatinangor`, `Cisitu`, `Dago`, `Tubagus Ismail`).
+- **Zero-Login Posting** — Sellers upload a photo (automatically compressed client-side in the browser), rate the condition from 1 to 5, set a price or check **Free Giveaway (Hibah Gratis)**, and lock the listing with a 4-digit PIN.
+- **ITB Email Verification** — Sellers using `@mahasiswa.itb.ac.id` or `@itb.ac.id` automatically receive a verified **Mahasiswa ITB** badge on their listings.
+- **24-Hour Booking Hold** — Buyers select a COD meetup spot, date, and time slot. The item immediately changes to `Dalam Proses` (In Progress) and generates a booking code (`GT-DDMM-XXXX`) to follow up on WhatsApp.
+- **4-Digit PIN Controls** — Sellers can mark an item as `Sudah Tersalurkan` (Completed) or cancel a booking anytime using the 4-digit PIN set during upload.
+- **Real-Time Sync** — New listings and booking status changes show up live for all visitors without needing a page refresh.
+- **Campus & COD Hub Filters** — Filter items by category, free giveaways, saved favorites, or 5 main meetup points (`Ganesha`, `Jatinangor`, `Cisitu`, `Dago`, `Tubagus Ismail`).
 
 ## Tech Stack
 
-Sengaja dibuat *single-page* dan tanpa *build tools* yang berat supaya gampang di-deploy dan di-maintain:
+Intentionally built as a lightweight single-page app without heavy build tools so it stays fast and simple to deploy:
 
 - **Frontend:** HTML5, Tailwind CSS (CDN), Vanilla JavaScript, Lucide Icons
-- **Backend & Realtime:** Supabase (PostgreSQL, Storage Bucket, Realtime WebSocket)
-- **Hosting:** Vercel (auto-deploy dari GitHub)
+- **Backend & Realtime:** Supabase (PostgreSQL, Storage Bucket, Realtime)
+- **Hosting:** Vercel (auto-deployed from GitHub)
 
-## Struktur File
+## Project Structure
 
-Semua aset foto hero diletakkan di *root* sejajar dengan `index.html`:
+All hero banner assets live in the repository root alongside `index.html`:
 
 ```text
-├── index.html                      # Halaman utama, katalog, form booking, & logic aplikasi
-├── 1652241026-IMG_0011-01.jpeg     # Banner 1: Air Mancur Kampus ITB Ganesha
-├── 1714369519-DSCF0906.jpg         # Banner 2: Wisudawan ITB
-├── IMG_2948-feat.jpg               # Banner 3: Kampus ITB Jatinangor
+├── index.html                      # Main storefront, booking flow, modals, & app logic
+├── 1652241026-IMG_0011-01.jpeg     # Hero Slide 1: ITB Ganesha Fountain
+├── 1714369519-DSCF0906.jpg         # Hero Slide 2: ITB Graduates
+├── IMG_2948-feat.jpg               # Hero Slide 3: ITB Jatinangor Campus
 └── README.md
 ```
 
-## Setup Supabase (Kalau Mau Jalanin Sendiri)
+## Supabase Setup (Self-Hosting)
 
-1. Buat tabel `items` di SQL Editor Supabase:
+1. Run the following query in the Supabase SQL Editor to create the `items` table:
 
 ```sql
 CREATE TABLE public.items (
@@ -69,12 +69,12 @@ CREATE POLICY "Public update" ON public.items FOR UPDATE USING (true) WITH CHECK
 ALTER PUBLICATION supabase_realtime ADD TABLE public.items;
 ```
 
-2. Buat bucket Storage bernama `item-photos` dengan akses **Public**, lalu tambahkan *policy* untuk `SELECT` dan `INSERT`.
-3. Ganti `SUPABASE_URL` dan `SUPABASE_ANON_KEY` di bagian `<script>` dalam `index.html` dengan kredensial proyek Supabase milikmu.
-4. Push ke GitHub dan hubungkan repositori ke Vercel.
+2. Create a public Storage bucket named `item-photos` and add policies allowing public `SELECT` and `INSERT`.
+3. Replace `SUPABASE_URL` and `SUPABASE_ANON_KEY` inside the `<script>` tag in `index.html` with your own Supabase project credentials.
+4. Push the repository to GitHub and import it into Vercel.
 
----
-## Tim & Lisensi
+# Team & License
 
-Dibuat oleh tim mahasiswa ITB untuk bantu sirkulasi barang bekas dan hibah di lingkungan kampus. Dikembangkan sebagai inisiatif platform komunitas mahasiswa Institut Teknologi Bandung. 
-Dirilis di bawah lisensi **MIT** — bebas digunakan dan dikembangkan lebih lanjut untuk kebutuhan ekosistem kampus.
+Built by a team of ITB students to keep usable campus gear circulating.
+Developed as a student community platform initiative at Institut Teknologi Bandung.
+Released under the MIT license — free to use and build upon for campus community needs.
