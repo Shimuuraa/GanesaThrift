@@ -446,14 +446,14 @@
             </div>
           </aside>
 
-          <!-- Right Hero Banner Card (ITB Ganesha & Wisudawan ITB Photos) -->
+          <!-- Right Hero Banner Card (3 Distinct Photos: Air Mancur ITB Ganesha, Wisudawan ITB, Kampus ITB Jatinangor) -->
           <div class="flex-1 relative rounded-2xl overflow-hidden min-h-[360px] sm:min-h-[395px] bg-slate-800 flex flex-col justify-between p-7 sm:p-11">
-            <!-- Background Campus / Wisudawan ITB Image -->
+            <!-- Background Campus Image -->
             <img
               id="hero-slide-bg"
-              src="./964706_720.jpg"
+              src="./1652241026-IMG_0011-01.jpeg"
               onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1400&q=80'"
-              alt="Kampus ITB Ganesha"
+              alt="Air Mancur Kampus ITB Ganesha"
               class="absolute inset-0 w-full h-full object-cover object-[center_48%] opacity-100 transition-opacity duration-500"
             />
             <!-- Balanced Gradient Overlay: Legible white text on left, vivid photo on right -->
@@ -500,9 +500,9 @@
             <!-- Bottom Controls: Pagination Indicators + Prev/Next Arrows -->
             <div class="relative z-10 flex items-center justify-between pt-4">
               <div class="flex items-center gap-1.5" id="hero-dots">
-                <button type="button" onclick="setHeroSlide(0)" class="h-1 w-7 rounded-full bg-white transition-all cursor-pointer" aria-label="Slide 1"></button>
-                <button type="button" onclick="setHeroSlide(1)" class="h-1 w-2.5 rounded-full bg-white/45 transition-all cursor-pointer" aria-label="Slide 2"></button>
-                <button type="button" onclick="setHeroSlide(2)" class="h-1 w-2.5 rounded-full bg-white/45 transition-all cursor-pointer" aria-label="Slide 3"></button>
+                <button type="button" onclick="manualHeroSlide(0)" class="h-1 w-7 rounded-full bg-white transition-all cursor-pointer" aria-label="Slide 1"></button>
+                <button type="button" onclick="manualHeroSlide(1)" class="h-1 w-2.5 rounded-full bg-white/45 transition-all cursor-pointer" aria-label="Slide 2"></button>
+                <button type="button" onclick="manualHeroSlide(2)" class="h-1 w-2.5 rounded-full bg-white/45 transition-all cursor-pointer" aria-label="Slide 3"></button>
               </div>
 
               <div class="flex items-center gap-2">
@@ -1778,13 +1778,15 @@
       { label: 'Malam', range: '18.00–20.00' }
     ];
 
+    // 3 Hero Banners with 3 Distinct Campus Photos
     const HERO_SLIDES = [
       {
         badge: 'MUSIM PINDAHAN KOS',
         titleMain: 'Barang kampus,',
         titleItalic: 'pindah tangan.',
         desc: 'Meja, rak, kipas, sampai buku TPB dari kakak tingkat. Harga mahasiswa — atau gratis.',
-        bg: './964706_720.jpg',
+        bg: './1652241026-IMG_0011-01.jpeg',
+        alt: 'Air Mancur Kampus ITB Ganesha',
         fallback: 'https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1400&q=80',
         pos: 'object-[center_48%]'
       },
@@ -1794,20 +1796,23 @@
         titleItalic: 'cukup booking.',
         desc: 'Wariskan diktat TPB, jas lab, dan perlengkapan kuliah ke adik tingkat di Ganesha maupun Jatinangor.',
         bg: './1714369519-DSCF0906.jpg',
+        alt: 'Wisudawan Institut Teknologi Bandung',
         fallback: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1400&q=80',
         pos: 'object-[center_22%]'
       },
       {
-        badge: 'COD DI 5 TITIK KAMPUS',
+        badge: 'GANESHA & JATINANGOR',
         titleMain: 'Transaksi aman,',
         titleItalic: 'ketemuan langsung.',
-        desc: 'Booking barang pilihanmu untuk ditahan 24 jam, cek kondisi saat COD, dan bayar di tempat.',
-        bg: './964706_720.jpg',
+        desc: 'Booking barang pilihanmu untuk ditahan 24 jam, cek kondisi saat COD di Ganesha maupun Jatinangor, dan bayar di tempat.',
+        bg: './IMG_2948-feat.jpg',
+        alt: 'Kampus ITB Jatinangor',
         fallback: 'https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1400&q=80',
-        pos: 'object-[center_48%]'
+        pos: 'object-[center_62%]'
       }
     ];
     let currentHeroSlide = 0;
+    let heroAutoTimer = null;
 
     const CONDITION_LABELS = {
       1: '1/5 Perlu Perbaikan',
@@ -1832,6 +1837,7 @@
         this.onerror = null;
         this.src = slide.fallback;
       };
+      bgImg.alt = slide.alt || 'Kampus ITB';
       bgImg.src = slide.bg;
       bgImg.className = `absolute inset-0 w-full h-full object-cover ${slide.pos || 'object-center'} opacity-100 transition-opacity duration-500`;
 
@@ -1843,12 +1849,28 @@
       });
     }
 
+    function startHeroAutoPlay() {
+      if (heroAutoTimer) clearInterval(heroAutoTimer);
+      heroAutoTimer = setInterval(() => {
+        if (currentView === 'home') {
+          setHeroSlide(currentHeroSlide + 1);
+        }
+      }, 6500);
+    }
+
+    function manualHeroSlide(idx) {
+      setHeroSlide(idx);
+      startHeroAutoPlay();
+    }
+
     function prevHeroSlide() {
       setHeroSlide(currentHeroSlide - 1);
+      startHeroAutoPlay();
     }
 
     function nextHeroSlide() {
       setHeroSlide(currentHeroSlide + 1);
+      startHeroAutoPlay();
     }
 
     // -----------------------------------------------------------------------
@@ -3395,6 +3417,7 @@
       }
 
       lucide.createIcons();
+      startHeroAutoPlay();
       fetchItemsFromCloud(false).then(() => setupCloudRealtime());
     });
   </script>
