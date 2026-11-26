@@ -77,4 +77,4 @@ ALTER PUBLICATION supabase_realtime ADD TABLE public.items;
 
 Built by a team of ITB students to keep usable campus gear circulating.
 Developed as a student community platform initiative at Institut Teknologi Bandung.
-Released under the MIT license — free to use and build upon for campus community needs.
+The source code is released under the **Apache License 2.0** — free to use, modify, and build upon for campus community needs with proper attribution. However, the project name, logo, and original visual assets remain the exclusive property of the original creators and may not be reused without permission.
