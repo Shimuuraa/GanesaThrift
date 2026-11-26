@@ -1098,7 +1098,7 @@
             <div class="rounded-2xl bg-gt-beige p-4 space-y-2.5 text-xs text-slate-600">
               <div class="flex items-start gap-2.5">
                 <i data-lucide="clock" class="w-4 h-4 text-gt-navy shrink-0 mt-0.5"></i>
-                <span>Barang ditahan 24 jam untukmu, status jadi &ldquo;Dalam Proses&rdquo;.</span>
+                <span>Barang ditahan 24 jam untukmu (otomatis terhapus dari katalog jika tidak dikonfirmasi dalam 3 hari).</span>
               </div>
               <div class="flex items-start gap-2.5">
                 <i data-lucide="shield-check" class="w-4 h-4 text-gt-navy shrink-0 mt-0.5"></i>
@@ -1526,10 +1526,13 @@
   <!-- ===================================================================== -->
   <script>
     // -----------------------------------------------------------------------
-    // 0. SUPABASE CONFIGURATION
+    // 0. SUPABASE CONFIGURATION & SAFE COLUMN PROJECTION
     // -----------------------------------------------------------------------
     const SUPABASE_URL = 'https://rogpfzhhkdmugcwmhqbb.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_1I5L7Y9rWl_MntxPEwRupA_Ev3LX7Ff';
+
+    // Kolom yang aman dikirim ke browser (kolom 'pin' dan 'buyer_wa' tidak pernah ditarik)
+    const SAFE_ITEM_COLUMNS = 'id, title, description, category, condition, price, is_free, location, seller_name, seller_email, seller_wa, status, buyer_name, booked_at, image_url, created_at';
 
     const supabaseClient = window.supabase
       ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
@@ -1769,7 +1772,6 @@
       { label: 'Malam', range: '18.00–20.00' }
     ];
 
-    // 3 Hero Banners with 3 Distinct Campus Photos
     const HERO_SLIDES = [
       {
         badge: 'MUSIM PINDAHAN KOS',
@@ -1918,7 +1920,7 @@
     }
 
     // -----------------------------------------------------------------------
-    // 6. SUPABASE CLOUD LAYER
+    // 6. SUPABASE CLOUD LAYER (SECURE RPC + AUTO CLEANUP 3 DAYS)
     // -----------------------------------------------------------------------
     function normalizeCategoryName(cat) {
       if (!cat) return 'Lainnya';
@@ -1939,10 +1941,9 @@
         sellerName: row.seller_name || '',
         sellerEmail: row.seller_email || '',
         sellerWa: row.seller_wa || '',
-        pin: String(row.pin || ''),
         status: row.status || 'Tersedia',
         buyerName: row.buyer_name || '',
-        buyerWa: row.buyer_wa || '',
+        bookedAt: row.booked_at ? new Date(row.booked_at).getTime() : null,
         imageUrl: row.image_url || FALLBACK_PLACEHOLDER_SVG,
         createdAt: row.created_at ? new Date(row.created_at).getTime() : Date.now()
       };
@@ -1961,11 +1962,31 @@
         seller_email: item.sellerEmail,
         seller_wa: item.sellerWa,
         pin: String(item.pin),
-        status: item.status || 'Tersedia',
-        buyer_name: item.buyerName || '',
-        buyer_wa: item.buyerWa || '',
+        status: 'Tersedia',
+        buyer_name: '',
+        buyer_wa: '',
         image_url: item.imageUrl
       };
+    }
+
+    async function cleanupExpiredBookingsInBackground() {
+      if (!supabaseClient) return;
+      try {
+        const { data, error } = await supabaseClient.rpc('cleanup_expired_bookings');
+        if (error || !Array.isArray(data) || data.length === 0) return;
+
+        const pathsToDelete = data
+          .map(row => extractStorageFilePath(row.deleted_image_url))
+          .filter(Boolean);
+
+        if (pathsToDelete.length > 0) {
+          await supabaseClient.storage
+            .from('item-photos')
+            .remove(pathsToDelete);
+        }
+      } catch (err) {
+        console.warn('Auto-cleanup check skipped:', err);
+      }
     }
 
     async function fetchItemsFromCloud(silent = false) {
@@ -1980,9 +2001,12 @@
         renderFeaturedCatalog();
       }
       try {
+        // Jalankan pembersihan otomatis barang booking > 3 hari sebelum memuat katalog
+        await cleanupExpiredBookingsInBackground();
+
         const { data, error } = await supabaseClient
           .from('items')
-          .select('*')
+          .select(SAFE_ITEM_COLUMNS)
           .order('created_at', { ascending: false });
 
         if (error) throw error;
@@ -2569,7 +2593,7 @@
     }
 
     // -----------------------------------------------------------------------
-    // 10. FULL BOOKING PAGE CONTROLLER
+    // 10. FULL BOOKING PAGE CONTROLLER (USING SECURE RPC book_item)
     // -----------------------------------------------------------------------
     function getUpcomingDaysList() {
       const dayNames = ['MIN', 'SEN', 'SEL', 'RAB', 'KAM', 'JUM', 'SAB'];
@@ -2772,16 +2796,11 @@
       const bookingCode = `GT-${dd}${mm}-${rand4}`;
 
       try {
-        const { data, error } = await supabaseClient
-          .from('items')
-          .update({
-            status: 'Dalam Proses',
-            buyer_name: buyerName,
-            buyer_wa: buyerWa
-          })
-          .eq('id', bookingTargetItem.id)
-          .eq('status', 'Tersedia')
-          .select();
+        const { data, error } = await supabaseClient.rpc('book_item', {
+          p_item_id: String(bookingTargetItem.id),
+          p_buyer_name: buyerName,
+          p_buyer_wa: buyerWa
+        });
 
         if (error) throw error;
 
@@ -2831,7 +2850,7 @@
         switchView('booking-success');
       } catch (err) {
         console.error('Booking error:', err);
-        errBox.textContent = 'Gagal mengirim booking. Periksa koneksi internet dan coba lagi.';
+        errBox.textContent = 'Gagal mengirim booking. Pastikan skrip SQL RPC sudah dijalankan di Supabase.';
         errBox.classList.remove('hidden');
         if (submitBtn) submitBtn.disabled = false;
         if (submitLabel) submitLabel.textContent = 'Kirim Booking';
@@ -2850,7 +2869,7 @@
     }
 
     // -----------------------------------------------------------------------
-    // 11. PRODUCT DETAIL MODAL & SELLER PIN MANAGEMENT (AUTO-DELETE ON SOLD)
+    // 11. PRODUCT DETAIL MODAL & SERVER-VERIFIED SELLER PIN MANAGEMENT
     // -----------------------------------------------------------------------
     function openDetailModal(itemId, defaultTab = 'description') {
       const item = items.find(i => i.id === itemId);
@@ -2928,7 +2947,7 @@
         ctaHtml = `
           <div class="p-3.5 rounded-xl bg-gt-beige border border-gt-beigeDark text-xs text-gt-navy space-y-1">
             <p class="font-bold">Sedang dalam proses COD oleh ${escapeHtml(item.buyerName || 'Mahasiswa ITB')}</p>
-            <p class="text-slate-600">Penjual dapat mengonfirmasi barang sudah laku (foto &amp; data akan langsung dihapus dari database) atau membatalkan booking di tab Kelola Status.</p>
+            <p class="text-slate-600">Penjual dapat mengonfirmasi barang sudah laku (foto &amp; data akan langsung dihapus dari database) atau membatalkan booking di tab Kelola Status. Barang otomatis terhapus jika tidak dikonfirmasi dalam 3 hari.</p>
           </div>
         `;
       } else {
@@ -2964,9 +2983,10 @@
               ${
                 item.status === 'Dalam Proses'
                   ? `<button
+                      id="cancel-booking-btn"
                       type="button"
                       onclick="handleCancelBooking()"
-                      class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-gt-navy text-xs font-bold cursor-pointer"
+                      class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-gt-navy text-xs font-bold disabled:opacity-60 cursor-pointer"
                     >
                       Batalkan Booking
                     </button>`
@@ -3042,41 +3062,64 @@
       `;
     }
 
-    function validateSellerPin(item) {
+    function showPinValidationError(message) {
       const input = document.getElementById('seller-pin-input');
       const errEl = document.getElementById('pin-error-msg');
-      const entered = (input ? input.value : '').trim();
-
-      if (entered !== String(item.pin)) {
-        if (errEl) {
-          errEl.textContent = 'PIN tidak cocok. Masukkan 4 digit PIN penjual.';
-          errEl.classList.remove('hidden');
-        }
-        if (input) {
-          input.classList.remove('animate-shake');
-          void input.offsetWidth;
-          input.classList.add('animate-shake', 'border-red-400');
-          input.focus();
-        }
-        return false;
+      if (errEl) {
+        errEl.textContent = message;
+        errEl.classList.remove('hidden');
       }
-      return true;
+      if (input) {
+        input.classList.remove('animate-shake');
+        void input.offsetWidth;
+        input.classList.add('animate-shake', 'border-red-400');
+        input.focus();
+      }
+    }
+
+    function getEnteredPinOrWarn() {
+      const input = document.getElementById('seller-pin-input');
+      const entered = (input ? input.value : '').trim();
+      if (!/^\d{4}$/.test(entered)) {
+        showPinValidationError('Masukkan 4 digit angka PIN penjual.');
+        return null;
+      }
+      return entered;
     }
 
     async function handleMarkSold() {
       const item = items.find(i => i.id === selectedItemId);
-      if (!item || !supabaseClient || !validateSellerPin(item)) return;
+      if (!item || !supabaseClient) return;
+
+      const enteredPin = getEnteredPinOrWarn();
+      if (!enteredPin) return;
 
       const btn = document.getElementById('mark-sold-btn');
       const label = document.getElementById('mark-sold-label');
       const errEl = document.getElementById('pin-error-msg');
       if (errEl) errEl.classList.add('hidden');
       if (btn) btn.disabled = true;
-      if (label) label.textContent = 'Menghapus data...';
+      if (label) label.textContent = 'Memverifikasi...';
 
       try {
-        // 1. Hapus file foto dari Supabase Storage bucket 'item-photos' agar kuota storage tetap lega
-        const storageFilePath = extractStorageFilePath(item.imageUrl);
+        // 1. Verifikasi PIN di sisi server & hapus baris data barang di tabel 'items'
+        const { data, error } = await supabaseClient.rpc('confirm_item_sold', {
+          p_item_id: String(item.id),
+          p_pin: enteredPin
+        });
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+          if (btn) btn.disabled = false;
+          if (label) label.textContent = 'Konfirmasi Laku & Hapus';
+          showPinValidationError('PIN tidak cocok. Masukkan 4 digit PIN penjual.');
+          return;
+        }
+
+        // 2. Hapus file foto dari Supabase Storage bucket 'item-photos' agar kuota storage tetap lega
+        const deletedUrl = data[0].deleted_image_url || item.imageUrl;
+        const storageFilePath = extractStorageFilePath(deletedUrl);
         if (storageFilePath) {
           const { error: storageErr } = await supabaseClient.storage
             .from('item-photos')
@@ -3084,26 +3127,6 @@
           if (storageErr) {
             console.warn('Gagal menghapus file foto di storage:', storageErr.message);
           }
-        }
-
-        // 2. Hapus seluruh data dasar barang dari tabel 'items' di database
-        const { data, error } = await supabaseClient
-          .from('items')
-          .delete()
-          .eq('id', item.id)
-          .eq('pin', String(item.pin))
-          .select();
-
-        if (error) throw error;
-
-        if (!data || data.length === 0) {
-          if (btn) btn.disabled = false;
-          if (label) label.textContent = 'Konfirmasi Laku & Hapus';
-          if (errEl) {
-            errEl.textContent = 'Gagal menghapus dari database. Pastikan policy DELETE aktif di Supabase.';
-            errEl.classList.remove('hidden');
-          }
-          return;
         }
 
         const deletedTitle = item.title;
@@ -3124,33 +3147,45 @@
         console.error('Delete sold item error:', err);
         if (btn) btn.disabled = false;
         if (label) label.textContent = 'Konfirmasi Laku & Hapus';
-        showToast('Gagal menghapus barang dari database.', 'error');
+        showToast('Gagal menghapus barang. Pastikan skrip SQL RPC sudah dijalankan.', 'error');
       }
     }
 
     async function handleCancelBooking() {
       const item = items.find(i => i.id === selectedItemId);
-      if (!item || !supabaseClient || !validateSellerPin(item)) return;
+      if (!item || !supabaseClient) return;
+
+      const enteredPin = getEnteredPinOrWarn();
+      if (!enteredPin) return;
+
+      const cancelBtn = document.getElementById('cancel-booking-btn');
+      const errEl = document.getElementById('pin-error-msg');
+      if (errEl) errEl.classList.add('hidden');
+      if (cancelBtn) cancelBtn.disabled = true;
 
       try {
-        const { data, error } = await supabaseClient
-          .from('items')
-          .update({ status: 'Tersedia', buyer_name: '', buyer_wa: '' })
-          .eq('id', item.id)
-          .eq('pin', String(item.pin))
-          .select();
+        const { data, error } = await supabaseClient.rpc('cancel_item_booking', {
+          p_item_id: String(item.id),
+          p_pin: enteredPin
+        });
 
         if (error) throw error;
-        if (data && data.length > 0) {
-          const updated = mapDbRowToItem(data[0]);
-          const idx = items.findIndex(i => i.id === updated.id);
-          if (idx !== -1) items[idx] = updated;
-          refreshAll();
-          renderDetailModalContent(updated);
-          lucide.createIcons();
-          showToast(`Booking dibatalkan. "${updated.title}" kembali Tersedia.`);
+
+        if (!data || data.length === 0) {
+          if (cancelBtn) cancelBtn.disabled = false;
+          showPinValidationError('PIN tidak cocok. Masukkan 4 digit PIN penjual.');
+          return;
         }
+
+        const updated = mapDbRowToItem(data[0]);
+        const idx = items.findIndex(i => i.id === updated.id);
+        if (idx !== -1) items[idx] = updated;
+        refreshAll();
+        renderDetailModalContent(updated);
+        lucide.createIcons();
+        showToast(`Booking dibatalkan. "${updated.title}" kembali Tersedia.`);
       } catch (err) {
+        if (cancelBtn) cancelBtn.disabled = false;
         showToast('Gagal membatalkan booking.', 'error');
       }
     }
@@ -3370,9 +3405,6 @@
         sellerEmail,
         sellerWa,
         pin,
-        status: 'Tersedia',
-        buyerName: '',
-        buyerWa: '',
         imageUrl: finalImage
       };
 
@@ -3380,7 +3412,7 @@
         const { data, error } = await supabaseClient
           .from('items')
           .insert([mapItemToDbInsert(newDraft)])
-          .select();
+          .select(SAFE_ITEM_COLUMNS);
 
         if (error) throw error;
 
